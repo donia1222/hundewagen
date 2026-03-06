@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getResolvedImage, setResolvedImage } from "@/lib/product-cache"
 
 const EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".webp"]
 const HAS_EXT = /\.(jpg|jpeg|png|gif|webp|svg)$/i
@@ -14,13 +15,18 @@ interface ProductImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
 }
 
 export function ProductImage({ src, candidates, alt, onAllFailed, ...props }: ProductImageProps) {
-  const urls: string[] = candidates && candidates.length > 0
-    ? candidates
-    : src
-      ? HAS_EXT.test(src)
-        ? [src]
-        : EXTENSIONS.map(ext => src + ext)
-      : []
+  const cacheKey = src || candidates?.[0] || ""
+  const cached = cacheKey ? getResolvedImage(cacheKey) : undefined
+
+  const urls: string[] = cached
+    ? [cached]
+    : candidates && candidates.length > 0
+      ? candidates
+      : src
+        ? HAS_EXT.test(src)
+          ? [src]
+          : EXTENSIONS.map(ext => src + ext)
+        : []
 
   const [attempt, setAttempt] = useState(0)
   const [loaded, setLoaded] = useState(false)
@@ -31,7 +37,6 @@ export function ProductImage({ src, candidates, alt, onAllFailed, ...props }: Pr
     if (allFailed && onAllFailed) onAllFailed()
   }, [allFailed, onAllFailed])
 
-  // Reset loaded state when src changes
   useEffect(() => {
     setLoaded(false)
     setAttempt(0)
@@ -53,7 +58,6 @@ export function ProductImage({ src, candidates, alt, onAllFailed, ...props }: Pr
 
   return (
     <span className={`relative block overflow-hidden ${className ?? ""}`} style={style}>
-      {/* Skeleton shown while loading */}
       {!loaded && (
         <span className="absolute inset-0 bg-gradient-to-r from-[#F0F0F0] via-[#E8E8E8] to-[#F0F0F0] animate-pulse rounded-[inherit]" />
       )}
@@ -61,7 +65,10 @@ export function ProductImage({ src, candidates, alt, onAllFailed, ...props }: Pr
         src={urls[attempt]}
         alt={alt}
         loading="lazy"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => {
+          setLoaded(true)
+          if (cacheKey && urls[attempt]) setResolvedImage(cacheKey, urls[attempt])
+        }}
         onError={() => { setLoaded(false); setAttempt(a => a + 1) }}
         className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
         {...rest}

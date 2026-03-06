@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, MapPin, X, ZoomIn } from "lucide-react"
 import { ProductImage } from "@/components/product-image"
+import { fetchProductsCached } from "@/lib/product-cache"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -93,21 +94,18 @@ export default function ProductPage() {
     setLoading(true)
     setError("")
 
-    fetch(`/api/products?id=${id}`)
-      .then(r => r.json())
+    fetchProductsCached(`id=${id}`)
       .then(data => {
         if (data.success && data.product) {
-          setProduct(data.product)
-          // Fetch similar from cache (no extra PHP call)
-          fetch("/api/products")
-            .then(r => r.json())
+          setProduct(data.product as unknown as Product)
+          fetchProductsCached()
             .then(all => {
-              if (!all.success) return
-              const cat = data.product.category
+              if (!all.success || !all.products) return
+              const cat = (data.product as unknown as Product).category
               const hasImage = (p: Product) =>
                 getImages(p).length > 0 || !!(p.image_url) || !!(p.image_url_candidates?.length)
-              const others: Product[] = all.products.filter(
-                (p: Product) => p.id !== data.product.id && p.category === cat && (p.stock ?? 0) > 0 && hasImage(p)
+              const others = (all.products as unknown as Product[]).filter(
+                (p: Product) => p.id !== (data.product as unknown as Product).id && p.category === cat && (p.stock ?? 0) > 0 && hasImage(p)
               )
               setSimilar(others.slice(0, 10))
             })
@@ -248,21 +246,12 @@ export default function ProductPage() {
                 onClick={() => setLightbox(true)}
                 title="Klicken zum Vergrößern"
               >
-                {images.length > 0 ? (
-                  <img
-                    src={images[imgIdx]}
-                    alt={product.name}
-                    className="w-full h-full object-contain"
-                    onError={e => { (e.target as HTMLImageElement).src = "/placeholder.svg?height=400&width=400" }}
-                  />
-                ) : (
-                  <ProductImage
-                    src={product.image_url}
-                    candidates={product.image_url_candidates}
-                    alt={product.name}
-                    className="w-full h-full object-contain"
-                  />
-                )}
+                <ProductImage
+                  src={images[imgIdx] || product.image_url}
+                  candidates={product.image_url_candidates}
+                  alt={product.name}
+                  className="w-full h-full object-contain"
+                />
                 {product.badge && (
                   <span className="absolute top-3 left-3 bg-[#2C5F2E] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
                     {product.badge}
@@ -416,24 +405,14 @@ export default function ProductPage() {
                       className="bg-white rounded-2xl border border-[#EBEBEB] overflow-hidden cursor-pointer group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                     >
                       <div className="aspect-square bg-[#F8F8F8] overflow-hidden">
-                        {imgs.length > 0 ? (
-                          <img
-                            src={imgs[0]}
-                            alt={p.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onError={() => markSimilarFailed(p.id)}
-                          />
-                        ) : (
-                          <ProductImage
-                            src={p.image_url}
-                            candidates={p.image_url_candidates}
-                            alt={p.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onAllFailed={() => markSimilarFailed(p.id)}
-                          />
-                        )}
+                        <ProductImage
+                          src={imgs[0] || p.image_url}
+                          candidates={p.image_url_candidates}
+                          alt={p.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onAllFailed={() => markSimilarFailed(p.id)}
+                        />
                       </div>
                       <div className="p-3">
                         <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-2 leading-tight mb-1">
@@ -504,22 +483,12 @@ export default function ProductPage() {
                 transformOrigin: `${zoom.x}% ${zoom.y}%`,
               } : { transform: "scale(1)", transformOrigin: "center" }}
             >
-              {images.length > 0 ? (
-                <img
-                  src={images[imgIdx]}
-                  alt={product.name}
-                  className="block max-w-[90vw] max-h-[90vh] w-auto h-auto bg-white"
-                  draggable={false}
-                  onError={e => { (e.target as HTMLImageElement).src = "/placeholder.svg?height=800&width=800" }}
-                />
-              ) : (
-                <ProductImage
-                  src={product.image_url}
-                  candidates={product.image_url_candidates}
-                  alt={product.name}
-                  className="w-full h-full object-contain bg-white"
-                />
-              )}
+              <ProductImage
+                src={images[imgIdx] || product.image_url}
+                candidates={product.image_url_candidates}
+                alt={product.name}
+                className="block max-w-[90vw] max-h-[90vh] w-auto h-auto bg-white"
+              />
             </div>
           </div>
           {images.length > 1 && (

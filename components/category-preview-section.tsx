@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ProductImage } from "./product-image"
+import { fetchProductsCached } from "@/lib/product-cache"
 
 interface Product {
   id: number
@@ -72,11 +73,14 @@ export function CategoryPreviewSection() {
     let cancelled = false
     const load = async (retries = 2): Promise<void> => {
       try {
-        const [r1, r2] = await Promise.all([fetch("/api/products"), fetch("/api/categories")])
-        if (!r1.ok || !r2.ok) throw new Error("not ok")
-        const [prodData, catData] = await Promise.all([r1.json(), r2.json()])
+        const [prodData, catRes] = await Promise.all([
+          fetchProductsCached(),
+          fetch("/api/categories"),
+        ])
+        if (!catRes.ok) throw new Error("not ok")
+        const catData = await catRes.json()
         if (cancelled) return
-        if (prodData.success) setProducts(prodData.products)
+        if (prodData.success && prodData.products) setProducts(prodData.products as unknown as Product[])
         if (catData.success) setCategories(catData.categories)
       } catch {
         if (!cancelled && retries > 0) {
@@ -197,24 +201,14 @@ export function CategoryPreviewSection() {
                       className={`group bg-white rounded-2xl overflow-hidden border border-[#EBEBEB] hover:border-[#D5D5D5] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer ${i >= 4 ? "hidden sm:block" : ""}`}
                     >
                       <div className="aspect-square bg-[#F8F8F8] overflow-hidden">
-                        {imgs.length > 0 ? (
-                          <img
-                            src={imgs[0]}
-                            alt={product.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            onError={() => markFailed(product.id)}
-                          />
-                        ) : (
-                          <ProductImage
-                            src={product.image_url}
-                            candidates={product.image_url_candidates}
-                            alt={product.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            onAllFailed={() => markFailed(product.id)}
-                          />
-                        )}
+                        <ProductImage
+                          src={imgs[0] || product.image_url}
+                          candidates={product.image_url_candidates}
+                          alt={product.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          onAllFailed={() => markFailed(product.id)}
+                        />
                       </div>
                       <div className="p-3 flex flex-col h-[72px]">
                         <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-2 leading-tight group-hover:text-[#2C5F2E] transition-colors flex-1">
