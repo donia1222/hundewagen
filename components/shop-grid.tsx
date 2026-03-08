@@ -127,7 +127,7 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, onS
             w-6 h-6 sm:w-8 sm:h-8
             ${isWished
               ? "bg-red-500 text-white shadow-md"
-              : "bg-white/80 text-[#DDD] shadow-sm hover:text-red-400 hover:scale-110"
+              : "bg-white/80 text-[#333] shadow-sm hover:text-red-400 hover:scale-110"
             }`}
         >
           <Heart className={`w-4 h-4 ${isWished ? "fill-current" : ""}`} />

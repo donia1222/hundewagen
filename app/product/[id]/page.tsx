@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
-import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, MapPin, X, ZoomIn } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, MapPin, X, ZoomIn, Heart } from "lucide-react"
 import { ProductImage } from "@/components/product-image"
 import { fetchProductsCached } from "@/lib/product-cache"
 
@@ -82,6 +82,7 @@ export default function ProductPage() {
   const [imgIdx, setImgIdx] = useState(0)
   const [added, setAdded] = useState(false)
   const [cartCount, setCartCount] = useState(0)
+  const [isWished, setIsWished] = useState(false)
   const [lightbox, setLightbox] = useState(false)
   const [zoom, setZoom] = useState({ x: 50, y: 50, active: false })
   const lightboxImgRef = useRef<HTMLDivElement>(null)
@@ -118,6 +119,25 @@ export default function ProductPage() {
 
   const markSimilarFailed = (id: number) =>
     setFailedSimilar(prev => new Set([...prev, id]))
+
+  // Wishlist sync with shop
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("shop-wishlist")
+      if (saved && id) setIsWished(JSON.parse(saved).includes(Number(id)))
+    } catch {}
+  }, [id])
+
+  const toggleWishlist = () => {
+    if (!product) return
+    try {
+      const saved = localStorage.getItem("shop-wishlist")
+      const list: number[] = saved ? JSON.parse(saved) : []
+      const next = isWished ? list.filter(x => x !== product.id) : [...list, product.id]
+      localStorage.setItem("shop-wishlist", JSON.stringify(next))
+      setIsWished(!isWished)
+    } catch {}
+  }
 
   useEffect(() => {
     setImgIdx(0)
@@ -402,6 +422,17 @@ export default function ProductPage() {
                 >
                   {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
                   {added ? "Hinzugefügt!" : inStock ? "In den Warenkorb" : "Ausverkauft"}
+                </button>
+                <button
+                  onClick={toggleWishlist}
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all duration-200 border ${
+                    isWished
+                      ? "bg-red-50 border-red-200 text-red-500"
+                      : "bg-white border-[#E8E8E8] text-[#333] hover:border-[#999]"
+                  }`}
+                >
+                  <Heart className={`w-4 h-4 ${isWished ? "fill-current" : ""}`} />
+                  {isWished ? "Auf der Wunschliste" : "Zur Wunschliste hinzufügen"}
                 </button>
               </div>
             </div>

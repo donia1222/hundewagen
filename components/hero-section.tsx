@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { Flashlight, Sword, Target, Wrench, Axe, Shield } from "lucide-react"
 
 interface Product {
   id: number
@@ -293,40 +294,52 @@ export function HeroSection() {
             </div>
           )}
 
-          {/* Grid — solo 6 primeras */}
-          {categories.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              {categories.slice(0, 6).map((cat) => {
-                const catProds = products.filter(p =>
-                  p.category === cat.slug || p.category === cat.name
-                )
-                const srcs = getCategoryImage(catProds)
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => router.push(`/shop?cat=${encodeURIComponent(cat.name)}`)}
-                    className="relative overflow-hidden rounded-2xl bg-[#1a1a1a] group aspect-[3/4] text-left"
-                  >
-                    <CatImageCard
-                      srcs={srcs}
-                      alt={cat.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 group-hover:from-black/65 transition-all duration-300" />
-                    <div className="absolute inset-0 rounded-2xl ring-2 ring-transparent group-hover:ring-white/30 transition-all duration-300" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3.5">
-                      <span className="text-white font-black text-sm leading-tight drop-shadow-lg block tracking-wide">
-                        {cat.name}
+          {/* Grid — 3 categorías con iconos */}
+          {categories.length > 0 && (() => {
+            const iconMap: Record<string, React.ReactNode> = {
+              "Lampen": <Flashlight className="w-7 h-7" />,
+              "Messer": <Sword className="w-7 h-7" />,
+              "Armbrust": <Target className="w-7 h-7" />,
+              "Armbrust Zubehör": <Wrench className="w-7 h-7" />,
+              "Beil": <Axe className="w-7 h-7" />,
+              "Security": <Shield className="w-7 h-7" />,
+            }
+            const colors = [
+              { bg: "bg-white", icon: "bg-[#2C5F2E]/10 text-[#2C5F2E]", accent: "text-[#2C5F2E]", border: "hover:border-[#2C5F2E]/40" },
+              { bg: "bg-white", icon: "bg-[#2C5F2E]/10 text-[#2C5F2E]", accent: "text-[#2C5F2E]", border: "hover:border-[#2C5F2E]/40" },
+              { bg: "bg-white", icon: "bg-[#2C5F2E]/10 text-[#2C5F2E]", accent: "text-[#2C5F2E]", border: "hover:border-[#2C5F2E]/40" },
+            ]
+            return (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
+                {categories.slice(0, 6).map((cat, i) => {
+                  const catProds = products.filter(p =>
+                    p.category === cat.slug || p.category === cat.name
+                  )
+                  const c = colors[i % 3]
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => router.push(`/shop?cat=${encodeURIComponent(cat.name)}`)}
+                      className={`${c.bg} rounded-2xl border border-[#E8E8E8] ${c.border} p-5 group hover:shadow-xl transition-all duration-300 text-left flex flex-col gap-4`}
+                    >
+                      <div className={`w-14 h-14 rounded-2xl ${c.icon} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        {iconMap[cat.name] || <Flashlight className="w-7 h-7" />}
+                      </div>
+                      <div>
+                        <p className="font-black text-[#1A1A1A] text-lg group-hover:text-[#2C5F2E] transition-colors">
+                          {cat.name}
+                        </p>
+                        <p className="text-xs text-[#888] mt-1">{catProds.length} Produkte verfügbar</p>
+                      </div>
+                      <span className={`text-sm font-semibold ${c.accent} group-hover:gap-2 inline-flex items-center gap-1 transition-all`}>
+                        Entdecken <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </span>
-                      <span className="text-white/60 text-[11px] font-medium mt-0.5 block group-hover:text-white/90 transition-colors">
-                        Entdecken →
-                      </span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          )}
+                    </button>
+                  )
+                })}
+              </div>
+            )
+          })()}
 
           {/* Mobile CTA */}
           <div className="mt-5 sm:hidden">
