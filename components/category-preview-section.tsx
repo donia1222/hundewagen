@@ -133,150 +133,86 @@ export function CategoryPreviewSection() {
   if (sections.length === 0) return null
 
   return (
-    <div className="bg-[#F0F1F3] border-t border-[#E0E0E0] py-12">
-      <div className="container mx-auto px-4 space-y-6">
-
-        {sections.map(({ label, cat, image, emoji, headline, accent, description, accentColor, overlayFrom, stats, ctaLabel, catParam, products: catProducts }) => {
+    <div>
+        {sections.map(({ label, cat, emoji, description, ctaLabel, catParam, products: catProducts }) => {
           const visible = catProducts.filter(p => !failedIds.has(p.id)).slice(0, 6)
           if (visible.length === 0) return null
           return (
-            <div key={cat} className="rounded-3xl overflow-hidden bg-white border border-[#EBEBEB] shadow-md">
+            <section key={cat} className="bg-white border-t border-[#E0E0E0] py-12">
+              <div className="container mx-auto px-4">
 
-              {/* ── Banner ── */}
-              <div className="relative h-[260px] sm:h-[380px] group overflow-hidden cursor-pointer"
-                onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}>
-
-                <img
-                  src={image}
-                  alt={label}
-                  className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                  onError={e => { (e.target as HTMLImageElement).style.display = "none" }}
-                />
-                <div className="absolute inset-0" style={{ background: `linear-gradient(to right, ${overlayFrom} 0%, ${overlayFrom}e6 35%, ${overlayFrom}88 65%, ${overlayFrom}11 100%)` }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-
-                <div className="relative h-full flex flex-col justify-center px-6 sm:px-14 max-w-xl gap-3 sm:gap-5 py-6 sm:py-10">
-                  <span
-                    className="inline-flex items-center gap-1.5 self-start text-[11px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border"
-                    style={{ backgroundColor: `${accentColor}22`, color: accentColor, borderColor: `${accentColor}55` }}
-                  >
-                    {emoji} {label}
-                  </span>
-
-                  <h2 className="text-white font-black text-2xl sm:text-4xl leading-[1.1]" style={{ letterSpacing: "-0.02em" }}>
-                    {headline[0]}<br />
-                    {headline[1]} <span style={{ color: accentColor }}>{accent}</span>
-                  </h2>
-
-                  <p className="text-white/65 text-xs sm:text-sm leading-relaxed max-w-xs hidden sm:block">
-                    {description}
-                  </p>
-
-                  <div className="flex gap-5 sm:gap-7">
-                    {stats.map(([val, lbl]) => (
-                      <div key={lbl}>
-                        <p className="text-white font-black text-base sm:text-lg leading-none">{val}</p>
-                        <p className="text-white/45 text-[10px] sm:text-[11px] mt-1">{lbl}</p>
-                      </div>
-                    ))}
+                {/* Header — mismo estilo que RecommendedProducts */}
+                <div className="flex items-end justify-between mb-8">
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 bg-[#2C5F2E]/8 text-[#2C5F2E] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+                      <span className="text-2xl">{emoji}</span> {cat}
+                    </div>
+                    <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">{label}</h2>
+                    <p className="text-sm text-[#888] mt-1">{description}</p>
                   </div>
-
                   <button
-                    className="self-start font-bold px-6 py-3 text-sm rounded-xl inline-flex items-center gap-2 shadow-xl transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
-                    style={{ backgroundColor: accentColor, color: overlayFrom }}
+                    onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}
+                    className="hidden sm:flex items-center gap-1.5 text-sm text-[#2C5F2E] font-semibold hover:gap-3 transition-all duration-200 whitespace-nowrap"
                   >
-                    {ctaLabel} →
+                    Alle ansehen <span>→</span>
                   </button>
                 </div>
-              </div>
 
-              {/* ── 4 Product cards ── */}
-              <div className="p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {visible.map((product, i) => {
-                  const imgs = getImages(product)
-                  return (
-                    <div
-                      key={product.id}
-                      onClick={() => router.push(`/product/${product.id}`)}
-                      className={`group bg-white rounded-2xl overflow-hidden border border-[#EBEBEB] hover:border-[#D5D5D5] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer ${i >= 4 ? "hidden sm:block" : ""}`}
-                    >
-                      <div className="aspect-square bg-[#F8F8F8] overflow-hidden">
-                        <ProductImage
-                          src={imgs[0] || product.image_url}
-                          candidates={product.image_url_candidates}
-                          alt={product.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          onAllFailed={() => markFailed(product.id)}
-                        />
-                      </div>
-                      <div className="p-3 flex flex-col h-[72px]">
-                        <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-2 leading-tight group-hover:text-[#2C5F2E] transition-colors flex-1">
+                {/* Product grid — mismo estilo que RecommendedProducts */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                  {visible.map((product) => {
+                    const imgs = getImages(product)
+                    return (
+                      <div
+                        key={product.id}
+                        onClick={() => router.push(`/product/${product.id}`)}
+                        className="cursor-pointer group"
+                      >
+                        <div className="relative bg-[#F8F8F8] rounded-2xl overflow-hidden aspect-square mb-3 border border-[#EFEFEF] group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300">
+                          <ProductImage
+                            src={imgs[0] || product.image_url}
+                            candidates={product.image_url_candidates}
+                            alt={product.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            onAllFailed={() => markFailed(product.id)}
+                          />
+                          <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <span className="bg-white text-[#1A1A1A] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                              Ansehen →
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs font-semibold text-[#1A1A1A] leading-tight line-clamp-2 mb-1.5 group-hover:text-[#2C5F2E] transition-colors">
                           {product.name}
                         </p>
                         {product.price > 0 && (
-                          <p className="text-sm font-black text-[#1A1A1A] mt-1">
-                            CHF {product.price.toFixed(2)}
-                          </p>
+                          <div className="flex items-baseline gap-1.5 flex-wrap">
+                            <span className="text-sm font-black text-[#1A1A1A]">
+                              CHF {product.price.toFixed(2)}
+                            </span>
+                          </div>
                         )}
                       </div>
-                    </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+                </div>
 
-              {/* ── Footer CTA ── */}
-              <div className="px-5 pb-5">
-                <button
-                  onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}
-                  className="w-full py-3.5 rounded-2xl border-2 border-[#2C5F2E]/20 hover:border-[#2C5F2E] hover:bg-[#2C5F2E]/5 text-sm font-bold text-[#2C5F2E] transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  Mehr aus {label} entdecken <span className="text-base">→</span>
-                </button>
-              </div>
+                {/* Mobile CTA */}
+                <div className="mt-5 sm:hidden">
+                  <button
+                    onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}
+                    className="w-full py-3 rounded-2xl border-2 border-[#2C5F2E]/25 hover:border-[#2C5F2E] text-sm font-bold text-[#2C5F2E] transition-all"
+                  >
+                    Alle {label} anzeigen →
+                  </button>
+                </div>
 
-            </div>
+              </div>
+            </section>
           )
         })}
 
-        {/* ── Angeln & Fischen Banner ── */}
-        <div className="relative rounded-3xl overflow-hidden h-[420px] group">
-          <img
-            src="/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg"
-            alt="Angeln & Fischen"
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#04111f] via-[#04111f]/80 to-[#04111f]/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#04111f]/70 via-transparent to-transparent" />
-          <div className="relative h-full flex flex-col justify-center px-10 max-w-lg gap-5">
-            <span className="inline-flex items-center gap-1.5 self-start bg-[#5BC8E8]/20 text-[#5BC8E8] border border-[#5BC8E8]/40 text-[11px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full">
-              🎣 Angeln & Fischen
-            </span>
-            <h2 className="text-white font-black text-4xl leading-[1.1]" style={{ letterSpacing: "-0.02em" }}>
-              Alles für den<br />
-              <span className="text-[#5BC8E8]">perfekten Angeltag</span>
-            </h2>
-            <p className="text-white/65 text-sm leading-relaxed max-w-xs">
-              Ruten, Rollen, Köder und Zubehör — Top-Qualität für Angler aller Niveaus.
-            </p>
-            <div className="flex gap-7">
-              {[["500+", "Produkte"], ["Top", "Qualität"], ["Gratis", "Beratung"]].map(([val, lbl]) => (
-                <div key={lbl}>
-                  <p className="text-white font-black text-lg leading-none">{val}</p>
-                  <p className="text-white/45 text-[11px] mt-1">{lbl}</p>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => router.push("/shop")}
-              className="self-start bg-[#5BC8E8] text-[#04111f] font-bold px-6 py-3 text-sm hover:bg-white transition-all duration-200 rounded-xl inline-flex items-center gap-2 shadow-xl"
-            >
-              Jetzt entdecken →
-            </button>
-          </div>
-        </div>
-
-      </div>
     </div>
   )
 }

@@ -403,16 +403,16 @@ function PremiumHotSauceStoreInner() {
       <FadeSection>
         <CategoryPreviewSection />
       </FadeSection>
-
-      <FadeSection>
-        <BlogBanner />
-      </FadeSection>
-      <FadeSection>
-        <GalleryBanner />
-      </FadeSection>
-
       <FadeSection>
         <ReviewsSection />
+      </FadeSection>
+            <FadeSection>
+        <section className="py-10 bg-white border-t border-[#E0E0E0]">
+          <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BlogBanner />
+            <GalleryBanner />
+          </div>
+        </section>
       </FadeSection>
       <ShoppingCartComponent
         isOpen={isCartOpen}
