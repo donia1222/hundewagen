@@ -267,7 +267,7 @@ export default function ProductPage() {
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
           <button
             onClick={() => backTo ? router.push(`/${backTo}`) : router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-full border-2 border-[#2C5F2E]/30 text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white hover:border-[#2C5F2E] transition-all flex-shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>

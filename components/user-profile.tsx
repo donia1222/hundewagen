@@ -22,6 +22,12 @@ import {
   Filter,
   RefreshCw,
   Download,
+  ShoppingBag,
+  CreditCard,
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  Truck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -847,374 +853,315 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F7F8]">
-      <div className="bg-white flex flex-col">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b border-[#E0E0E0] sticky top-0 z-30 flex-shrink-0">
-          <div className="px-3 sm:px-6 py-3 sm:py-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <button
-                  onClick={onClose}
-                  className="w-9 h-9 flex items-center justify-center rounded-full border-2 border-[#2C5F2E]/30 text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white hover:border-[#2C5F2E] transition-all flex-shrink-0"
-                  type="button"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
-                <div className="w-8 h-8 bg-[#2C5F2E] rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <h1 style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Mein Profil</h1>
-      
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2 w-full sm:w-auto">
-                {!isEditing ? (
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsEditing(true);
-                    }}
-                    className="bg-[#2C5F2E] hover:bg-[#1A4520] flex-1 sm:flex-none"
-                    size="sm"
+    <div className="min-h-screen bg-gray-50/80">
+      <div className="flex flex-col">
+        {/* Modern Header */}
+        <div className="sticky top-0 z-30 flex-shrink-0">
+          <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
+            <div className="px-4 sm:px-6 py-3">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={onClose}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
                     type="button"
                   >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Bearbeiten
-                  </Button>
-                ) : (
-                  <div className="flex space-x-2 w-full sm:w-auto">
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleSave();
-                      }}
-                      disabled={isSaving}
-                      className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none"
-                      size="sm"
-                      type="button"
-                    >
-                      <Save className="w-4 h-4 mr-1 sm:mr-2" />
-                      <span className="hidden sm:inline">{isSaving ? "Speichere..." : "Speichern"}</span>
-                      <span className="sm:hidden">{isSaving ? "..." : "OK"}</span>
-                    </Button>
-                    <Button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleCancel();
-                      }} 
-                      variant="outline" 
-                      size="sm"
-                      type="button"
-                    >
-                      <X className="w-4 h-4 mr-1 sm:mr-2" />
-                      <span className="hidden sm:inline">Abbrechen</span>
-                    </Button>
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#2C5F2E] to-[#3a7a3d] rounded-xl flex items-center justify-center shadow-sm shadow-green-500/20">
+                    <User className="w-5 h-5 text-white" />
                   </div>
-                )}
+                  <div>
+                    <h1 className="text-base font-black text-gray-900 tracking-tight">Mein Profil</h1>
+                    <p className="text-xs text-gray-400">{userData?.email}</p>
+                  </div>
+                </div>
 
+                <div />
               </div>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="bg-[#F7F7F8]">
-          <div className="px-3 sm:px-6 py-4 sm:py-8">
+        <div className="bg-gray-50/80">
+          <div className="px-4 sm:px-6 py-6 sm:py-8">
             <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+
+              {/* Stats Cards Row */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-4 text-white shadow-lg shadow-blue-500/20">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
+                  <div className="relative">
+                    <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-2">
+                      <ShoppingBag className="w-4 h-4" />
+                    </div>
+                    <p className="text-3xl font-black">{totalOrders || 0}</p>
+                    <p className="text-xs text-blue-100 mt-0.5">Bestellungen</p>
+                  </div>
+                </div>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-4 text-white shadow-lg shadow-emerald-500/20">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
+                  <div className="relative">
+                    <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-2">
+                      <TrendingUp className="w-4 h-4" />
+                    </div>
+                    <p className="text-3xl font-black">{Math.round(Number(orderStats?.total_spent) || 0)}</p>
+                    <p className="text-xs text-emerald-100 mt-0.5">CHF ausgegeben</p>
+                  </div>
+                </div>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 p-4 text-white shadow-lg shadow-violet-500/20">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
+                  <div className="relative">
+                    <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-2">
+                      <Calendar className="w-4 h-4" />
+                    </div>
+                    <p className="text-sm font-black mt-1">{userData?.created_at ? new Date(userData.created_at).toLocaleDateString("de-CH") : "-"}</p>
+                    <p className="text-xs text-violet-100 mt-0.5">Mitglied seit</p>
+                  </div>
+                </div>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-4 text-white shadow-lg shadow-amber-500/20">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -translate-y-4 translate-x-4" />
+                  <div className="relative">
+                    <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center mb-2">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <p className="text-sm font-black mt-1">{orderStats?.last_order_date ? new Date(orderStats.last_order_date).toLocaleDateString("de-CH") : "-"}</p>
+                    <p className="text-xs text-amber-100 mt-0.5">Letzte Bestellung</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* User Info */}
-                <div className="lg:col-span-1 space-y-4 sm:space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <User className="w-5 h-5 mr-2 text-[#2C5F2E]" />
-                        Persönliche Daten
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="firstName">Vorname</Label>
-                          {isEditing ? (
-                            <Input
-                              id="firstName"
-                              value={editData.first_name || ""}
-                              onChange={(e) => setEditData((prev) => ({ ...prev, first_name: e.target.value }))}
-                              className="bg-white"
-                            />
-                          ) : (
-                            <p className="p-2 bg-gray-50 rounded">{userData?.first_name}</p>
-                          )}
+                <div className="lg:col-span-1 space-y-5">
+                  {/* Personal Data */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 bg-gradient-to-r from-gray-50/80 to-transparent border-b border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <User className="w-4 h-4 text-blue-600" />
                         </div>
-                        <div>
-                          <Label htmlFor="lastName">Nachname</Label>
-                          {isEditing ? (
-                            <Input
-                              id="lastName"
-                              value={editData.last_name || ""}
-                              onChange={(e) => setEditData((prev) => ({ ...prev, last_name: e.target.value }))}
-                              className="bg-white"
-                            />
-                          ) : (
-                            <p className="p-2 bg-gray-50 rounded">{userData?.last_name}</p>
-                          )}
-                        </div>
+                        <h3 className="font-bold text-gray-900 text-sm">Persönliche Daten</h3>
                       </div>
-
-                      <div>
-                        <Label>E-Mail</Label>
-                        <div className="flex items-center space-x-2">
-                          <Mail className="w-4 h-4 text-gray-500" />
-                          <p className="p-2 bg-gray-100 rounded flex-1 text-gray-600">{userData?.email}</p>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">E-Mail kann nicht geändert werden</p>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="phone">Telefon</Label>
-                        {isEditing ? (
-                          <Input
-                            id="phone"
-                            value={editData.phone || ""}
-                            onChange={(e) => setEditData((prev) => ({ ...prev, phone: e.target.value }))}
-                            className="bg-white"
-                            placeholder="+41 XX XXX XX XX"
-                          />
-                        ) : (
-                          <div className="flex items-center space-x-2">
-                            <Phone className="w-4 h-4 text-gray-500" />
-                            <p className="p-2 bg-gray-50 rounded flex-1">{userData?.phone}</p>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <MapPin className="w-5 h-5 mr-2 text-[#2C5F2E]" />
-                        Adresse
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label htmlFor="address">Straße und Hausnummer</Label>
-                        {isEditing ? (
-                          <Input
-                            id="address"
-                            value={editData.address || ""}
-                            onChange={(e) => setEditData((prev) => ({ ...prev, address: e.target.value }))}
-                            className="bg-white"
-                          />
-                        ) : (
-                          <p className="p-2 bg-gray-50 rounded">{userData?.address}</p>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="postalCode">PLZ</Label>
-                          {isEditing ? (
-                            <Input
-                              id="postalCode"
-                              value={editData.postal_code || ""}
-                              onChange={(e) => setEditData((prev) => ({ ...prev, postal_code: e.target.value }))}
-                              className="bg-white"
-                              placeholder="1234"
-                            />
-                          ) : (
-                            <p className="p-2 bg-gray-50 rounded">{userData?.postal_code}</p>
-                          )}
-                        </div>
-                        <div>
-                          <Label htmlFor="city">Stadt</Label>
-                          {isEditing ? (
-                            <Input
-                              id="city"
-                              value={editData.city || ""}
-                              onChange={(e) => setEditData((prev) => ({ ...prev, city: e.target.value }))}
-                              className="bg-white"
-                            />
-                          ) : (
-                            <p className="p-2 bg-gray-50 rounded">{userData?.city}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="canton">Kanton</Label>
-                        {isEditing ? (
-                          <Input
-                            id="canton"
-                            value={editData.canton || ""}
-                            onChange={(e) => setEditData((prev) => ({ ...prev, canton: e.target.value }))}
-                            className="bg-white"
-                            placeholder="z.B. Zürich, Bern, Basel..."
-                          />
-                        ) : (
-                          <p className="p-2 bg-gray-50 rounded">{userData?.canton}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <Label htmlFor="notes">Anmerkungen</Label>
-                        {isEditing ? (
-                          <Textarea
-                            id="notes"
-                            value={editData.notes || ""}
-                            onChange={(e) => setEditData((prev) => ({ ...prev, notes: e.target.value }))}
-                            className="bg-white"
-                            rows={3}
-                            placeholder="Besondere Lieferhinweise..."
-                          />
-                        ) : (
-                          <p className="p-2 bg-gray-50 rounded min-h-[80px]">
-                            {userData?.notes || "Keine Anmerkungen"}
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Account Stats */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Eye className="w-5 h-5 mr-2 text-[#2C5F2E]" />
-                        Konto-Übersicht
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-[#2C5F2E]">{totalOrders || 0}</div>
-                        <p className="text-sm text-gray-600">Bestellungen</p>
-                      </div>
-
-                      <Separator />
-                      {orderStats?.last_order_date && (
-                   <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <Package className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">Letzte Bestellung</span>
-                          </div>
-                          <p className="text-sm font-medium">{formatDate(orderStats.last_order_date)}</p>
+                      {!isEditing ? (
+                        <Button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsEditing(true); }}
+                          size="sm"
+                          type="button"
+                          className="rounded-lg text-xs h-8 px-3 bg-blue-50 text-blue-600 hover:bg-blue-100 border-0 shadow-none"
+                        >
+                          <Edit className="w-3.5 h-3.5 mr-1" />
+                          Bearbeiten
+                        </Button>
+                      ) : (
+                        <div className="flex gap-1.5">
+                          <Button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSave(); }}
+                            disabled={isSaving}
+                            size="sm"
+                            type="button"
+                            className="rounded-lg text-xs h-8 px-3 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-0 shadow-none"
+                          >
+                            <Save className="w-3.5 h-3.5 mr-1" />
+                            {isSaving ? "..." : "Speichern"}
+                          </Button>
+                          <Button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCancel(); }}
+                            size="sm"
+                            type="button"
+                            className="rounded-lg text-xs h-8 w-8 p-0 bg-gray-100 text-gray-500 hover:bg-gray-200 border-0 shadow-none"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
                         </div>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <div className="p-5 space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-400 font-medium">Vorname</Label>
+                          {isEditing ? (
+                            <Input id="firstName" value={editData.first_name || ""} onChange={(e) => setEditData((prev) => ({ ...prev, first_name: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" />
+                          ) : (
+                            <p className="text-sm font-medium text-gray-800 mt-1">{userData?.first_name}</p>
+                          )}
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-400 font-medium">Nachname</Label>
+                          {isEditing ? (
+                            <Input id="lastName" value={editData.last_name || ""} onChange={(e) => setEditData((prev) => ({ ...prev, last_name: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" />
+                          ) : (
+                            <p className="text-sm font-medium text-gray-800 mt-1">{userData?.last_name}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-400 font-medium">E-Mail</Label>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Mail className="w-3.5 h-3.5 text-gray-400" />
+                          <p className="text-sm text-gray-600">{userData?.email}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-400 font-medium">Telefon</Label>
+                        {isEditing ? (
+                          <Input id="phone" value={editData.phone || ""} onChange={(e) => setEditData((prev) => ({ ...prev, phone: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" placeholder="+41 XX XXX XX XX" />
+                        ) : (
+                          <div className="flex items-center gap-2 mt-1">
+                            <Phone className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-sm text-gray-800">{userData?.phone || "-"}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-                  {/* Password Change */}
-                  <Card className="border-[#2C5F2E]/20 bg-[#2C5F2E]/5">
-                    <CardHeader>
-                      <CardTitle className="flex items-center text-[#2C5F2E]">
-                        <Lock className="w-5 h-5 mr-2" />
+                  {/* Address */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 bg-gradient-to-r from-gray-50/80 to-transparent border-b border-gray-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <MapPin className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <h3 className="font-bold text-gray-900 text-sm">Adresse</h3>
+                      </div>
+                    </div>
+                    <div className="p-5 space-y-3">
+                      <div>
+                        <Label className="text-xs text-gray-400 font-medium">Strasse</Label>
+                        {isEditing ? (
+                          <Input id="address" value={editData.address || ""} onChange={(e) => setEditData((prev) => ({ ...prev, address: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" />
+                        ) : (
+                          <p className="text-sm font-medium text-gray-800 mt-1">{userData?.address || "-"}</p>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-400 font-medium">PLZ</Label>
+                          {isEditing ? (
+                            <Input id="postalCode" value={editData.postal_code || ""} onChange={(e) => setEditData((prev) => ({ ...prev, postal_code: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" placeholder="1234" />
+                          ) : (
+                            <p className="text-sm font-medium text-gray-800 mt-1">{userData?.postal_code || "-"}</p>
+                          )}
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-400 font-medium">Stadt</Label>
+                          {isEditing ? (
+                            <Input id="city" value={editData.city || ""} onChange={(e) => setEditData((prev) => ({ ...prev, city: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" />
+                          ) : (
+                            <p className="text-sm font-medium text-gray-800 mt-1">{userData?.city || "-"}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-400 font-medium">Kanton</Label>
+                        {isEditing ? (
+                          <Input id="canton" value={editData.canton || ""} onChange={(e) => setEditData((prev) => ({ ...prev, canton: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" placeholder="z.B. Zürich, Bern..." />
+                        ) : (
+                          <p className="text-sm font-medium text-gray-800 mt-1">{userData?.canton || "-"}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-400 font-medium">Anmerkungen</Label>
+                        {isEditing ? (
+                          <Textarea id="notes" value={editData.notes || ""} onChange={(e) => setEditData((prev) => ({ ...prev, notes: e.target.value }))} className="bg-gray-50/80 border-gray-200 rounded-xl mt-1 focus:bg-white" rows={2} placeholder="Lieferhinweise..." />
+                        ) : (
+                          <p className="text-sm text-gray-600 mt-1">{userData?.notes || "Keine"}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Password */}
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 bg-gradient-to-r from-emerald-50/60 to-transparent border-b border-gray-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <Lock className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <h3 className="font-bold text-gray-900 text-sm">Sicherheit</h3>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <Button onClick={openPasswordDialog} className="w-full bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white rounded-xl shadow-sm shadow-green-500/20" size="sm">
+                        <Lock className="w-4 h-4 mr-2" />
                         Passwort ändern
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <p className="text-sm text-[#2C5F2E]">
-                          Ändern Sie Ihr Passwort regelmäßig, um Ihr Konto zu schützen.
-                        </p>
-                        <Button onClick={openPasswordDialog} className="bg-[#2C5F2E] hover:bg-[#1A4520] w-full" size="lg">
-                          <Lock className="w-4 h-4 mr-2" />
-                          Passwort ändern
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </Button>
+                    </div>
+                  </div>
 
-                  {/* DANGER ZONE */}
-                  <Card className="border-red-200 bg-red-50">
-                    <CardHeader>
-                      <CardTitle className="flex items-center text-red-600">
-                        <AlertTriangle className="w-5 h-5 mr-2" />
-                        Konto löschen
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <p className="text-sm text-red-700">
-                          <strong>Achtung:</strong> Das Löschen Ihres Kontos ist unwiderruflich. Alle Ihre Daten werden
-                          permanent entfernt.
-                        </p>
-                        <Button
-                          onClick={openDeleteDialog}
-                          variant="destructive"
-                          className="bg-red-600 hover:bg-red-700 w-full"
-                          size="lg"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Mein Konto löschen
-                        </Button>
+                  {/* Danger Zone */}
+                  <div className="bg-white rounded-2xl border border-red-100 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 bg-gradient-to-r from-red-50/60 to-transparent border-b border-red-100">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                          <AlertTriangle className="w-4 h-4 text-red-500" />
+                        </div>
+                        <h3 className="font-bold text-red-600 text-sm">Gefahrenzone</h3>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    <div className="p-5">
+                      <p className="text-xs text-gray-500 mb-3">Das Löschen ist unwiderruflich.</p>
+                      <Button onClick={openDeleteDialog} variant="destructive" className="w-full bg-red-500 hover:bg-red-600 rounded-xl" size="sm">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Konto löschen
+                      </Button>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Orders Section - EXPANDED */}
-                <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="flex items-center">
-                          <Package className="w-5 h-5 mr-2 text-[#2C5F2E]" />
-                          Meine Bestellungen ({totalOrders})
-                        </CardTitle>
-                        <Button
-                          onClick={handleRefreshOrders}
-                          variant="outline"
-                          size="sm"
-                          disabled={ordersLoading}
-                          className="bg-white hover:bg-gray-50"
-                        >
-                          <RefreshCw className={`w-4 h-4 mr-2 ${ordersLoading ? "animate-spin" : ""}`} />
-                          Aktualisieren
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      {/* Filters and Search */}
-                      <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
-                        <div className="w-full">
-                          <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                            <Input
-                              placeholder="Bestellnummer oder Produkt suchen..."
-                              value={searchTerm}
-                              onChange={(e) => handleSearchChange(e.target.value)}
-                              className="pl-10 bg-white text-sm"
-                            />
-                          </div>
+                {/* Orders Section */}
+                <div className="lg:col-span-2">
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 bg-gradient-to-r from-gray-50/80 to-transparent border-b border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                          <Package className="w-4 h-4 text-indigo-600" />
                         </div>
-              
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-sm">Meine Bestellungen</h3>
+                          <p className="text-[10px] text-gray-400">{totalOrders} Gesamt</p>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={handleRefreshOrders}
+                        variant="outline"
+                        size="sm"
+                        disabled={ordersLoading}
+                        className="rounded-xl border-gray-200 text-gray-500 hover:bg-gray-50 h-8"
+                      >
+                        <RefreshCw className={`w-3.5 h-3.5 ${ordersLoading ? "animate-spin" : ""}`} />
+                      </Button>
+                    </div>
+                    <div className="p-5">
+                      {/* Search */}
+                      <div className="mb-5">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <Input
+                            placeholder="Bestellnummer oder Produkt suchen..."
+                            value={searchTerm}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                            className="pl-10 bg-gray-50/80 border-gray-200 rounded-xl h-10 focus:bg-white transition-colors"
+                          />
+                        </div>
                       </div>
 
-                      {/* Orders Loading State */}
+                      {/* Orders Loading */}
                       {ordersLoading && (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2C5F2E] mx-auto mb-4"></div>
-                          <p className="text-gray-600">Lade Bestellungen...</p>
+                        <div className="space-y-3">
+                          {[0,1,2].map(i => <div key={i} className="h-20 bg-gray-100 rounded-xl animate-pulse" />)}
                         </div>
                       )}
 
-                      {/* Orders Error State */}
+                      {/* Orders Error */}
                       {ordersError && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                          <div className="flex items-center">
-                            <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
-                            <div>
-                              <p className="text-red-700 font-medium">Fehler beim Laden der Bestellungen</p>
-                              <p className="text-red-600 text-sm mt-1">{ordersError}</p>
-                            </div>
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 flex items-center gap-3">
+                          <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+                          <div>
+                            <p className="text-red-700 font-medium text-sm">Fehler beim Laden</p>
+                            <p className="text-red-500 text-xs mt-0.5">{ordersError}</p>
                           </div>
                         </div>
                       )}
@@ -1223,173 +1170,100 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                       {!ordersLoading && !ordersError && (
                         <>
                           {orders.length > 0 ? (
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                               {orders.map((order) => (
-                                <div key={order.id} className="border rounded-lg bg-white shadow-sm">
+                                <div key={order.id} className="rounded-xl border border-gray-100 bg-white hover:shadow-md transition-shadow overflow-hidden">
                                   <div className="p-4">
-                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
-                                      <div className="flex items-center space-x-3 sm:space-x-4">
-                                        <div>
-                               
-                                          <h4 className="font-semibold text-base sm:text-lg">{order.order_number}</h4>
-                                          <p className="text-xs sm:text-sm text-gray-600">
-                                            {formatDate(order.created_at)}
-                                          </p>
+                                    {/* Order header row */}
+                                    <div className="flex items-center justify-between mb-3">
+                                      <div className="flex items-center gap-3">
+                                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                                          order.status === "completed" ? "bg-emerald-100 text-emerald-600" :
+                                          order.status === "processing" ? "bg-blue-100 text-blue-600" :
+                                          order.status === "cancelled" ? "bg-red-100 text-red-600" :
+                                          "bg-amber-100 text-amber-600"
+                                        }`}>
+                                          {order.status === "completed" ? <CheckCircle className="w-4 h-4" /> :
+                                           order.status === "processing" ? <Truck className="w-4 h-4" /> :
+                                           order.status === "cancelled" ? <X className="w-4 h-4" /> :
+                                           <Clock className="w-4 h-4" />}
                                         </div>
-                             
+                                        <div>
+                                          <h4 className="font-bold text-sm text-gray-900">{order.order_number}</h4>
+                                          <p className="text-[10px] text-gray-400">{formatDate(order.created_at)}</p>
+                                        </div>
                                       </div>
-                                      <div className="text-left sm:text-right w-full sm:w-auto">
-                                        <p className="font-bold text-lg text-[#2C5F2E]">
-                                          {(Number(order.total_amount) || 0).toFixed(2)} CHF
-                                        </p>
-                                        <p className="text-sm text-gray-500">{order.items_count} Artikel</p>
+                                      <div className="text-right">
+                                        <p className="font-black text-base text-gray-900">{(Number(order.total_amount) || 0).toFixed(2)} <span className="text-xs text-gray-400 font-medium">CHF</span></p>
+                                        <p className="text-[10px] text-gray-400">{order.items_count} Artikel</p>
                                       </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-sm text-gray-600 mb-3">
-                                      <div>
-                                        <span className="font-medium">Zahlung:</span>
-                                        <p className="capitalize">{order.payment_method}</p>
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Zahlungsstatus:</span>
-                                        <p>
-                                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
-                                            order.payment_status === "completed"
-                                              ? "bg-green-100 text-green-700"
-                                              : order.payment_status === "failed"
-                                              ? "bg-red-100 text-red-700"
-                                              : "bg-yellow-100 text-yellow-700"
-                                          }`}>
-                                            {order.payment_status === "completed" ? "Bezahlt" : order.payment_status === "failed" ? "Fehlgeschlagen" : "Ausstehend"}
-                                          </span>
-                                        </p>
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Versand:</span>
-                                        <p>{(Number(order.shipping_cost) || 0).toFixed(2)} CHF</p>
-                                      </div>
-                                      <div>
-                                        <span className="font-medium">Stadt:</span>
-                                        <p>{order.customer_city}</p>
-                                      </div>
+                                    {/* Badges row */}
+                                    <div className="flex items-center gap-2 flex-wrap mb-3">
+                                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+                                        order.status === "completed" ? "bg-emerald-50 text-emerald-600" :
+                                        order.status === "processing" ? "bg-blue-50 text-blue-600" :
+                                        order.status === "cancelled" ? "bg-red-50 text-red-600" :
+                                        "bg-amber-50 text-amber-600"
+                                      }`}>
+                                        {getStatusText(order.status)}
+                                      </span>
+                                      <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+                                        order.payment_status === "completed" ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200" :
+                                        order.payment_status === "failed" ? "bg-red-50 text-red-600 ring-1 ring-red-200" :
+                                        "bg-amber-50 text-amber-600 ring-1 ring-amber-200"
+                                      }`}>
+                                        <CreditCard className="w-2.5 h-2.5" />
+                                        {order.payment_status === "completed" ? "Bezahlt" : order.payment_status === "failed" ? "Fehlgeschlagen" : "Ausstehend"}
+                                      </span>
+                                      <span className="text-[10px] text-gray-400">{order.payment_method}</span>
                                     </div>
 
                                     {getVisibleNotes(order.customer_notes || "") && (
-                                      <div className="mb-3">
-                                        <span className="font-medium text-sm text-gray-600">Anmerkungen:</span>
-                                        <p className="text-sm text-gray-700 bg-gray-50 p-2 rounded mt-1">
-                                          {getVisibleNotes(order.customer_notes || "")}
-                                        </p>
-                                      </div>
+                                      <p className="text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2 mb-3">{getVisibleNotes(order.customer_notes || "")}</p>
                                     )}
 
-                                    {/* Toggle Items Button */}
-                                    <div className="flex flex-col gap-2 pt-3 border-t">
-                                      <div className="flex items-center gap-2">
-                                        <Button
-                                          onClick={() => toggleOrderItems(order.id)}
-                                          variant="outline"
-                                          size="sm"
-                                          className="bg-gray-50 hover:bg-gray-100"
-                                        >
-                                          <Package className="w-4 h-4 mr-2" />
-                                          {showOrderItems[order.id] ? "Ausblenden" : "Anzeigen"}
-                                          {showOrderItems[order.id] ? (
-                                            <ChevronLeft className="w-4 h-4 ml-2" />
-                                          ) : (
-                                            <ChevronRight className="w-4 h-4 ml-2" />
-                                          )}
-                                        </Button>
-                                        <Button
-                                          onClick={() => downloadInvoicePDF(order)}
-                                          variant="outline"
-                                          size="sm"
-                                          className="bg-[#2C5F2E]/10 hover:bg-[#2C5F2E]/20 text-[#2C5F2E] border-[#2C5F2E]/30"
-                                        >
-                                          <Download className="w-4 h-4 mr-2" />
-                                          PDF
-                                        </Button>
-                                      </div>
-                                      <div className="text-xs text-gray-500 px-1">
-                                        Bestellt am {formatDate(order.created_at)}
-                                      </div>
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-2 pt-3 border-t border-gray-50">
+                                      <Button onClick={() => toggleOrderItems(order.id)} size="sm" className="rounded-lg text-xs h-8 px-3 bg-blue-50 text-blue-600 hover:bg-blue-100 border-0 shadow-none">
+                                        <Eye className="w-3.5 h-3.5 mr-1.5" />
+                                        {showOrderItems[order.id] ? "Ausblenden" : "Artikel"}
+                                      </Button>
+                                      <Button onClick={() => downloadInvoicePDF(order)} size="sm" className="rounded-lg text-xs h-8 px-3 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-0 shadow-none">
+                                        <Download className="w-3.5 h-3.5 mr-1.5" />
+                                        PDF
+                                      </Button>
                                     </div>
 
                                     {/* Order Items */}
                                     {showOrderItems[order.id] && order.items && order.items.length > 0 && (
-                                      <div className="mt-4 pt-4 border-t bg-gray-50 rounded-lg p-4">
-                                        <h5 className="font-medium mb-3 text-gray-800">Bestellte Artikel:</h5>
-                                        <div className="space-y-3">
-                                          {order.items.map((item, index) => (
-                                            <div
-                                              key={index}
-                                              className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 bg-white p-3 rounded-lg shadow-sm"
-                                            >
-                                    
-                                              <div className="flex-1 text-center sm:text-left">
-                                                <h6 className="font-medium text-sm">{item.product_name}</h6>
-                                                {item.product_description && (
-                                                  <p className="text-xs text-gray-600 line-clamp-2">
-                                                    {item.product_description}
-                                                  </p>
-                                                )}
-                                                <div className="flex items-center justify-center sm:justify-start space-x-2 mt-1 flex-wrap gap-1">
-                                              
-                                                  {item.badge && (
-                                                    <Badge variant="outline" className="text-xs">
-                                                      {item.badge}
-                                                    </Badge>
-                                                  )}
-                                                  {item.origin && (
-                                                    <Badge variant="outline" className="text-xs">
-                                                    {item.origin}
-                                                    </Badge>
-                                                  )}
-                                                </div>
-                                              </div>
-                                              <div className="text-center sm:text-right w-full sm:w-auto">
-                                                <p className="font-medium text-[#2C5F2E]">
-                                                  {(Number(item.subtotal) || 0).toFixed(2)} CHF
-                                                </p>
-                                                <p className="text-xs text-gray-500">
-                                                  {item.quantity}x {(Number(item.price) || 0).toFixed(2)} CHF
-                                                </p>
-                                              </div>
+                                      <div className="mt-3 pt-3 border-t border-gray-50 space-y-2">
+                                        {order.items.map((item, index) => (
+                                          <div key={index} className="flex items-center justify-between bg-gray-50/80 rounded-lg px-3 py-2">
+                                            <div className="min-w-0 flex-1">
+                                              <p className="text-xs font-semibold text-gray-800 truncate">{item.product_name}</p>
+                                              <p className="text-[10px] text-gray-400">{item.quantity}x {(Number(item.price) || 0).toFixed(2)} CHF</p>
                                             </div>
-                                          ))}
-                                        </div>
+                                            <p className="text-xs font-bold text-gray-900 ml-3">{(Number(item.subtotal) || 0).toFixed(2)} CHF</p>
+                                          </div>
+                                        ))}
                                       </div>
                                     )}
                                   </div>
                                 </div>
                               ))}
+
                               {/* Pagination */}
                               {totalPages > 1 && (
-                                <div className="flex flex-col sm:flex-row items-center justify-between pt-4 sm:pt-6 border-t gap-3">
-                                  <div className="text-sm text-gray-600 order-2 sm:order-1">
-                                    Seite {currentPage} von {totalPages} ({totalOrders} Bestellungen)
-                                  </div>
-                                  <div className="flex items-center space-x-2 order-1 sm:order-2">
-                                    <Button
-                                      onClick={() => handlePageChange(currentPage - 1)}
-                                      disabled={currentPage <= 1 || ordersLoading}
-                                      variant="outline"
-                                      size="sm"
-                                    >
+                                <div className="flex items-center justify-between pt-4">
+                                  <p className="text-xs text-gray-400">Seite {currentPage}/{totalPages}</p>
+                                  <div className="flex items-center gap-2">
+                                    <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1} variant="outline" size="sm" className="rounded-xl h-8 border-gray-200">
                                       <ChevronLeft className="w-4 h-4" />
-                                      <span className="hidden sm:inline">Zurück</span>
                                     </Button>
-                                    <span className="px-3 py-1 bg-[#2C5F2E]/10 text-[#2C5F2E] rounded text-sm font-medium">
-                                      {currentPage}
-                                    </span>
-                                    <Button
-                                      onClick={() => handlePageChange(currentPage + 1)}
-                                      disabled={currentPage >= totalPages || ordersLoading}
-                                      variant="outline"
-                                      size="sm"
-                                    >
-                                      <span className="hidden sm:inline">Weiter</span>
+                                    <span className="text-xs font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">{currentPage}</span>
+                                    <Button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages} variant="outline" size="sm" className="rounded-xl h-8 border-gray-200">
                                       <ChevronRight className="w-4 h-4" />
                                     </Button>
                                   </div>
@@ -1397,33 +1271,24 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                               )}
                             </div>
                           ) : (
-                            <div className="text-center py-12 text-gray-500">
-                              <Package className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                              <h3 className="text-lg font-medium mb-2">Keine Bestellungen gefunden</h3>
+                            <div className="flex flex-col items-center justify-center py-12">
+                              <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-3">
+                                <Package className="w-7 h-7 text-gray-300" />
+                              </div>
+                              <p className="text-gray-500 font-medium text-sm">Keine Bestellungen</p>
                               {searchTerm || statusFilter ? (
-                                <div>
-                                  <p className="mb-4">Keine Bestellungen entsprechen Ihren Suchkriterien.</p>
-                                  <Button
-                                    onClick={() => {
-                                      setSearchTerm("")
-                                      setStatusFilter("")
-                                      setCurrentPage(1)
-                                    }}
-                                    variant="outline"
-                                    className="bg-white hover:bg-gray-50"
-                                  >
-                                    Filter zurücksetzen
-                                  </Button>
-                                </div>
+                                <Button onClick={() => { setSearchTerm(""); setStatusFilter(""); setCurrentPage(1) }} variant="ghost" size="sm" className="mt-2 text-xs text-gray-400 hover:text-gray-600">
+                                  Filter zurücksetzen
+                                </Button>
                               ) : (
-                                <p>Sie haben noch keine Bestellungen aufgegeben.</p>
+                                <p className="text-gray-400 text-xs mt-1">Noch keine Bestellungen aufgegeben</p>
                               )}
                             </div>
                           )}
                         </>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

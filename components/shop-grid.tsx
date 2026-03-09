@@ -583,8 +583,8 @@ export default function ShopGrid() {
             {/* Mobile: Hamburger side menu */}
             <Sheet open={navMenuOpen} onOpenChange={setNavMenuOpen}>
               <SheetTrigger asChild>
-                <button className="lg:hidden p-2 border border-[#E0E0E0] rounded hover:bg-[#F5F5F5] flex-shrink-0">
-                  <Menu className="w-5 h-5 text-[#333]" />
+                <button className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0">
+                  <Menu className="w-5 h-5" />
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
@@ -679,7 +679,7 @@ export default function ShopGrid() {
               onClick={() => router.push("/")}
               className="hidden lg:flex items-center gap-2 text-[#555] hover:text-[#2C5F2E] transition-colors group flex-shrink-0"
             >
-              <div className="w-8 h-8 rounded-full border border-[#E5E5E5] group-hover:border-[#2C5F2E]/60 group-hover:bg-[#2C5F2E]/5 flex items-center justify-center transition-all">
+              <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-[#2C5F2E] group-hover:text-white flex items-center justify-center transition-all">
                 <Home className="w-4 h-4" />
               </div>
               <span style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Online-Shop</span>

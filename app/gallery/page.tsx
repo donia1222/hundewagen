@@ -110,8 +110,8 @@ export default function GalleryPage() {
           {/* Mobile: hamburger menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="sm:hidden p-2 border border-[#E0E0E0] rounded hover:bg-[#F5F5F5] flex-shrink-0 focus:outline-none">
-                <Menu className="w-5 h-5 text-[#333]" />
+              <button className="sm:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0 focus:outline-none">
+                <Menu className="w-5 h-5" />
               </button>
             </SheetTrigger>
             <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
@@ -170,7 +170,7 @@ export default function GalleryPage() {
           {/* Desktop: back button */}
           <button
             onClick={() => router.push("/")}
-            className="hidden sm:flex w-9 h-9 items-center justify-center rounded-full border-2 border-[#2C5F2E]/30 text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white hover:border-[#2C5F2E] transition-all flex-shrink-0"
+            className="hidden sm:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>

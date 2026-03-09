@@ -1344,7 +1344,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <div className="flex items-center gap-4">
             <button
               onClick={onBackToStore}
-              className="w-9 h-9 flex items-center justify-center rounded-full border-2 border-[#2C5F2E]/30 text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white hover:border-[#2C5F2E] transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>

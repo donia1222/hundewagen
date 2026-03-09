@@ -60,8 +60,8 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
           <div className="flex items-center gap-3">
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
-                <button className="lg:hidden p-2 border border-[#E0E0E0] rounded hover:bg-[#F5F5F5] flex-shrink-0">
-                  <Menu className="w-5 h-5 text-[#333]" />
+                <button className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0">
+                  <Menu className="w-5 h-5" />
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
