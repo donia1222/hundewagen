@@ -216,8 +216,8 @@ export default function BlogPage() {
           {/* Mobile: hamburger menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="sm:hidden w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0 focus:outline-none">
-                <Menu className="w-5 h-5" />
+              <button className="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0 focus:outline-none">
+                <Menu className="w-6 h-6" />
               </button>
             </SheetTrigger>
             <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
