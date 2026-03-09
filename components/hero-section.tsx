@@ -97,7 +97,7 @@ export function HeroSection() {
     <div className="bg-white">
 
       {/* ── Trust bar ── */}
-      <div className="border-b border-[#E0E0E0] bg-white">
+      <div className="hidden md:block border-b border-[#E0E0E0] bg-white">
         <div className="container mx-auto px-4 py-2.5">
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-1 text-sm text-[#333333]">
             {[
@@ -159,12 +159,7 @@ export function HeroSection() {
 
         <div className="relative z-10 container mx-auto px-6 flex items-center" style={{ minHeight: "520px" }}>
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2.5 mb-6">
-              <span className="bg-[#CC0000] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full">
-                🔥 Frühjahrs-Sale
-              </span>
-              <span className="text-white/55 text-xs font-medium tracking-wide">Bis zu 30% Rabatt</span>
-            </div>
+            {/* Frühjahrs-Sale chip removed */}
 
             <h1
               className="text-white font-black leading-[1.05] mb-5"
