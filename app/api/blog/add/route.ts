@@ -3,6 +3,7 @@ import { blogCache } from "../cache"
 
 const PHP_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "/add_blog_post.php"
 
+
 export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get("content-type") ?? ""
