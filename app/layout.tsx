@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { CookieBanner } from '@/components/cookie-banner'
 
 // ⚙️ MANTENIMIENTO: cambia a false para volver al estado normal
-const MAINTENANCE_MODE = false
+const MAINTENANCE_MODE = true
 
 
 export const metadata: Metadata = {
@@ -31,27 +31,34 @@ export default function RootLayout({
   if (MAINTENANCE_MODE) {
     return (
       <html lang="en">
-        <body style={{ margin: 0, padding: 0, background: '#0f0f0f' }}>
+        <body style={{ margin: 0, padding: 0, background: '#ffffff' }}>
           <div style={{
             minHeight: '100vh',
-            background: 'linear-gradient(135deg, #0f0f0f 0%, #1a2e1a 50%, #0f0f0f 100%)',
+            background: '#ffffff',
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
-            color: 'white', fontFamily: "'Segoe UI', sans-serif", textAlign: 'center', padding: '2rem',
+            color: '#1a1a1a', fontFamily: "'Segoe UI', sans-serif", textAlign: 'center', padding: '2rem',
           }}>
-            <p style={{ fontSize: '0.85rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: '#4ade80', marginBottom: '1rem' }}>
-              US - Fishing &amp; Huntingshop
-            </p>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: '800', margin: '0 0 1.5rem', lineHeight: 1.1 }}>
-              Wir sind bald zurück
-            </h1>
-            <p style={{ fontSize: '1.05rem', opacity: 0.6, maxWidth: '380px', lineHeight: 1.7, margin: 0 }}>
-              Wir arbeiten gerade daran.<br />Bald sind wir für Sie bereit!
-            </p>
-            <div style={{ marginTop: '3rem', width: '40px', height: '2px', background: '#4ade80', borderRadius: '2px' }} />
-            <p style={{ marginTop: '1.5rem', fontSize: '0.8rem', opacity: 0.3 }}>
-              9745 Sevelen, Schweiz
-            </p>
+            {/* Logo Lweb */}
+            <img
+              src="/logolweb.png"
+              alt="Lweb Logo"
+              style={{ width: '180px', marginBottom: '2rem' }}
+            />
+            <div style={{ marginTop: '1rem', width: '40px', height: '2px', background: '#1a1a1a', borderRadius: '2px', opacity: 0.2 }} />
+            <div style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#444', lineHeight: 2 }}>
+              <p style={{ margin: 0, fontWeight: '600', fontSize: '1rem', color: '#1a1a1a' }}>Lweb Schweiz</p>
+              <p style={{ margin: 0 }}>App Entwickler &amp; Full-Stack Developer in Buchs SG</p>
+              <p style={{ margin: 0, color: '#777', fontSize: '0.85rem' }}>
+                Native iOS &amp; Android Apps, moderne Websites und KI-Lösungen.<br />
+                Faire Preise, direkt vom Entwickler.
+              </p>
+              <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
+                <a href="mailto:info@lweb.ch" style={{ color: '#1a1a1a', textDecoration: 'none', fontWeight: 500 }}>info@lweb.ch</a>
+                <a href="tel:+41765608645" style={{ color: '#1a1a1a', textDecoration: 'none', fontWeight: 500 }}>+41 76 560 86 45</a>
+                <p style={{ margin: 0, color: '#888', fontSize: '0.8rem' }}>9475 Sevelen, Schweiz</p>
+              </div>
+            </div>
           </div>
         </body>
       </html>
