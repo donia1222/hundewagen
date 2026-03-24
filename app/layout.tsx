@@ -56,25 +56,7 @@ export default function RootLayout({
               />
               <p style={{ margin: '0 0 1.8rem', fontWeight: '700', fontSize: '1rem', color: '#111827' }}>Lweb Schweiz</p>
 
-              {/* Domain CTA */}
-              <div style={{
-                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-                borderRadius: '16px',
-                padding: '2rem 1.5rem',
-                marginBottom: '2rem',
-                marginTop: '0.5rem',
-                color: '#fff',
-              }}>
-                <p style={{ margin: '0 0 0.4rem', fontSize: '0.78rem', letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.6 }}>
-                  Domain zum Verkauf
-                </p>
-                <h2 style={{ margin: '1rem 0 1rem', fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: '800', letterSpacing: '-0.02em' }}>
-                  Interessiert an <span style={{ color: '#60a5fa' }}>usfh.ch</span> ?
-                </h2>
-                <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.7 }}>
-                  Kontaktieren Sie uns — wir freuen uns auf Ihre Anfrage.
-                </p>
-              </div>
+      
 
               {/* Divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.8rem' }}>
