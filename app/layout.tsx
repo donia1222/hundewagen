@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { CookieBanner } from '@/components/cookie-banner'
 
 // ⚙️ MANTENIMIENTO: cambia a false para volver al estado normal
-const MAINTENANCE_MODE = true
+const MAINTENANCE_MODE = false
 
 
 export const metadata: Metadata = {
