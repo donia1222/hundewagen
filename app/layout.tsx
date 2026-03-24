@@ -56,6 +56,7 @@ export default function RootLayout({
               <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'center' }}>
                 <a href="mailto:info@lweb.ch" style={{ color: '#1a1a1a', textDecoration: 'none', fontWeight: 500 }}>info@lweb.ch</a>
                 <a href="tel:+41765608645" style={{ color: '#1a1a1a', textDecoration: 'none', fontWeight: 500 }}>+41 76 560 86 45</a>
+                <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" style={{ color: '#1a1a1a', textDecoration: 'none', fontWeight: 500 }}>www.lweb.ch</a>
                 <p style={{ margin: 0, color: '#888', fontSize: '0.8rem' }}>9475 Sevelen, Schweiz</p>
               </div>
             </div>
