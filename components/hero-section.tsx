@@ -55,11 +55,18 @@ function CatImageCard({
   )
 }
 
+const HERO_IMAGES = [
+  "/images/shop/header.jpeg",
+  "/images/shop/46503497_763729157311247_9165108232799125504_ncopia.jpg",
+  "/images/shop/132718579_1370015803349243_4576092651755794772_n.jpg",
+]
+
 export function HeroSection() {
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [count, setCount] = useState(0)
+  const [slideIndex, setSlideIndex] = useState(0)
 
   useEffect(() => {
     // Wait for the element to be visible (fade delay 360ms + partial animation), then count
@@ -81,6 +88,13 @@ export function HeroSection() {
       }, interval)
     }, 500)
     return () => clearTimeout(startDelay)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideIndex(i => (i + 1) % HERO_IMAGES.length)
+    }, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -132,20 +146,30 @@ export function HeroSection() {
         className="relative w-full overflow-hidden"
         style={{ minHeight: "520px" }}
       >
-        <img
-          src="/images/shop/header.jpeg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: "scale(1.04)", transformOrigin: "center center" }}
-          onError={(e) => {
-            const el = e.currentTarget
-            el.style.display = "none"
-            if (el.parentElement) {
-              el.parentElement.style.background =
-                "linear-gradient(135deg, #0d1a0a 0%, #1a2e10 50%, #2d4a1e 100%)"
-            }
-          }}
-        />
+        {HERO_IMAGES.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+            style={{
+              transform: "scale(1.04)",
+              transformOrigin: "center center",
+              opacity: i === slideIndex ? 1 : 0,
+            }}
+          />
+        ))}
+        {/* Dots indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {HERO_IMAGES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setSlideIndex(i)}
+              className="w-2 h-2 rounded-full transition-all duration-300"
+              style={{ background: i === slideIndex ? "#fff" : "rgba(255,255,255,0.4)" }}
+            />
+          ))}
+        </div>
         <div
           className="absolute inset-0"
           style={{
