@@ -387,6 +387,16 @@ export default function ProductPage() {
                   {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
                   {added ? "Hinzugefügt!" : inStock ? "In den Warenkorb" : "Ausverkauft"}
                 </button>
+                {!inStock && (
+                  <p className="text-xs text-center text-[#999] mt-3">
+                    <a
+                      href={`mailto:info@usfh.ch?subject=Verfügbarkeitsanfrage: ${encodeURIComponent(product.name)}&body=Guten Tag,%0A%0Aich würde gerne wissen, ob der folgende Artikel wieder verfügbar ist:%0A%0AArtikel: ${encodeURIComponent(product.name)}%0AArtikel-Nr.: ${product.id}%0A%0AVielen Dank!`}
+                      className="underline hover:text-[#8B5E3C] transition-colors"
+                    >
+                      Nach Verfügbarkeit anfragen
+                    </a>
+                  </p>
+                )}
                 <button
                   onClick={toggleWishlist}
                   style={{ marginTop: '8px' }}

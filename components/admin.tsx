@@ -212,6 +212,31 @@ export function Admin({ onClose }: AdminProps) {
   } | null>(null)
 
 
+  // Excel Add (sin borrar) State
+  const [addFile, setAddFile] = useState<File | null>(null)
+  const [addLoading, setAddLoading] = useState(false)
+  const [addResult, setAddResult] = useState<{
+    success: boolean
+    inserted?: number
+    updated?: number
+    skipped?: number
+    parsed?: number
+    processedIds?: number[]
+    errors?: string[]
+    error?: string
+  } | null>(null)
+  type ImportBatch = { filename: string; date: string; ids: number[]; count: number }
+  const [importHistory, setImportHistory] = useState<ImportBatch[]>(() => {
+    if (typeof window === "undefined") return []
+    try {
+      const saved: ImportBatch[] = JSON.parse(localStorage.getItem("excel-import-history") || "[]")
+      const cleaned = saved.filter(b => b.ids?.length > 0)
+      if (cleaned.length !== saved.length) localStorage.setItem("excel-import-history", JSON.stringify(cleaned))
+      return cleaned
+    } catch { return [] }
+  })
+  const [deletingBatch, setDeletingBatch] = useState<string | null>(null)
+
   // Blog State
   interface BlogPost { id: number; title: string; content: string; hero_image?: string; hero_image_url?: string; image2_url?: string; image3_url?: string; image4_url?: string; created_at: string }
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
@@ -1072,6 +1097,58 @@ export function Admin({ onClose }: AdminProps) {
       toast({ title: "Fehler", description: "Verbindungsfehler beim Import", variant: "destructive" })
     } finally {
       setImportLoading(false)
+    }
+  }
+
+  const handleExcelAdd = async () => {
+    if (!addFile) return
+    setAddLoading(true)
+    setAddResult(null)
+    try {
+      const formData = new FormData()
+      formData.append("file", addFile)
+      const response = await fetch("/api/add-products", { method: "POST", body: formData })
+      const data = await response.json()
+      setAddResult(data)
+      if (data.success) {
+        toast({ title: "Hinzufügen erfolgreich", description: `${data.inserted} neu, ${data.updated} aktualisiert — nichts gelöscht` })
+        loadProducts()
+        loadCategories()
+        if (data.processedIds?.length > 0) {
+          const batch = { filename: addFile.name, date: new Date().toLocaleString("de-CH"), ids: data.processedIds, count: data.processedIds.length }
+          const updated = [batch, ...importHistory].slice(0, 20)
+          setImportHistory(updated)
+          localStorage.setItem("excel-import-history", JSON.stringify(updated))
+        }
+      } else {
+        toast({ title: "Fehler", description: data.error, variant: "destructive" })
+      }
+    } catch {
+      toast({ title: "Fehler", description: "Verbindungsfehler", variant: "destructive" })
+    } finally {
+      setAddLoading(false)
+    }
+  }
+
+  const handleDeleteBatch = async (batch: ImportBatch) => {
+    setDeletingBatch(batch.date)
+    try {
+      const response = await fetch("/api/delete-import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: batch.ids }) })
+      const data = await response.json()
+      if (data.success) {
+        toast({ title: "Gelöscht", description: `${data.deleted} Produkte aus "${batch.filename}" entfernt` })
+        const updated = importHistory.filter(b => b.date !== batch.date)
+        setImportHistory(updated)
+        localStorage.setItem("excel-import-history", JSON.stringify(updated))
+        loadProducts()
+        loadCategories()
+      } else {
+        toast({ title: "Fehler", description: data.error, variant: "destructive" })
+      }
+    } catch {
+      toast({ title: "Fehler", description: "Verbindungsfehler", variant: "destructive" })
+    } finally {
+      setDeletingBatch(null)
     }
   }
 
@@ -2069,6 +2146,80 @@ export function Admin({ onClose }: AdminProps) {
                     ) : (
                       <p className="text-red-700 font-medium">Fehler: {importResult.error}</p>
                     )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Excel Add (sin borrar) */}
+            <Card className="mb-6 border border-blue-200 bg-gradient-to-r from-blue-50/50 to-white rounded-2xl shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center text-base">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
+                    <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+                  </div>
+                  Excel-Import (Produkte hinzufügen – nichts löschen)
+                </CardTitle>
+                <p className="text-xs text-gray-500 mt-1">Neue Kategorien &amp; Produkte hinzufügen, ohne bestehende zu löschen.</p>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4 flex-wrap">
+                  <label className="flex-1 min-w-[220px] cursor-pointer">
+                    <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 bg-white hover:bg-gray-50 transition-colors">
+                      <Upload className="w-4 h-4 text-gray-500 shrink-0" />
+                      <span className="text-sm text-gray-600 truncate">
+                        {addFile ? addFile.name : ".xlsx / .xls auswählen"}
+                      </span>
+                    </div>
+                    <input type="file" accept=".xlsx,.xls" className="hidden" onChange={(e) => { setAddFile(e.target.files?.[0] ?? null); setAddResult(null) }} />
+                  </label>
+                  <Button onClick={handleExcelAdd} disabled={!addFile || addLoading} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Upload className={`w-4 h-4 mr-2 ${addLoading ? "animate-bounce" : ""}`} />
+                    {addLoading ? "Lädt hoch..." : "Hinzufügen"}
+                  </Button>
+                </div>
+                {addResult && (
+                  <div className={`mt-4 rounded-lg p-3 text-sm ${addResult?.success ? "bg-blue-50 border border-blue-200" : "bg-red-50 border border-red-200"}`}>
+                    {addResult?.success ? (
+                      <div className="space-y-1">
+                        <p className="font-medium text-blue-800">Abgeschlossen ({addResult?.parsed} verarbeitet)</p>
+                        <div className="flex gap-4 text-blue-700 flex-wrap">
+                          <span>✅ Neu: <strong>{addResult?.inserted}</strong></span>
+                          <span>🔄 Aktualisiert: <strong>{addResult?.updated}</strong></span>
+                          <span>⏭ Übersprungen: <strong>{addResult?.skipped}</strong></span>
+                          <span className="text-green-700">🛡 Gelöscht: <strong>0</strong></span>
+                        </div>
+                        {(addResult?.errors?.length ?? 0) > 0 && (
+                          <details className="mt-2">
+                            <summary className="cursor-pointer text-yellow-700 font-medium">{addResult?.errors?.length} Warnungen anzeigen</summary>
+                            <ul className="mt-1 space-y-0.5 text-yellow-700 text-xs">
+                              {addResult?.errors?.map((e, i) => <li key={i}>{e}</li>)}
+                            </ul>
+                          </details>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-red-700 font-medium">Fehler: {addResult?.error}</p>
+                    )}
+                  </div>
+                )}
+                {importHistory.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Importverlauf</p>
+                    <div className="space-y-2">
+                      {importHistory.map((batch) => (
+                        <div key={batch.date} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-gray-800 truncate">{batch.filename}</p>
+                            <p className="text-xs text-gray-500">{batch.date} · {batch.count} Produkte</p>
+                          </div>
+                          <Button variant="outline" size="sm" disabled={deletingBatch === batch.date} onClick={() => handleDeleteBatch(batch)} className="ml-3 shrink-0 border-red-200 text-red-600 hover:bg-red-50">
+                            <Trash2 className="w-3.5 h-3.5 mr-1" />
+                            {deletingBatch === batch.date ? "..." : "Löschen"}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </CardContent>
