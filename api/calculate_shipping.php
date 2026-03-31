@@ -51,9 +51,9 @@ try {
     $stmt->execute([':w' => $weight_kg]);
     $range = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Fallback: use heaviest range
+    // Fallback: use largest range (Sperrgut)
     if (!$range) {
-        $range = $pdo->query("SELECT id, label FROM shipping_weight_ranges ORDER BY min_kg DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+        $range = $pdo->query("SELECT id, label FROM shipping_weight_ranges ORDER BY max_kg DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
     }
 
     if (!$range) {

@@ -372,7 +372,7 @@ export default function ProductPage() {
                   </span>
                   <span className="text-base text-[#999] font-medium">CHF</span>
                 </div>
-                <p className="text-xs text-[#999] mb-4">* Preise inkl. MwSt., zzgl. Versandkosten</p>
+                <p className="text-xs text-[#999] mb-4">* Preise exkl. MwSt., zzgl. Versandkosten</p>
                 <button
                   onClick={addToCart}
                   disabled={!inStock}

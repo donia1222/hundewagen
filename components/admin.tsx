@@ -2698,7 +2698,7 @@ export function Admin({ onClose }: AdminProps) {
               </div>
             )}
 
-            {!shippingLoading && shippingZones.map((zone, i) => (
+            {!shippingLoading && shippingZones.filter(zone => zone.countries === "CH").map((zone, i) => (
               <div key={zone.id} className="bg-white border border-gray-100 rounded-2xl shadow-sm mb-5 overflow-hidden hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-50/80 to-transparent border-b border-gray-100">
                   <div className="flex items-center gap-3">
@@ -2725,11 +2725,13 @@ export function Admin({ onClose }: AdminProps) {
 
                 {zone.enabled && (
                   <div className="p-6">
-                    <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${shippingRanges.length}, minmax(90px, 1fr))` }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {shippingRanges.map(range => (
-                        <div key={range.id} className="group">
-                          <label className="text-xs text-gray-400 font-medium block mb-1.5">{range.label}</label>
-                          <div className="flex items-center gap-1.5 relative">
+                        <div key={range.id} className="group bg-gray-50/60 rounded-xl p-3 border border-gray-100">
+                          <label className="text-xs text-gray-500 font-semibold block mb-2 leading-snug">
+                            {range.label}{range.label.includes("Sperrgut") ? " / bis 999 kg" : ""}
+                          </label>
+                          <div className="flex items-center gap-1.5">
                             <input
                               type="number"
                               min="0"
@@ -2737,7 +2739,7 @@ export function Admin({ onClose }: AdminProps) {
                               value={getRate(zone.id, range.id) || ""}
                               placeholder="0"
                               onChange={e => setRate(zone.id, range.id, parseFloat(e.target.value) || 0)}
-                              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all"
+                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all"
                             />
                             <span className="text-xs text-gray-400 font-medium shrink-0">CHF</span>
                           </div>

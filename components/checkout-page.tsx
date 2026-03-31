@@ -420,7 +420,8 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
 
   const getShippingCost = () => shippingCost
 
-  const getFinalTotal = () => getTotalPrice() + shippingCost
+  const getMwst = () => (getTotalPrice() + shippingCost) * 0.085
+  const getFinalTotal = () => Math.ceil((getTotalPrice() + shippingCost + getMwst()) / 0.5) * 0.5
 
   const createUserAccount = async () => {
     try {
@@ -2174,6 +2175,10 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         : <span className="font-semibold">{shippingCost.toFixed(2)} CHF</span>
                       }
                     </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>MwSt. 8.5%:</span>
+                    <span>{getMwst().toFixed(2)} CHF</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-xl font-black">

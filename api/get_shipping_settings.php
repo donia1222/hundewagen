@@ -37,19 +37,33 @@ try {
     if ($pdo->query("SELECT COUNT(*) FROM shipping_zones")->fetchColumn() == 0) {
         $pdo->exec("INSERT INTO shipping_zones (name, countries, enabled) VALUES
             ('Schweiz', 'CH', 1),
-            ('Europa', 'DE,FR,IT,AT,ES,NL,BE,PL,PT,CZ,DK,SE,FI,NO,HU,RO,HR,SK,SI,LU,LI', 1),
-            ('International', '*', 1)");
+            ('Europa', 'DE,FR,IT,AT,ES,NL,BE,PL,PT,CZ,DK,SE,FI,NO,HU,RO,HR,SK,SI,LU,LI', 0),
+            ('International', '*', 0)");
     }
 
-    // Seed ranges if empty
-    if ($pdo->query("SELECT COUNT(*) FROM shipping_weight_ranges")->fetchColumn() == 0) {
+    // Migration: disable Europa and International zones
+    $pdo->exec("UPDATE shipping_zones SET enabled = 0 WHERE name IN ('Europa', 'International')");
+
+    // Migration: replace old weight ranges with new 4 package categories
+    $rangeCount = intval($pdo->query("SELECT COUNT(*) FROM shipping_weight_ranges")->fetchColumn());
+    if ($rangeCount !== 4) {
+        $pdo->exec("DELETE FROM shipping_weight_ranges");
+        $pdo->exec("DELETE FROM shipping_rates");
         $pdo->exec("INSERT INTO shipping_weight_ranges (min_kg, max_kg, label) VALUES
-            (0, 0.5, '0–0.5 kg'),
-            (0.5, 1, '0.5–1 kg'),
-            (1, 3, '1–3 kg'),
-            (3, 5, '3–5 kg'),
-            (5, 10, '5–10 kg'),
-            (10, 9999, '10+ kg')");
+            (0,   2,   'PostPac Economy — bis 2 kg (60×60×100 cm)'),
+            (2,   10,  'PostPac Priority — bis 10 kg (60×60×100 cm)'),
+            (10,  30,  'PostPac — bis 30 kg (60×60×100 cm)'),
+            (30,  999, 'Sperrgut — über 60×60×100 cm / bis 999 kg')");
+
+        $chZone = $pdo->query("SELECT id FROM shipping_zones WHERE countries = 'CH' LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+        if ($chZone) {
+            $newRanges = $pdo->query("SELECT id FROM shipping_weight_ranges ORDER BY min_kg")->fetchAll(PDO::FETCH_ASSOC);
+            $defaultPrices = [9, 12, 21, 31];
+            $ins = $pdo->prepare("INSERT IGNORE INTO shipping_rates (zone_id, range_id, price) VALUES (?, ?, ?)");
+            foreach ($newRanges as $idx => $r) {
+                $ins->execute([$chZone['id'], $r['id'], $defaultPrices[$idx]]);
+            }
+        }
     }
 
     $zones = $pdo->query("SELECT id, name, countries, enabled FROM shipping_zones ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);

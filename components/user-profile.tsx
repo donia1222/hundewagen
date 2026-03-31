@@ -667,7 +667,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     doc.setFont("helvetica", "bold")
     doc.setFontSize(11)
     doc.setTextColor(40, 40, 40)
-    doc.text("Rechnungsadresse:", margin, 70)
+    doc.text("Lieferadresse:", margin, 70)
     doc.setFont("helvetica", "normal")
     doc.setFontSize(10)
     const lines = [
@@ -679,6 +679,11 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
       order.customer_phone,
     ].filter(Boolean)
     lines.forEach((l, i) => doc.text(l, margin, 77 + i * 5.5))
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(40, 40, 40)
+    doc.text("Rechnungsadresse:", pageW / 2 + 5, 70)
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100, 100, 100)
+    doc.text("(identisch mit Lieferadresse)", pageW / 2 + 5, 76)
 
     // --- Bestellstatus ---
     doc.setFont("helvetica", "bold")
@@ -729,16 +734,28 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     doc.setDrawColor(200, 200, 200)
     doc.line(margin, y, pageW - margin, y)
     y += 6
-    doc.setFontSize(10)
-    doc.setFont("helvetica", "normal")
-    doc.text("Versandkosten:", pageW - 55, y)
-    doc.text(`${(Number(order.shipping_cost) || 0).toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
-    y += 7
-    doc.setFont("helvetica", "bold")
-    doc.setFontSize(12)
-    doc.setTextColor(44, 95, 46)
+
+    const itemsSubtotal = items.reduce((s, i) => s + (Number(i.subtotal) || 0), 0)
+    const shipping = Number(order.shipping_cost) || 0
+    const netTotal = itemsSubtotal + shipping
+    const mwstAmount = netTotal * 0.085
+    const grossTotal = netTotal + mwstAmount
+    const roundedTotal = Math.ceil(grossTotal / 0.5) * 0.5
+
+    doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(40, 40, 40)
+    doc.text("Zwischensumme (Artikel):", pageW - 75, y)
+    doc.text(`${itemsSubtotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    y += 6
+    doc.text("Versandkosten:", pageW - 75, y)
+    doc.text(`${shipping.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    y += 6
+    doc.text("MwSt. 8.5%:", pageW - 75, y)
+    doc.text(`${mwstAmount.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    y += 2
+    doc.setDrawColor(44, 95, 46); doc.line(pageW - 75, y, pageW - margin, y); y += 5
+    doc.setFont("helvetica", "bold"); doc.setFontSize(12); doc.setTextColor(44, 95, 46)
     doc.text("TOTAL:", pageW - 55, y)
-    doc.text(`${(Number(order.total_amount) || 0).toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    doc.text(`${roundedTotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
 
     // --- Footer ---
     doc.setFont("helvetica", "normal")

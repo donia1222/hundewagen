@@ -577,7 +577,7 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#888]">
             <span className="flex items-center gap-3">
-              <span>* Alle Preise inkl. MwSt., zzgl. Versandkosten</span>
+              <span>* Alle Preise exkl. MwSt., zzgl. Versandkosten</span>
               <span className="text-[#DDD] hidden md:inline">·</span>
               <span className="hidden md:flex items-center gap-1 text-[#AAA] text-xs">
                 Design by&nbsp;<a href="https://lweb.ch" target="_blank" rel="noopener noreferrer" className="font-black tracking-tight text-[#555] hover:text-[#2C5F2E] transition-colors uppercase text-[11px]">lweb.ch</a>
