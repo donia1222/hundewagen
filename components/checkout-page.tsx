@@ -420,7 +420,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
 
   const getShippingCost = () => shippingCost
 
-  const getMwst = () => Math.round((getTotalPrice() + shippingCost) * 0.085 / 0.05) * 0.05
+  const getMwst = () => Math.round(getTotalPrice() * 0.081 / 0.05) * 0.05
   const getFinalTotal = () => Math.ceil((getTotalPrice() + shippingCost + getMwst()) / 0.5) * 0.5
 
   const createUserAccount = async () => {
@@ -2163,12 +2163,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                     <span>{getTotalPrice().toFixed(2)} CHF</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>
-                      Versand
-                      {shippingInfo.zone && (
-                        <span className="text-xs text-gray-500 ml-1">({shippingInfo.zone} · {shippingInfo.range})</span>
-                      )}:
-                    </span>
+                    <span>Versand:</span>
                     <span>
                       {shippingCost === 0
                         ? <Badge className="bg-green-100 text-green-700">Kostenlos</Badge>
@@ -2176,8 +2171,13 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                       }
                     </span>
                   </div>
+                  {shippingInfo.zone && (
+                    <div className="text-xs text-gray-500">
+                      {shippingInfo.zone} · {shippingInfo.range}
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm text-gray-500">
-                    <span>MwSt. 8.5%:</span>
+                    <span>MwSt. 8.1%:</span>
                     <span>{getMwst().toFixed(2)} CHF</span>
                   </div>
                   <Separator />

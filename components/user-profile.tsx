@@ -717,7 +717,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     const items = order.items || []
     items.forEach((item, idx) => {
       const subtotal = Number(item.subtotal) || 0
-      const itemMwst = Math.round(subtotal * 0.085 / 0.05) * 0.05
+      const itemMwst = Math.round(subtotal * 0.081 / 0.05) * 0.05
       const rowH = 18
       if (idx % 2 === 0) {
         doc.setFillColor(245, 248, 245)
@@ -744,7 +744,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     const itemsSubtotal = items.reduce((s, i) => s + (Number(i.subtotal) || 0), 0)
     const shipping = Number(order.shipping_cost) || 0
     const netTotal = itemsSubtotal + shipping
-    const mwstAmount = Math.round(netTotal * 0.085 / 0.05) * 0.05
+    const mwstAmount = Math.round(itemsSubtotal * 0.081 / 0.05) * 0.05
     const grossTotal = netTotal + mwstAmount
     const roundedTotal = Math.ceil(grossTotal / 0.5) * 0.5
 
@@ -755,7 +755,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     doc.text("Versandkosten:", pageW - 75, y)
     doc.text(`${shipping.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
     y += 6
-    doc.text("MwSt. 8.5%:", pageW - 75, y)
+    doc.text("MwSt. 8.1%:", pageW - 75, y)
     doc.text(`${mwstAmount.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
     y += 6
     y -= 4
