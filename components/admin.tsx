@@ -1290,7 +1290,8 @@ export function Admin({ onClose }: AdminProps) {
     const shipping = Number(order.shipping_cost) || 0
     const netTotal = itemsSubtotal + shipping
     const mwstAmount = Math.round(netTotal * 0.085 / 0.05) * 0.05
-    const roundedTotal = netTotal + mwstAmount
+    const grossTotal = netTotal + mwstAmount
+    const roundedTotal = Math.ceil(grossTotal / 0.5) * 0.5
 
     doc.text("Zwischensumme (Artikel):", pageW - 75, y)
     doc.text(`${itemsSubtotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
