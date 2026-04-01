@@ -282,6 +282,7 @@ export function Admin({ onClose }: AdminProps) {
   const [shippingRanges, setShippingRanges] = useState<ShippingRange[]>([])
   const [shippingRates,  setShippingRates]  = useState<ShippingRate[]>([])
   const [shippingLoading,   setShippingLoading]   = useState(false)
+  const [showCharts, setShowCharts] = useState(false)
   const [shippingSavedMsg,  setShippingSavedMsg]  = useState("")
   const [isSavingShipping,  setIsSavingShipping]  = useState(false)
 
@@ -1604,8 +1605,21 @@ export function Admin({ onClose }: AdminProps) {
               </div>
             )}
 
-            {/* Charts Section */}
+            {/* Charts Toggle */}
             {orders.length > 0 && (
+              <div className="flex justify-end mb-3">
+                <button
+                  onClick={() => setShowCharts(v => !v)}
+                  className="flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border border-gray-200 rounded-xl px-4 py-2 bg-white hover:bg-gray-50 transition-all shadow-sm"
+                >
+                  <span>{showCharts ? "▲" : "▼"}</span>
+                  {showCharts ? "Statistiken ausblenden" : "Statistiken anzeigen"}
+                </button>
+              </div>
+            )}
+
+            {/* Charts Section */}
+            {orders.length > 0 && showCharts && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
                 {/* Revenue Area Chart */}
                 <div className="lg:col-span-2 rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
