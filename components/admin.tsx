@@ -200,6 +200,7 @@ export function Admin({ onClose }: AdminProps) {
   // Excel Import State
   const [importFile, setImportFile] = useState<File | null>(null)
   const [importLoading, setImportLoading] = useState(false)
+  const [showExcelImport, setShowExcelImport] = useState(false)
   const [importResult, setImportResult] = useState<{
     success: boolean
     inserted?: number
@@ -2096,8 +2097,110 @@ export function Admin({ onClose }: AdminProps) {
               </div>
             )}
 
+            {/* Products Header Actions */}
+            <div className="mb-6">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Kategorieverwaltung</h2>
+              <p className="text-xs text-gray-400 mt-0.5 mb-3">Kategorien verwalten</p>
+              <button
+                onClick={() => { setEditingCategory(null); setIsCategoryModalOpen(true) }}
+                className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 p-5 text-left shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 w-full sm:w-auto sm:min-w-[220px]"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
+                <div className="relative">
+                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                    <Plus className="w-5 h-5 text-white" />
+                  </div>
+                  <p className="text-white font-bold text-base leading-tight">Neue Kategorie</p>
+                  <p className="text-blue-100 text-xs mt-1">Kategorie erstellen</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Categories List */}
+            {categories.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Kategorien</h3>
+                <div className="flex flex-wrap gap-3">
+                  {categories.map((cat) => {
+                    const productCount = products.filter((p) => p.category === cat.slug).length
+                    return (
+                      <div key={cat.slug} className="flex flex-col rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200 transition-all overflow-hidden w-full sm:w-56">
+                        <div className="flex items-center gap-2.5 px-3.5 pt-3 pb-2">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/20">
+                            <Flame className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-gray-900 text-sm truncate">{cat.name}</p>
+                            <p className="text-[11px] text-gray-400 font-medium">{productCount} Produkt{productCount !== 1 ? "e" : ""}</p>
+                          </div>
+                        </div>
+                        <div className="flex border-t border-gray-100 mt-1">
+                          <button
+                            onClick={() => { setEditingCategory(cat); setIsCategoryModalOpen(true) }}
+                            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-green-700 hover:bg-green-50 transition-colors"
+                          >
+                            <Edit className="w-3 h-3" />
+                            Bearbeiten
+                          </button>
+                          <div className="w-px bg-gray-100" />
+                          <button
+                            onClick={() => handleDeleteCategory(cat)}
+                            disabled={productCount > 0}
+                            title={productCount > 0 ? `${productCount} Produkte – zuerst löschen` : "Löschen"}
+                            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-red-500 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            Löschen
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="mb-4">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Produkte hinzufügen</h2>
+              <p className="text-xs text-gray-400 mt-0.5 mb-4">Produkte verwalten</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Banner: Neues Produkt */}
+                <button
+                  onClick={showAddProductModal}
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] p-5 text-left shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
+                  <div className="relative">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                      <Plus className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="text-white font-bold text-base leading-tight">Neues Produkt</p>
+                    <p className="text-green-100 text-xs mt-1">Produkt manuell erstellen</p>
+                  </div>
+                </button>
+
+                {/* Banner: Excel Import */}
+                <button
+                  onClick={() => setShowExcelImport(v => !v)}
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 p-5 text-left shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-200"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
+                  <div className="relative">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                      <FileSpreadsheet className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="text-white font-bold text-base leading-tight">Excel importieren</p>
+                    <p className="text-emerald-100 text-xs mt-1">{showExcelImport ? "Formular schließen" : "Produkte per Excel synchronisieren"}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             {/* Excel Import */}
-            <Card className="mb-6 border border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-white rounded-2xl shadow-sm">
+            {showExcelImport && <Card className="mb-6 border border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-white rounded-2xl shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center text-base">
                   <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-2">
@@ -2163,10 +2266,10 @@ export function Admin({ onClose }: AdminProps) {
                   </div>
                 )}
               </CardContent>
-            </Card>
+            </Card>}
 
-            {/* Excel Add (sin borrar) */}
-            <Card className="mb-6 border border-blue-200 bg-gradient-to-r from-blue-50/50 to-white rounded-2xl shadow-sm">
+            {/* Excel Add (sin borrar) — HIDDEN */}
+            {false && <Card className="mb-6 border border-blue-200 bg-gradient-to-r from-blue-50/50 to-white rounded-2xl shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center text-base">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
@@ -2182,7 +2285,7 @@ export function Admin({ onClose }: AdminProps) {
                     <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 bg-white hover:bg-gray-50 transition-colors">
                       <Upload className="w-4 h-4 text-gray-500 shrink-0" />
                       <span className="text-sm text-gray-600 truncate">
-                        {addFile ? addFile.name : ".xlsx / .xls auswählen"}
+                        {addFile ? addFile?.name : ".xlsx / .xls auswählen"}
                       </span>
                     </div>
                     <input type="file" accept=".xlsx,.xls" className="hidden" onChange={(e) => { setAddFile(e.target.files?.[0] ?? null); setAddResult(null) }} />
@@ -2237,70 +2340,13 @@ export function Admin({ onClose }: AdminProps) {
                   </div>
                 )}
               </CardContent>
-            </Card>
-
-            {/* Products Header Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-              <div>
-                <h2 className="text-xl font-black text-gray-900 tracking-tight">Produktverwaltung</h2>
-                <p className="text-xs text-gray-400 mt-0.5">Produkte und Kategorien verwalten</p>
-              </div>
-              <div className="flex flex-row items-center gap-2 flex-nowrap">
-                <Button onClick={() => { setEditingCategory(null); setIsCategoryModalOpen(true) }} variant="outline" className="border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded-xl h-9">
-                  <Plus className="w-4 h-4 mr-1.5" />
-                  Kategorie
-                </Button>
-                <Button onClick={showAddProductModal} className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white rounded-xl h-9 shadow-sm shadow-green-500/20">
-                  <Plus className="w-4 h-4 mr-1.5" />
-                  Produkt
-                </Button>
-              </div>
-            </div>
-
-            {/* Categories List */}
-            {categories.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Kategorien</h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => {
-                    const productCount = products.filter((p) => p.category === cat.slug).length
-                    return (
-                      <div key={cat.slug} className="group flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-3.5 py-2 shadow-sm hover:shadow-md hover:border-gray-200 transition-all">
-                        <div className="w-7 h-7 bg-gradient-to-br from-indigo-100 to-violet-100 rounded-lg flex items-center justify-center">
-                          <Flame className="w-3.5 h-3.5 text-indigo-500" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold text-gray-800 text-sm truncate">{cat.name}</p>
-                          <p className="text-[10px] text-gray-400">{productCount} Produkt{productCount !== 1 ? "e" : ""}</p>
-                        </div>
-                        <div className="flex items-center gap-0.5 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => { setEditingCategory(cat); setIsCategoryModalOpen(true) }}
-                            className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1 h-auto"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleDeleteCategory(cat)}
-                            disabled={productCount > 0}
-                            title={productCount > 0 ? `${productCount} Produkte – zuerst löschen` : "Löschen"}
-                            className="text-red-300 hover:text-red-500 hover:bg-red-50 p-1 h-auto disabled:opacity-40"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
+            </Card>}
 
             {/* Products Filters */}
+            <div className="mb-3">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Produkte suchen</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Produkte filtern und suchen</p>
+            </div>
             <div ref={filterCardRef}>
             <div className="mb-4 rounded-2xl bg-white border border-gray-100 shadow-sm p-4">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
@@ -2378,6 +2424,11 @@ export function Admin({ onClose }: AdminProps) {
             </div>
             </div>{/* end filterCardRef wrapper */}
 
+            <div className="mb-3">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Produktstatus ändern</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Status der Produkte ändern</p>
+            </div>
+
             {/* Bulk action bar — sticky */}
             <div className="sticky top-16 z-20 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl px-4 py-2.5 mb-4 shadow-md flex flex-wrap items-center gap-3">
               <Button
@@ -2426,6 +2477,11 @@ export function Admin({ onClose }: AdminProps) {
               )}
             </div>
 
+            <div className="mb-3">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Produkte</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Alle Produkte im Überblick</p>
+            </div>
+
             {/* Products Grid — 5 columns compact */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {filteredProducts.map((product) => (
@@ -2469,23 +2525,6 @@ export function Admin({ onClose }: AdminProps) {
                         "bg-red-500"
                       }`} title={getStockStatusText(product.stock_status)} />
                     </div>
-                    {/* Action buttons overlay */}
-                    <div className="absolute bottom-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <Button
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); showEditProductModal(product.id) }}
-                        className="bg-white/90 backdrop-blur-sm hover:bg-white text-blue-600 rounded-lg h-7 w-7 p-0 shadow-md"
-                      >
-                        <Edit className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); showDeleteProductModal(product.id, product.name) }}
-                        className="bg-white/90 backdrop-blur-sm hover:bg-white text-red-500 rounded-lg h-7 w-7 p-0 shadow-md"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Product Info — compact */}
@@ -2503,6 +2542,25 @@ export function Admin({ onClose }: AdminProps) {
                         <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-600">{product.badge}</span>
                       )}
                     </div>
+                  </div>
+
+                  {/* Fixed footer buttons */}
+                  <div className="flex border-t border-gray-100">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); showEditProductModal(product.id) }}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-green-700 hover:bg-green-50 transition-colors rounded-bl-xl"
+                    >
+                      <Edit className="w-3 h-3" />
+                      Bearbeiten
+                    </button>
+                    <div className="w-px bg-gray-100" />
+                    <button
+                      onClick={(e) => { e.stopPropagation(); showDeleteProductModal(product.id, product.name) }}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-red-500 hover:bg-red-50 transition-colors rounded-br-xl"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      Löschen
+                    </button>
                   </div>
                 </div>
               ))}
