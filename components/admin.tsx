@@ -164,10 +164,11 @@ export function Admin({ onClose }: AdminProps) {
   // Gutscheine State
   const [giftCards, setGiftCards] = useState<any[]>([])
   const [giftCardPurchases, setGiftCardPurchases] = useState<any[]>([])
-  const gcEnabled = false
+  const gcEnabled = true
   const [gcLoading, setGcLoading] = useState(false)
   const [gcPurchasesLoading, setGcPurchasesLoading] = useState(false)
   const [markingGcPaidId, setMarkingGcPaidId] = useState<number | null>(null)
+  const [deletingGcId, setDeletingGcId] = useState<number | null>(null)
   const [gcFormOpen, setGcFormOpen] = useState(false)
   const [gcEditItem, setGcEditItem] = useState<any | null>(null)
   const [gcFormData, setGcFormData] = useState({ name: "", description: "", amount: "", is_active: "1" })
@@ -814,6 +815,23 @@ export function Admin({ onClose }: AdminProps) {
       }
     } catch {}
     finally { setMarkingGcPaidId(null) }
+  }
+
+  const handleDeleteGcPurchase = async (purchase: any) => {
+    setDeletingGcId(purchase.id)
+    try {
+      const fd = new FormData()
+      fd.append("id", purchase.id.toString())
+      const res = await fetch("/api/gutscheine/delete-purchase", { method: "POST", body: fd })
+      const data = await res.json()
+      if (data.success) {
+        toast({ title: "Gelöscht", description: "Gutschein-Kauf wurde entfernt" })
+        loadGiftCardPurchases()
+      } else {
+        toast({ title: "Fehler", description: data.error, variant: "destructive" })
+      }
+    } catch {}
+    finally { setDeletingGcId(null) }
   }
 
   const loadOrders = async () => {
@@ -3049,18 +3067,27 @@ export function Admin({ onClose }: AdminProps) {
                           </span>
                         )}
                         {/* Acción */}
-                        {p.status === "offen" ? (
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {p.status === "offen" && (
+                            <Button
+                              onClick={() => handleMarkGcPaid(p)}
+                              disabled={markingGcPaidId === p.id}
+                              size="sm"
+                              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white rounded-lg px-3 text-xs h-8"
+                            >
+                              {markingGcPaidId === p.id ? "..." : "Bezahlt"}
+                            </Button>
+                          )}
                           <Button
-                            onClick={() => handleMarkGcPaid(p)}
-                            disabled={markingGcPaidId === p.id}
+                            onClick={() => { if (window.confirm("Diesen Gutschein-Kauf wirklich löschen?")) handleDeleteGcPurchase(p) }}
+                            disabled={deletingGcId === p.id}
                             size="sm"
-                            className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white rounded-lg px-3 text-xs h-8 shrink-0"
+                            variant="outline"
+                            className="border-red-200 text-red-500 hover:bg-red-50 rounded-lg px-2 text-xs h-8"
                           >
-                            {markingGcPaidId === p.id ? "..." : "Bezahlt"}
+                            {deletingGcId === p.id ? "..." : <Trash2 className="w-3.5 h-3.5" />}
                           </Button>
-                        ) : (
-                          <div className="w-16" />
-                        )}
+                        </div>
                       </div>
                     ))}
                   </div>
