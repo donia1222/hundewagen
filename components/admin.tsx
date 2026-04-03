@@ -164,7 +164,7 @@ export function Admin({ onClose }: AdminProps) {
   // Gutscheine State
   const [giftCards, setGiftCards] = useState<any[]>([])
   const [giftCardPurchases, setGiftCardPurchases] = useState<any[]>([])
-  const gcEnabled = true
+  const gcEnabled = false
   const [gcLoading, setGcLoading] = useState(false)
   const [gcPurchasesLoading, setGcPurchasesLoading] = useState(false)
   const [markingGcPaidId, setMarkingGcPaidId] = useState<number | null>(null)
