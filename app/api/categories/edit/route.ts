@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { clearCache } from "../cache"
 
 const PHP_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "/edit_category.php"
 
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
     })
     text = await res.text()
     const data = JSON.parse(text)
+    if (data.success) clearCache()
     return NextResponse.json(data, { status: res.ok ? 200 : res.status })
   } catch (e: any) {
     return NextResponse.json(

@@ -93,11 +93,18 @@ export async function POST(request: NextRequest) {
 
         if (!id || !name) continue
 
-        const numId = parseInt(String(id), 10)
-        if (isNaN(numId) || numId <= 0) continue
+        let numId = parseInt(String(id), 10)
+        if (isNaN(numId) || numId <= 0) {
+          let hash = 0
+          const str = String(id).trim()
+          for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0
+          }
+          numId = Math.abs(hash) || 1
+        }
 
-        const price = parseFloat(String(getCol(row, "Preis inkl. MwSt.", "Preis zzgl. MwSt.") ?? 0)) || 0
-        const stock = parseInt(String(getCol(row, "Lager", "Lagerbestand") ?? 0), 10) || 0
+        const price = parseFloat(String(getCol(row, "Preis inkl. MwSt.", "Preis zzgl. MwSt.", "Preis", "price", "VK-Preis") ?? 0).replace(",", ".")) || 0
+        const stock = parseInt(String(getCol(row, "Lager", "Lagerbestand", "Bestand", "Stock", "stock") ?? 0), 10) || 0
         const description = String(getCol(row, "Beschreibung") ?? "").trim()
         const supplier = String(getCol(row, "Lieferant") ?? "").trim()
         const origin = String(getCol(row, "Hersteller") ?? "").trim()
