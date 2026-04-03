@@ -32,7 +32,7 @@ interface CartItem {
 
 const CART_KEY = "cantina-cart"
 const CART_COUNT_KEY = "cantina-cart-count"
-const gcEnabled = false
+const gcEnabled = true
 
 export default function GutscheineGrid() {
   const router = useRouter()

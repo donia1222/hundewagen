@@ -515,6 +515,9 @@ export default function ShopGrid() {
       return matchSearch && matchCategory && matchSupplier && matchStock
     })
     .sort((a, b) => {
+      const aInStock = (a.stock ?? 0) > 0 ? 0 : 1
+      const bInStock = (b.stock ?? 0) > 0 ? 0 : 1
+      if (aInStock !== bInStock) return aInStock - bInStock
       switch (sortBy) {
         case "name_asc":   return a.name.localeCompare(b.name)
         case "name_desc":  return b.name.localeCompare(a.name)
@@ -791,9 +794,32 @@ export default function ShopGrid() {
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EBEBEB] space-y-5">
 
               <div>
+                <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Verfügbarkeit</p>
+                <ul className="space-y-0.5">
+                  {([["all", "Alle"], ["out_of_stock", "An Lager"]] as const).map(([val, label]) => {
+                    const count = val === "all" ? products.length : products.filter(p => (p.stock ?? 0) > 0).length
+                    const isActive = stockFilter === val
+                    return (
+                      <li key={val}>
+                        <button
+                          onClick={() => { setShowWishlist(false); setStockFilter(val); setSidebarOpen(false) }}
+                          className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
+                            isActive ? "bg-[#2C5F2E] text-white shadow-sm" : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
+                          }`}
+                        >
+                          <span>{label}</span>
+                          <span className={`text-[10px] font-bold ml-2 px-1.5 py-0.5 rounded-full flex-shrink-0 ${isActive ? "bg-white/25 text-white" : "bg-[#F0F0F0] text-[#888]"}`}>{count}</span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+
+              <div className="border-t border-[#F3F3F3] pt-4">
                 <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Kategorien</p>
                 <ul className="space-y-0.5">
-                  {[{ slug: "all", name: "Alle" }, ...categories].map(cat => {
+                  {categories.map(cat => {
                     const count = cat.slug === "all" ? products.length : products.filter(p => p.category === cat.slug).length
                     const isActive = activeCategory === cat.slug
                     return (
@@ -816,24 +842,6 @@ export default function ShopGrid() {
               </div>
 
               <div className="border-t border-[#F3F3F3] pt-4">
-                <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Verfügbarkeit</p>
-                <ul className="space-y-0.5">
-                  {([["all", "Alle"], ["out_of_stock", "An Lager"]] as const).map(([val, label]) => (
-                    <li key={val}>
-                      <button
-                        onClick={() => { setShowWishlist(false); setStockFilter(val); setSidebarOpen(false) }}
-                        className={`w-full text-left text-sm px-3 py-2 rounded-xl transition-all font-medium ${
-                          stockFilter === val ? "bg-[#2C5F2E] text-white shadow-sm" : "text-[#555] hover:bg-[#F5F5F5]"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="border-t border-[#F3F3F3] pt-4">
                 <button
                   onClick={() => { setShowWishlist(p => !p); setActiveCategory("all"); setStockFilter("all"); setSearch(""); setSidebarOpen(false) }}
                   className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
@@ -852,14 +860,6 @@ export default function ShopGrid() {
                 </button>
               </div>
 
-              {(!showWishlist && (activeCategory !== "all" || stockFilter !== "all" || search)) && (
-                <button
-                  onClick={() => { setActiveCategory("all"); setActiveSupplier("all"); setStockFilter("all"); setSearch("") }}
-                  className="w-full text-xs font-semibold text-[#CC0000]/70 hover:text-[#CC0000] transition-colors text-left flex items-center gap-1.5 pt-1"
-                >
-                  <X className="w-3 h-3" /> Filter zurücksetzen
-                </button>
-              )}
             </div>
           </aside>
 
