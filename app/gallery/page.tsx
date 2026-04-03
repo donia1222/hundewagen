@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ChevronLeft, X, ChevronRight, Images, Menu, Newspaper, Download, ShoppingCart } from "lucide-react"
+import { Footer } from "@/components/footer"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { LoginAuth } from "@/components/login-auth"
 
@@ -248,6 +249,7 @@ export default function GalleryPage() {
           onClose={() => setLightboxIndex(null)}
         />
       )}
+      <Footer />
     </div>
   )
 }

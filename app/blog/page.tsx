@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ChevronLeft, Calendar, X, ChevronRight, Menu, Newspaper, Images, Download, ShoppingCart } from "lucide-react"
+import { Footer } from "@/components/footer"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { LoginAuth } from "@/components/login-auth"
 
@@ -424,6 +425,7 @@ export default function BlogPage() {
           onClose={() => setFirstPostLightbox(null)}
         />
       )}
+      <Footer />
     </div>
   )
 }

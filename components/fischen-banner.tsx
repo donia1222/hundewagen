@@ -1,15 +1,19 @@
 "use client"
 
 import { Fish } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function FischenBanner() {
+  const router = useRouter()
   return (
-    <div className="w-full relative overflow-hidden rounded-2xl h-[200px] md:h-[240px]">
+    <div
+      onClick={() => router.push("/angeln")}
+      className="w-full relative overflow-hidden rounded-2xl h-[200px] md:h-[240px] cursor-pointer group">
       <div className="absolute inset-0">
         <img
           src="/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg"
           alt="Angeln Zubehör"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
       </div>

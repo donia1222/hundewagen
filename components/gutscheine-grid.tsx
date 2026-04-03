@@ -6,6 +6,7 @@ import { ShoppingCart, Check, Gift, ArrowLeft, Home, ArrowUp, Truck } from "luci
 import { ShoppingCartComponent } from "@/components/shopping-cart"
 import { LoginAuth } from "@/components/login-auth"
 import { CheckoutPage } from "@/components/checkout-page"
+import { Footer } from "@/components/footer"
 import { useToast } from "@/hooks/use-toast"
 
 interface GiftCard {
@@ -416,6 +417,7 @@ export default function GutscheineGrid() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   )
 }
