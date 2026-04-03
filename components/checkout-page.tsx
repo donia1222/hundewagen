@@ -102,7 +102,7 @@ interface UserData {
 }
 
 // ⚠️ Cambiar a false para reactivar la tienda
-const STORE_UNDER_MAINTENANCE = false
+const STORE_UNDER_MAINTENANCE = true
 
 export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, onRemoveFromCart }: CheckoutPageProps) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
