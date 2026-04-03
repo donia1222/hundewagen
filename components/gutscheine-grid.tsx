@@ -189,7 +189,7 @@ export default function GutscheineGrid() {
 
             {/* Mobile: home button + title */}
             <button
-              onClick={() => router.push("/")}
+              onClick={() => router.back()}
               className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -198,7 +198,7 @@ export default function GutscheineGrid() {
 
             {/* Desktop: ← Home button */}
             <button
-              onClick={() => router.push("/")}
+              onClick={() => router.back()}
               className="hidden lg:flex items-center gap-2 text-[#555] hover:text-[#2C5F2E] transition-colors group flex-shrink-0"
             >
               <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-[#2C5F2E] group-hover:text-white flex items-center justify-center transition-all">

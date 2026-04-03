@@ -5,7 +5,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import {
   ShoppingCart, ChevronLeft, ChevronRight,
   Search, X, Check, LayoutGrid, Home,
-  ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images
+  ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images, Gift
 } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ShoppingCartComponent } from "./shopping-cart"
@@ -857,7 +857,34 @@ export default function ShopGrid() {
                 </button>
               </div>
 
+              <div className="border-t border-[#F3F3F3] pt-4">
+                <button
+                  onClick={() => router.push("/gutscheine")}
+                  className="w-full text-left flex items-center gap-2 text-sm px-3 py-2 rounded-xl transition-all font-medium text-[#2C5F2E] hover:bg-[#F0F5F0]"
+                >
+                  <Gift className="w-3.5 h-3.5 flex-shrink-0" />
+                  Gutscheine kaufen
+                </button>
+              </div>
+
             </div>
+
+            {/* ── Promo banner — desktop only ── */}
+            <div className="hidden lg:block mt-4 rounded-2xl overflow-hidden relative" style={{ minHeight: "210px" }}>
+              <img
+                src="/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg"
+                alt="Angeln & Outdoor"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)" }} />
+              <div className="relative p-4 flex flex-col justify-end h-full" style={{ minHeight: "210px" }}>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 mb-1">ANGELN & OUTDOOR</p>
+                <p className="text-white font-black text-base leading-tight">Alles zum Angeln im Laden</p>
+                <p className="text-white/75 text-[13px] mt-1 leading-snug">Angelhaken, Ruten, Köder, Netze, Kanus und vieles mehr.</p>
+              </div>
+            </div>
+
+
           </aside>
 
           {/* ── Main ── */}
