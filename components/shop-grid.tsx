@@ -689,10 +689,10 @@ export default function ShopGrid() {
               </SheetContent>
             </Sheet>
 
-            {/* Home button (all screens) */}
+            {/* Home button — desktop only (mobile uses hamburger menu) */}
             <button
               onClick={() => router.push("/")}
-              className="flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+              className="hidden lg:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
