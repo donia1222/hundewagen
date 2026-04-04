@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, memo, useRef } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import {
   ShoppingCart, ChevronLeft, ChevronRight,
-  Search, X, Check, LayoutGrid, Home,
+  Search, X, Check, LayoutGrid, Home, ArrowLeft,
   ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images, Gift
 } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -13,6 +13,7 @@ import { CheckoutPage } from "@/components/checkout-page"
 import { LoginAuth } from "./login-auth"
 import { ProductImage } from "./product-image"
 import { UserProfile } from "./user-profile"
+import { Footer } from "./footer"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -688,30 +689,31 @@ export default function ShopGrid() {
               </SheetContent>
             </Sheet>
 
-            {/* Mobile: divider + page title (like blog header) */}
-            <div className="lg:hidden w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
-            <span className="lg:hidden flex-shrink-0" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Online-Shop</span>
-
-            {/* Desktop: ← Home button */}
+            {/* Home button (all screens) */}
             <button
               onClick={() => router.push("/")}
-              className="hidden lg:flex items-center gap-2 text-[#555] hover:text-[#2C5F2E] transition-colors group flex-shrink-0"
+              className="flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
             >
-              <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-[#2C5F2E] group-hover:text-white flex items-center justify-center transition-all">
-                <Home className="w-4 h-4" />
-              </div>
-              <span style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Online-Shop</span>
+              <ArrowLeft className="w-4 h-4" />
             </button>
 
-            {/* Divider (desktop only) */}
-            <div className="hidden lg:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
+            {/* Divider */}
+            <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
 
             {/* Logo */}
-            <div className="hidden md:flex items-center flex-shrink-0">
-              <img src="/Security_n.png" alt="Logo" className="h-12 w-auto object-contain" />
+            <img src="/Security_n.png" alt="Logo" className="h-12 w-auto object-contain flex-shrink-0" />
+
+            {/* Title — mobile: simple, desktop: blog style */}
+            <span className="sm:hidden flex-shrink-0" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Online-Shop</span>
+            <div className="hidden sm:block flex-shrink-0">
+              <div className="leading-tight">
+                <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '1rem' }}>US-</span>
+                <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.9rem' }}> FISHING &amp; HUNTINGSHOP</span>
+              </div>
+              <div className="text-[11px] text-[#888] uppercase tracking-widest mt-0.5">Online-Shop</div>
             </div>
 
-            <div className="hidden md:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
+            <div className="hidden sm:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
 
             {/* Search — desktop only */}
             <div className="hidden sm:flex flex-1 max-w-lg relative mr-4">
@@ -870,7 +872,7 @@ export default function ShopGrid() {
             </div>
 
             {/* ── Promo banner — desktop only ── */}
-            <div className="hidden lg:block mt-4 rounded-2xl overflow-hidden relative" style={{ minHeight: "210px" }}>
+            <div onClick={() => router.push("/angeln")} className="hidden lg:block mt-4 rounded-2xl overflow-hidden relative cursor-pointer" style={{ minHeight: "210px" }}>
               <img
                 src="/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg"
                 alt="Angeln & Outdoor"
@@ -1188,7 +1190,7 @@ export default function ShopGrid() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+<div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
                   {visibleProducts.map(product => (
                     <ProductCard
                       key={product.id}
@@ -1221,47 +1223,7 @@ export default function ShopGrid() {
         </div>
       </div>
 
-      {/* Payment methods */}
-      {paySettings && (paySettings.enable_invoice || paySettings.enable_stripe || paySettings.enable_twint || paySettings.enable_paypal) && (
-      <div className="border-t border-[#E0E0E0] py-5 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-1.5 pr-4 border-r border-[#E0E0E0]">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#2C5F2E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span className="text-[11px] font-semibold text-[#555] tracking-widest uppercase">Sichere Zahlung</span>
-            </div>
-            {paySettings.enable_invoice && (
-              <div className="h-8 px-3 rounded-lg bg-[#F5F5F5] border border-[#E0E0E0] flex items-center gap-1.5 shadow-sm">
-                <span className="text-base">🏦</span>
-                <span className="text-[11px] font-bold text-[#444]">Rechnung</span>
-              </div>
-            )}
-            {paySettings.enable_twint && (
-              <div className="h-8 px-3 rounded-lg bg-black flex items-center shadow-sm">
-                <img src="/twint-logo.svg" alt="TWINT" className="h-5 w-auto" />
-              </div>
-            )}
-            {paySettings.enable_stripe && (
-              <>
-                <div className="h-8 px-4 rounded-lg bg-[#1A1F71] flex items-center shadow-sm">
-                  <span className="font-black text-white text-base italic tracking-tight">VISA</span>
-                </div>
-                <div className="h-8 px-3 rounded-lg bg-white border border-[#E0E0E0] flex items-center gap-1 shadow-sm">
-                  <div className="w-4 h-4 rounded-full bg-[#EB001B]" />
-                  <div className="w-4 h-4 rounded-full bg-[#F79E1B] -ml-2" />
-                  <span className="text-[11px] font-bold text-[#333] ml-1.5">Mastercard</span>
-                </div>
-              </>
-            )}
-            {paySettings.enable_paypal && (
-              <div className="h-8 px-3 rounded-lg bg-white border border-[#E0E0E0] flex items-center shadow-sm">
-                <img src="/0014294_paypal-express-payment-plugin.png" alt="PayPal" className="h-6 w-auto object-contain" />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      )}
+      <Footer />
     </>
   )
 }

@@ -33,7 +33,7 @@ interface CartItem {
 
 const CART_KEY = "cantina-cart"
 const CART_COUNT_KEY = "cantina-cart-count"
-const gcEnabled = false
+const gcEnabled = true
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export default function GutscheineGrid() {
@@ -167,34 +167,28 @@ export default function GutscheineGrid() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
 
 
-            {/* Mobile: home button + title */}
+            {/* Back button (mobile + desktop) */}
             <button
               onClick={() => router.back()}
-              className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <span className="lg:hidden flex-shrink-0" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Gutscheine kaufen</span>
 
-            {/* Desktop: ← Back button */}
-            <button
-              onClick={() => router.back()}
-              className="hidden lg:flex items-center gap-2 text-[#555] hover:text-[#2C5F2E] transition-colors group flex-shrink-0"
-            >
-              <div className="w-9 h-9 rounded-xl bg-gray-100 group-hover:bg-[#2C5F2E] group-hover:text-white flex items-center justify-center transition-all">
-                <ArrowLeft className="w-4 h-4" />
-              </div>
-              <span style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Gutscheine kaufen</span>
-            </button>
-
-            <div className="hidden lg:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
+            <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
 
             {/* Logo */}
-            <div className="hidden md:flex items-center flex-shrink-0">
-              <img src="/Security_n.png" alt="Logo" className="h-12 w-auto object-contain" />
-            </div>
+            <img src="/Security_n.png" alt="Logo" className="h-12 w-auto object-contain flex-shrink-0" />
 
-            <div className="hidden md:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
+            {/* Title — mobile: simple, desktop: blog style */}
+            <span className="sm:hidden flex-shrink-0" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Gutscheine</span>
+            <div className="hidden sm:block flex-shrink-0">
+              <div className="leading-tight">
+                <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '1rem' }}>US-</span>
+                <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.9rem' }}> FISHING &amp; HUNTINGSHOP</span>
+              </div>
+              <div className="text-[11px] text-[#888] uppercase tracking-widest mt-0.5">Geschenkgutscheine</div>
+            </div>
 
             {/* Spacer */}
             <div className="flex-1" />
