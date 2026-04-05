@@ -379,7 +379,7 @@ export default function ShopGrid() {
       if (loadingMoreRef.current || !hasMoreRef.current) return
       const scrolled = window.scrollY + window.innerHeight
       const total = document.documentElement.scrollHeight
-      if (scrolled >= total - 400) {
+      if (scrolled >= total - 1500) {
         loadingMoreRef.current = true
         setLoadingMore(true)
         setTimeout(() => {
