@@ -8,9 +8,9 @@ const MAINTENANCE_MODE = false
 
 
 export const metadata: Metadata = {
-  title: 'US - Fishing & Huntingshop',
-  description: 'Ihr Spezialist für Jagd- und Angelausrüstung. Premium Outdoor-Ausrüstung zu fairen Preisen.',
-  generator: '9745 Sevelen',
+  title: 'Hundewagen – Hundewagen & Zubehör für deinen Hund',
+  description: 'Die besten Hundewagen und Zubehör für deinen Hund. Premium-Auswahl für jeden Begleiter. hundewagen.shop',
+  generator: '9475 Sevelen',
   icons: {
     icon: '/favicon.png',
     apple: '/icon-192x192.png',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#2C5F2E',
+  themeColor: '#4F7CFF',
 }
 
 

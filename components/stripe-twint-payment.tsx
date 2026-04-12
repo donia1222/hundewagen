@@ -110,7 +110,7 @@ const TwintForm = ({ amount, orderData, secretKey, pmcId, disabled, returnUrl, o
             Weiterleitung zu TWINT...
           </>
         ) : (
-          <>Via TWINT bezahlen · {amount.toFixed(2)} CHF</>
+          <>Via TWINT bezahlen · {amount.toFixed(2)} €</>
         )}
       </Button>
     </div>

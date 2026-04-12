@@ -22,7 +22,7 @@ const CARDS: FishingCard[] = [
   {
     id: 1,
     image: "/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg",
-    icon: <Fish className="w-3.5 h-3.5 text-[#2C5F2E]" />,
+    icon: <Fish className="w-3.5 h-3.5 text-[#D4622A]" />,
     badge: "Angeln",
     title: "Alles zum Angeln im Laden",
     description: "Angelhaken, Ruten, Köder, Schwimmer und Angelschnüre — alles, was du für einen erfolgreichen Angeltag brauchst.",
@@ -30,7 +30,7 @@ const CARDS: FishingCard[] = [
   {
     id: 2,
     image: "/images/fischen/589527302_1466241405273415_5787096142363867948_n.jpg",
-    icon: <Anchor className="w-3.5 h-3.5 text-[#2C5F2E]" />,
+    icon: <Anchor className="w-3.5 h-3.5 text-[#D4622A]" />,
     badge: "Zubehör",
     title: "Angelzubehör & Ausrüstung",
     description: "Vom Kescher bis zur Tackle-Box — unser Sortiment bietet professionelles Zubehör für Anfänger und erfahrene Angler.",
@@ -38,7 +38,7 @@ const CARDS: FishingCard[] = [
   {
     id: 3,
     image: "/images/fischen/488932258_1259588225938735_6410340367577521871_n.jpg",
-    icon: <Waves className="w-3.5 h-3.5 text-[#2C5F2E]" />,
+    icon: <Waves className="w-3.5 h-3.5 text-[#D4622A]" />,
     badge: "Outdoor",
     title: "Kanus & Wassersport",
     description: "Kanus, Boote und Zubehör für Wassersport und Angelausflüge auf Seen und Flüssen in der Schweiz.",
@@ -46,7 +46,7 @@ const CARDS: FishingCard[] = [
   {
     id: 4,
     image: "/images/fischen/132081708_1370015766682580_118186262331184813_n.jpg",
-    icon: <Package className="w-3.5 h-3.5 text-[#2C5F2E]" />,
+    icon: <Package className="w-3.5 h-3.5 text-[#D4622A]" />,
     badge: "Köder",
     title: "Kunstköder & Naturköder",
     description: "Große Auswahl an Kunstködern, Wobblern, Gummifischen und Naturködern für jeden Gewässertyp.",
@@ -54,7 +54,7 @@ const CARDS: FishingCard[] = [
   {
     id: 5,
     image: "/images/fischen/503264101_2659264021091075_8537894800997994009_n.jpg",
-    icon: <Fish className="w-3.5 h-3.5 text-[#2C5F2E]" />,
+    icon: <Fish className="w-3.5 h-3.5 text-[#D4622A]" />,
     badge: "Ruten",
     title: "Angelruten & Rollen",
     description: "Qualitative Angelruten und Rollen für Fliegenfischen, Spinnfischen und Grundangeln — für jede Fischart die richtige Ausrüstung.",
@@ -101,7 +101,7 @@ export default function AngelnPage() {
         <div className="max-w-5xl mx-auto px-4 h-20 flex items-center gap-3">
           <Sheet>
             <SheetTrigger asChild>
-              <button className="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0 focus:outline-none">
+              <button className="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#D4622A] hover:text-white transition-all flex-shrink-0 focus:outline-none">
                 <Menu className="w-6 h-6" />
               </button>
             </SheetTrigger>
@@ -134,9 +134,9 @@ export default function AngelnPage() {
                 ))}
                 <div className="pt-2 mt-1 border-t border-[#E0E0E0]">
                   <div className="flex flex-wrap">
-                    <button onClick={() => router.push("/blog")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#2C5F2E] font-semibold"><Newspaper className="w-4 h-4 shrink-0" />Blog</button>
-                    <button onClick={() => router.push("/gallery")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#2C5F2E] font-semibold"><Images className="w-4 h-4 shrink-0" />Galerie</button>
-                    <button onClick={() => router.push("/angeln")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded font-semibold bg-gray-100 text-[#2C5F2E]"><Fish className="w-4 h-4 shrink-0" />Angeln</button>
+                    <button onClick={() => router.push("/blog")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#D4622A] font-semibold"><Newspaper className="w-4 h-4 shrink-0" />Blog</button>
+                    <button onClick={() => router.push("/gallery")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#D4622A] font-semibold"><Images className="w-4 h-4 shrink-0" />Galerie</button>
+                    <button onClick={() => router.push("/angeln")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded font-semibold bg-gray-100 text-[#D4622A]"><Fish className="w-4 h-4 shrink-0" />Angeln</button>
                   </div>
                   <p className="px-3 pt-3 pb-1 text-sm text-[#AAA] tracking-wide">Jagd · Angeln · Outdoor · Schweiz🇨🇭</p>
                 </div>
@@ -146,7 +146,7 @@ export default function AngelnPage() {
 
           <button
             onClick={() => router.back()}
-            className="hidden sm:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+            className="hidden sm:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#D4622A] hover:text-white transition-all flex-shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -166,7 +166,7 @@ export default function AngelnPage() {
       {/* Page title */}
       <div className="max-w-5xl mx-auto px-4 pt-10 pb-2">
         <div className="flex items-center gap-3 mb-1">
-          <div className="w-1 h-7 bg-[#2C5F2E] rounded-full" />
+          <div className="w-1 h-7 bg-[#D4622A] rounded-full" />
           <h1 className="text-3xl font-black text-[#1A1A1A] tracking-tight">Angeln & Outdoor</h1>
         </div>
         <p className="text-sm text-[#888] ml-4">Alles zum Angeln im Laden — Angelhaken, Ruten, Köder, Netze, Kanus und vieles mehr.</p>
@@ -180,20 +180,20 @@ export default function AngelnPage() {
           </div>
           <div className="p-8 sm:p-10">
             <div className="flex items-center gap-3 mb-4">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#2C5F2E] bg-[#2C5F2E]/8 px-3 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#D4622A] bg-[#D4622A]/8 px-3 py-1 rounded-full">
                 {CARDS[0].icon}
                 {CARDS[0].badge}
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-[#1A1A1A] tracking-tight leading-tight mb-4">{CARDS[0].title}</h2>
-            <div className="w-12 h-1 bg-[#2C5F2E] rounded-full mb-5" />
+            <div className="w-12 h-1 bg-[#D4622A] rounded-full mb-5" />
             <p className="text-base text-[#444] leading-[1.85]">{CARDS[0].description}</p>
           </div>
         </article>
 
         {/* Section header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-1 h-6 bg-[#2C5F2E] rounded-full" />
+          <div className="w-1 h-6 bg-[#D4622A] rounded-full" />
           <h2 className="text-xl font-black text-[#1A1A1A] tracking-tight">Unser Sortiment</h2>
         </div>
 
@@ -208,12 +208,12 @@ export default function AngelnPage() {
                 <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
               </div>
               <div className="p-6">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#2C5F2E] bg-[#2C5F2E]/8 px-3 py-1 rounded-full mb-3">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#D4622A] bg-[#D4622A]/8 px-3 py-1 rounded-full mb-3">
                   {card.icon}
                   {card.badge}
                 </span>
                 <h2 className="font-black text-[#1A1A1A] text-lg leading-tight mb-2">{card.title}</h2>
-                <div className="w-8 h-0.5 bg-[#2C5F2E] rounded-full mb-3" />
+                <div className="w-8 h-0.5 bg-[#D4622A] rounded-full mb-3" />
                 <p className="text-sm text-[#666] leading-relaxed">{card.description}</p>
               </div>
             </article>

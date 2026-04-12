@@ -96,25 +96,16 @@ export function CategoryPreviewSection() {
   }, [])
 
   if (loading) return (
-    <div className="bg-[#F0F1F3] border-t border-[#E0E0E0] py-12">
+    <div className="py-12 animate-pulse" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
       <div className="container mx-auto px-4 space-y-6">
         {[0, 1].map(i => (
-          <div key={i} className="rounded-3xl overflow-hidden bg-white border border-[#EBEBEB] shadow-sm animate-pulse">
-            <div className="h-[280px] bg-gray-200" />
+          <div key={i} className="rounded-3xl overflow-hidden border" style={{ background: "white", borderColor: "#e8eeff" }}>
             <div className="p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {Array.from({ length: 6 }).map((_, j) => (
-                <div key={j} className="rounded-2xl overflow-hidden border border-gray-100">
-                  <div className="aspect-square bg-gray-100" />
-                  <div className="p-3 space-y-2">
-                    <div className="h-3 bg-gray-100 rounded-full w-5/6" />
-                    <div className="h-3 bg-gray-100 rounded-full w-3/4" />
-                    <div className="h-4 bg-gray-200 rounded-full w-1/2" />
-                  </div>
+                <div key={j} className="rounded-2xl overflow-hidden" style={{ border: "1px solid #e8eeff" }}>
+                  <div className="aspect-square" style={{ background: "#F3F6FF" }} />
                 </div>
               ))}
-            </div>
-            <div className="px-5 pb-5">
-              <div className="h-12 bg-gray-100 rounded-xl" />
             </div>
           </div>
         ))}
@@ -138,27 +129,31 @@ export function CategoryPreviewSection() {
           const visible = catProducts.filter(p => !failedIds.has(p.id)).slice(0, 6)
           if (visible.length === 0) return null
           return (
-            <section key={cat} className="bg-white border-t border-[#E0E0E0] py-12">
+            <section key={cat} className="py-14" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
               <div className="container mx-auto px-4">
 
-                {/* Header — mismo estilo que RecommendedProducts */}
-                <div className="flex items-end justify-between mb-8">
+                {/* Header */}
+                <div className="flex items-end justify-between mb-10">
                   <div>
-                    <div className="inline-flex items-center gap-1.5 bg-[#2C5F2E]/8 text-[#2C5F2E] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-                      <span className="text-2xl">{emoji}</span> {cat}
-                    </div>
-                    <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">{label}</h2>
-                    <p className="text-sm text-[#888] mt-1">{description}</p>
+                    <span
+                      className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3"
+                      style={{ background: "var(--ap-pink-pale)", color: "#c0395a" }}
+                    >
+                      <span className="text-lg leading-none">{emoji}</span> {cat}
+                    </span>
+                    <h2 className="text-2xl font-black tracking-tight" style={{ color: "var(--ap-dark)" }}>{label}</h2>
+                    <p className="text-sm mt-1" style={{ color: "var(--ap-muted)" }}>{description}</p>
                   </div>
                   <button
                     onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}
-                    className="hidden sm:flex items-center gap-1.5 text-sm text-[#2C5F2E] font-semibold hover:gap-3 transition-all duration-200 whitespace-nowrap"
+                    className="hidden sm:flex items-center gap-1.5 text-sm font-bold hover:gap-3 transition-all duration-200 whitespace-nowrap"
+                    style={{ color: "var(--ap-blue)" }}
                   >
-                    Alle ansehen <span>→</span>
+                    Alle ansehen <span className="text-base">→</span>
                   </button>
                 </div>
 
-                {/* Product grid — mismo estilo que RecommendedProducts */}
+                {/* Product grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                   {visible.map((product) => {
                     const imgs = getImages(product)
@@ -168,30 +163,34 @@ export function CategoryPreviewSection() {
                         onClick={() => router.push(`/product/${product.id}`)}
                         className="cursor-pointer group"
                       >
-                        <div className="relative bg-[#F8F8F8] rounded-2xl overflow-hidden aspect-square mb-3 border border-[#EFEFEF] group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300">
+                        <div
+                          className="relative overflow-hidden aspect-square mb-3 group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300 rounded-3xl"
+                          style={{ background: "#F3F6FF", border: "1.5px solid #e8eeff" }}
+                        >
                           <ProductImage
                             src={imgs[0] || product.image_url}
                             candidates={product.image_url_candidates}
                             alt={product.name}
                             loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onAllFailed={() => markFailed(product.id)}
                           />
                           <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <span className="bg-white text-[#1A1A1A] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                            <span
+                              className="text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md"
+                              style={{ background: "linear-gradient(135deg, var(--ap-blue) 0%, var(--ap-pink) 100%)" }}
+                            >
                               Ansehen →
                             </span>
                           </div>
                         </div>
-                        <p className="text-xs font-semibold text-[#1A1A1A] leading-tight line-clamp-2 mb-1.5 group-hover:text-[#2C5F2E] transition-colors">
+                        <p className="text-xs font-semibold leading-tight line-clamp-2 mb-1.5 transition-colors" style={{ color: "var(--ap-dark)" }}>
                           {product.name}
                         </p>
                         {product.price > 0 && (
-                          <div className="flex items-baseline gap-1.5 flex-wrap">
-                            <span className="text-sm font-black text-[#1A1A1A]">
-                              CHF {product.price.toFixed(2)}
-                            </span>
-                          </div>
+                          <span className="text-sm font-black" style={{ color: "var(--ap-dark)" }}>
+                            € {product.price.toFixed(2)}
+                          </span>
                         )}
                       </div>
                     )
@@ -199,12 +198,13 @@ export function CategoryPreviewSection() {
                 </div>
 
                 {/* Mobile CTA */}
-                <div className="mt-5 sm:hidden">
+                <div className="mt-6 sm:hidden">
                   <button
                     onClick={() => router.push(`/shop?cat=${encodeURIComponent(catParam)}`)}
-                    className="w-full py-3 rounded-2xl border-2 border-[#2C5F2E]/25 hover:border-[#2C5F2E] text-sm font-bold text-[#2C5F2E] transition-all"
+                    className="w-full py-3.5 rounded-2xl text-sm font-bold transition-all border-2"
+                    style={{ borderColor: "var(--ap-blue)", color: "var(--ap-blue)", background: "transparent" }}
                   >
-                    Alle {label} anzeigen →
+                    Alle ansehen — {label} →
                   </button>
                 </div>
 

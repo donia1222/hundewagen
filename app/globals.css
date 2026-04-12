@@ -1,12 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,700;1,800&display=swap');
+
+/* ── Alpine Paws brand tokens — modern dog store palette ── */
+:root {
+  --ap-blue:        #4F7CFF;   /* primary blue — modern & trustworthy */
+  --ap-blue-light:  #6B93FF;   /* hover / lighter blue */
+  --ap-blue-pale:   #EEF3FF;   /* pale blue tint bg */
+  --ap-blue-dark:   #3A63E0;   /* deep blue for accents */
+  --ap-pink:        #FF6B9D;   /* pink accent — playful & friendly */
+  --ap-pink-light:  #FF8FB5;   /* lighter pink */
+  --ap-pink-pale:   #FFF0F6;   /* pale pink tint bg */
+  --ap-lavender:    #E8E3FF;   /* soft lavender bg */
+  --ap-mint:        #C8F5E8;   /* soft mint accent */
+  --ap-cream:       #F7F8FF;   /* page background cool white */
+  --ap-dark:        #1A1A2E;   /* deep blue-black */
+  --ap-muted:       #6B7280;   /* muted cool gray */
+  --ap-card:        #FFFFFF;   /* card background */
+  /* Legacy aliases for backward compat */
+  --ap-green:       #4F7CFF;
+  --ap-green-light: #6B93FF;
+  --ap-green-pale:  #EEF3FF;
+  --ap-sand:        #FF6B9D;
+  --ap-sand-light:  #FFF0F6;
+  --ap-teal:        #4F7CFF;
+  --ap-teal-pale:   #EEF3FF;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: 'Nunito', 'Segoe UI', Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {

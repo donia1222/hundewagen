@@ -338,8 +338,8 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
           >
             {/* Header */}
             <div className="flex flex-col items-center pt-5 pb-4 bg-white border-b border-gray-100">
-              <div className="w-11 h-11 rounded-full bg-[#2C5F2E]/10 flex items-center justify-center mb-2">
-                <Shield className="w-5 h-5 text-[#2C5F2E]" />
+              <div className="w-11 h-11 rounded-full bg-[#D4622A]/10 flex items-center justify-center mb-2">
+                <Shield className="w-5 h-5 text-[#D4622A]" />
               </div>
               <p className="font-bold text-[#1A1A1A] text-sm">Administrator</p>
               <p className="text-xs text-gray-500 truncate max-w-48">{adminProfile.email}</p>
@@ -351,7 +351,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                 onClick={handleViewProfile}
                 className="rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white focus:bg-white transition-colors"
               >
-                <User className="w-4 h-4 mr-3 text-[#2C5F2E] shrink-0" />
+                <User className="w-4 h-4 mr-3 text-[#D4622A] shrink-0" />
                 <div>
                   <p className="font-medium text-[#1A1A1A] text-sm">Profil anzeigen</p>
                   <p className="text-xs text-gray-400">Sitzungsinformationen</p>
@@ -362,7 +362,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                 onClick={() => router.push("/adminsevelen")}
                 className="rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white focus:bg-white transition-colors"
               >
-                <Settings className="w-4 h-4 mr-3 text-[#2C5F2E] shrink-0" />
+                <Settings className="w-4 h-4 mr-3 text-[#D4622A] shrink-0" />
                 <div>
                   <p className="font-medium text-[#1A1A1A] text-sm">Admin-Panel</p>
                   <p className="text-xs text-gray-400">Websiteverwaltung</p>
@@ -395,8 +395,8 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                 subtle
                   ? "bg-transparent text-[#BBB] border-[#DDD] hover:text-[#666] hover:border-[#999]"
                   : isLightSection
-                  ? "bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-[#2C5F2E]/50"
-                  : "bg-white/5 hover:bg-white/10 text-white border-white/10 hover:border-[#2C5F2E]/30"
+                  ? "bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-[#D4622A]/50"
+                  : "bg-white/5 hover:bg-white/10 text-white border-white/10 hover:border-[#D4622A]/30"
               }`}
               title="Iniciar Sesión Admin"
             >
@@ -416,8 +416,8 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
             {/* Form card */}
             <div className="mx-4 my-5 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 rounded-full bg-[#2C5F2E]/10 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-[#2C5F2E]" />
+                <div className="w-8 h-8 rounded-full bg-[#D4622A]/10 flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-[#D4622A]" />
                 </div>
                 <span className="text-2xl font-bold text-[#1A1A1A]">Anmelden</span>
               </div>
@@ -475,7 +475,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                     id="rememberMe"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="rounded border-gray-300 text-[#2C5F2E]"
+                    className="rounded border-gray-300 text-[#D4622A]"
                   />
                   <Label htmlFor="rememberMe" className="text-sm text-gray-500">7 Tage angemeldet bleiben</Label>
                 </div>
@@ -489,7 +489,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                 <Button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="w-full h-12 rounded-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-semibold text-base"
+                  className="w-full h-12 rounded-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-semibold text-base"
                 >
                   {isLoggingIn ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -501,7 +501,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
             </div>
 
             <p className="text-center text-sm text-gray-500 pb-6 px-4">
-              Jagd · Angeln · <span className="text-[#2C5F2E] font-semibold">Outdoor</span> · Schweiz
+              Jagd · Angeln · <span className="text-[#D4622A] font-semibold">Outdoor</span> · Schweiz
             </p>
           </DialogContent>
         </Dialog>
@@ -580,7 +580,7 @@ export function AdminAuth({ isLightSection = false, subtle = false }: AdminAuthP
                   setIsProfileOpen(false)
                   router.push("/adminsevelen")
                 }}
-                className="flex-1 bg-[#2C5F2E] hover:bg-[#1A4520]"
+                className="flex-1 bg-[#D4622A] hover:bg-[#B8501F]"
               >
                 Zum Admin-Panel
               </Button>

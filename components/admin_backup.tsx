@@ -539,7 +539,7 @@ export function Admin({ onClose }: AdminProps) {
                 <Flame className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">FEUER KÖNIGREICH</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Alpine Paws</h1>
                 <p className="text-gray-600">Panel de Administración</p>
               </div>
             </div>
@@ -608,7 +608,7 @@ export function Admin({ onClose }: AdminProps) {
                       <div>
                         <p className="text-gray-600 text-sm">Ingresos Totales</p>
                         <p className="text-2xl font-bold text-green-600">
-                          {(Number.parseFloat(orderStats.total_revenue.toString()) || 0).toFixed(2)} CHF
+                          {(Number.parseFloat(orderStats.total_revenue.toString()) || 0).toFixed(2)} €
                         </p>
                       </div>
                       <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -748,11 +748,11 @@ export function Admin({ onClose }: AdminProps) {
                       <div>
                         <p className="text-gray-600 text-sm">Total</p>
                         <p className="text-2xl font-bold text-gray-800">
-                          {(Number.parseFloat(order.total_amount.toString()) || 0).toFixed(2)} CHF
+                          {(Number.parseFloat(order.total_amount.toString()) || 0).toFixed(2)} €
                         </p>
                         <p className="text-gray-600 text-sm">Costo de Envío</p>
                         <p className="text-lg font-bold text-gray-800">
-                          {(Number.parseFloat(order.shipping_cost.toString()) || 0).toFixed(2)} CHF
+                          {(Number.parseFloat(order.shipping_cost.toString()) || 0).toFixed(2)} €
                         </p>
                         <p className="text-gray-600 text-sm">Fecha de Creación</p>
                         <p className="text-gray-600 text-sm">{formatDate(order.created_at)}</p>
@@ -997,7 +997,7 @@ export function Admin({ onClose }: AdminProps) {
                       <div className="flex items-center justify-between">
                         <Badge className="bg-orange-100 text-orange-800">{getCategoryDisplay(product.category)}</Badge>
                         <span className="font-bold text-lg text-gray-800">
-                          {Number.parseFloat(product.price.toString()).toFixed(2)} CHF
+                          {Number.parseFloat(product.price.toString()).toFixed(2)} €
                         </span>
                       </div>
 
@@ -1100,11 +1100,11 @@ export function Admin({ onClose }: AdminProps) {
                   <div className="space-y-2">
                     <p>
                       <span className="font-medium">Total:</span>{" "}
-                      {(Number.parseFloat(selectedOrder.total_amount.toString()) || 0).toFixed(2)} CHF
+                      {(Number.parseFloat(selectedOrder.total_amount.toString()) || 0).toFixed(2)} €
                     </p>
                     <p>
                       <span className="font-medium">Costo de Envío:</span>{" "}
-                      {(Number.parseFloat(selectedOrder.shipping_cost.toString()) || 0).toFixed(2)} CHF
+                      {(Number.parseFloat(selectedOrder.shipping_cost.toString()) || 0).toFixed(2)} €
                     </p>
                     <p>
                       <span className="font-medium">Método de Pago:</span> {selectedOrder.payment_method}
@@ -1141,10 +1141,10 @@ export function Admin({ onClose }: AdminProps) {
                               <div className="flex items-center space-x-4 mt-2">
                                 <span className="text-sm">Cantidad: {item.quantity}</span>
                                 <span className="text-sm">
-                                  Precio: {Number.parseFloat(item.price.toString()).toFixed(2)} CHF
+                                  Precio: {Number.parseFloat(item.price.toString()).toFixed(2)} €
                                 </span>
                                 <span className="text-sm font-medium">
-                                  Subtotal: {Number.parseFloat(item.subtotal.toString()).toFixed(2)} CHF
+                                  Subtotal: {Number.parseFloat(item.subtotal.toString()).toFixed(2)} €
                                 </span>
                               </div>
                               <div className="flex items-center space-x-4 mt-1">

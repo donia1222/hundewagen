@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
           price: item.price
         })) || [])
       },
-      description: `FEUER KÖNIGREICH Order - ${orderData.customerInfo.email}`,
+      description: `Hundewagen Order - ${orderData.customerInfo.email}`,
       receipt_email: orderData.customerInfo.email,
       shipping: {
         address: {

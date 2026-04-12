@@ -5,7 +5,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import {
   ShoppingCart, ChevronLeft, ChevronRight,
   Search, X, Check, LayoutGrid, ArrowLeft,
-  ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images, Gift
+  ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images, Gift, ExternalLink
 } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ShoppingCartComponent } from "./shopping-cart"
@@ -44,12 +44,13 @@ interface ProductCardProps {
   product: Product
   addedIds: Set<number>
   wishlist: Set<number>
+  affiliateUrl?: string
   onSelect: (p: Product) => void
   onAddToCart: (p: Product) => void
   onToggleWishlist: (id: number) => void
 }
 
-const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, onSelect, onAddToCart, onToggleWishlist }: ProductCardProps) {
+const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, affiliateUrl, onSelect, onAddToCart, onToggleWishlist }: ProductCardProps) {
   const [idx, setIdx] = useState(0)
   const images  = getImages(product)
   const inStock = (product.stock ?? 0) > 0
@@ -57,10 +58,11 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, onS
   const isWished = wishlist.has(product.id)
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 border border-[#EBEBEB] hover:border-[#D5D5D5]">
+    <div className="group bg-white rounded-3xl overflow-hidden flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all duration-300" style={{ border: "1.5px solid #e8eeff" }}>
       {/* Image */}
       <div
-        className="relative aspect-square bg-[#F8F8F8] overflow-hidden cursor-pointer"
+        className="relative aspect-square overflow-hidden cursor-pointer"
+        style={{ background: "#F3F6FF" }}
         onClick={() => onSelect(product)}
       >
         {images.length > 0 ? (
@@ -115,7 +117,7 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, onS
           </div>
         )}
         {product.badge && (
-          <span className="absolute top-2.5 left-2.5 bg-[#2C5F2E] text-white text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide shadow-sm">
+          <span className="absolute top-2.5 left-2.5 bg-[#4F7CFF] text-white text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide shadow-sm">
             {product.badge}
           </span>
         )}
@@ -143,25 +145,22 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, onS
           {product.origin || "—"}
         </p>
         <h3
-          className="text-sm font-bold text-[#1A1A1A] line-clamp-2 leading-snug cursor-pointer hover:text-[#2C5F2E] transition-colors"
+          className="text-sm font-bold text-[#1A1A1A] line-clamp-2 leading-snug cursor-pointer hover:text-[#4F7CFF] transition-colors"
           onClick={() => onSelect(product)}
         >
           {product.name}
         </h3>
         <div className="mt-auto pt-2.5 flex items-center justify-between gap-2 border-t border-[#F5F5F5]">
-          <span className="text-base font-black text-[#1A1A1A] tracking-tight">CHF {product.price.toFixed(2)}</span>
-          {inStock ? (
+          <span className="text-base font-black text-[#1A1A1A] tracking-tight">€ {product.price.toFixed(2)}</span>
+          {(
             <button
               onClick={() => onAddToCart(product)}
-              className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 ${
-                isAdded
-                  ? "bg-emerald-500 text-white"
-                  : "bg-[#2C5F2E] hover:bg-[#1A4520] text-white hover:shadow-md active:scale-95"
-              }`}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF9900] hover:bg-[#e88a00] text-white hover:shadow-md active:scale-95 transition-all duration-200"
+              title="Comprar en Amazon"
             >
-              {isAdded ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
+              <ExternalLink className="w-4 h-4" />
             </button>
-          ) : (
+          ) || (
             <a
               href={`mailto:info@usfh.ch?subject=Verfügbarkeitsanfrage: ${encodeURIComponent(product.name)}&body=Guten Tag,%0A%0Aich würde gerne wissen, ob der folgende Artikel wieder verfügbar ist:%0A%0AArtikel: ${encodeURIComponent(product.name)}%0AArtikel-Nr.: ${product.id}%0A%0AVielen Dank!`}
               onClick={e => e.stopPropagation()}
@@ -195,7 +194,7 @@ function MobileCatCard({ srcs, displayName, isActive, onClick, id }: {
       style={{
         width: "110px", height: "120px",
         backgroundColor: "#111",
-        border: isActive ? "2px solid #2C5F2E" : "2px solid transparent",
+        border: isActive ? "2px solid #4F7CFF" : "2px solid transparent",
         boxShadow: isActive ? "0 4px 16px rgba(44,95,46,0.3)" : "none",
       }}
     >
@@ -214,7 +213,7 @@ function MobileCatCard({ srcs, displayName, isActive, onClick, id }: {
           : "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)"
       }} />
       {isActive && (
-        <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#2C5F2E] rounded-full flex items-center justify-center">
+        <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F7CFF] rounded-full flex items-center justify-center">
           <Check className="w-2.5 h-2.5 text-white" />
         </div>
       )}
@@ -245,7 +244,7 @@ function CatCard({ srcs, displayName, isActive, onClick }: {
       style={{
         height: "180px", minWidth: "210px", width: "210px", flexShrink: 0,
         backgroundColor: "#f5f5f5",
-        border: isActive ? "2px solid #2C5F2E" : "2px solid #E0E0E0",
+        border: isActive ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
         boxShadow: isActive ? "0 8px 32px rgba(44,95,46,0.3)" : "none",
       }}
     >
@@ -263,7 +262,7 @@ function CatCard({ srcs, displayName, isActive, onClick }: {
           : "linear-gradient(to top, rgba(0,0,0,0.60) 0%, transparent 50%)"
       }} />
       {isActive && (
-        <div className="absolute top-3 right-3 w-6 h-6 bg-[#2C5F2E] rounded-full flex items-center justify-center shadow-lg">
+        <div className="absolute top-3 right-3 w-6 h-6 bg-[#4F7CFF] rounded-full flex items-center justify-center shadow-lg">
           <Check className="w-3.5 h-3.5 text-white" />
         </div>
       )}
@@ -286,6 +285,15 @@ export default function ShopGrid() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState("")
+  const [affiliateLinks, setAffiliateLinks] = useState<Record<string, string>>({})
+  const affiliateLinksRef = useRef<Record<string, string>>({})
+
+  useEffect(() => {
+    fetch("/api/affiliate-links").then(r => r.json()).then(data => {
+      setAffiliateLinks(data)
+      affiliateLinksRef.current = data
+    }).catch(() => {})
+  }, [])
 
   const [search, setSearch]                 = useState("")
   const [activeCategory, setActiveCategory] = useState("all")
@@ -307,19 +315,19 @@ export default function ShopGrid() {
         const reader = new FileReader()
         reader.onloadend = function () {
           const base64data = (reader.result as string).split(",")[1]
-          const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:US - Fishing & Huntingshop\nORG:US - Fishing & Huntingshop\nTITLE:JAGD · ANGELN · OUTDOOR\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@usfh.ch\nURL:https://usfh.ch\nPHOTO;ENCODING=b;TYPE=PNG:${base64data}\nEND:VCARD`
+          const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Hundewagen\nORG:Hundewagen\nTITLE:Hundeprodukte · Outdoor · Schweiz\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@hundewagen.shop\nURL:https://hundewagen.shop\nPHOTO;ENCODING=b;TYPE=PNG:${base64data}\nEND:VCARD`
           const link = document.createElement("a")
           link.href = URL.createObjectURL(new Blob([vcard], { type: "text/vcard;charset=utf-8" }))
-          link.download = "US-Fishing-Huntingshop.vcf"
+          link.download = "Hundewagen.vcf"
           document.body.appendChild(link); link.click(); document.body.removeChild(link)
         }
         reader.readAsDataURL(blob)
       })
       .catch(() => {
-        const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:US - Fishing & Huntingshop\nORG:US - Fishing & Huntingshop\nTITLE:JAGD · ANGELN · OUTDOOR\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@usfh.ch\nURL:https://usfh.ch\nEND:VCARD`
+        const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:Hundewagen\nORG:Hundewagen\nTITLE:Hundeprodukte · Outdoor · Schweiz\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@hundewagen.shop\nURL:https://hundewagen.shop\nEND:VCARD`
         const link = document.createElement("a")
         link.href = URL.createObjectURL(new Blob([vcard], { type: "text/vcard;charset=utf-8" }))
-        link.download = "US-Fishing-Huntingshop.vcf"
+        link.download = "Hundewagen.vcf"
         document.body.appendChild(link); link.click(); document.body.removeChild(link)
       })
   }
@@ -439,8 +447,13 @@ export default function ShopGrid() {
     localStorage.setItem("cantina-cart", JSON.stringify(c))
     localStorage.setItem("cantina-cart-count", c.reduce((s, i) => s + i.quantity, 0).toString())
   }
+  const getAmazonUrl = (product: Product) =>
+    affiliateLinksRef.current[String(product.id)] ||
+    `https://www.amazon.es/s?k=${encodeURIComponent(product.name)}&tag=hundezonen-20`
+
   const addToCart = (product: Product) => {
-    if ((product.stock ?? 0) === 0) return
+    window.open(getAmazonUrl(product), "_blank", "noopener,noreferrer")
+    return
     setCart(prev => {
       const exists = prev.find(i => i.id === product.id)
       const next = exists
@@ -539,7 +552,7 @@ export default function ShopGrid() {
   }
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f7f7f8]">
+      <div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -599,27 +612,24 @@ export default function ShopGrid() {
       )}
 
 
-<div className="min-h-screen bg-[#f7f7f8]">
+<div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
 
         {/* ── Top bar ── */}
-        <div className="bg-white border-b border-[#E0E0E0] sticky top-0 z-30 shadow-sm">
+        <div className="bg-white sticky top-0 z-30 shadow-sm" style={{ borderBottom: "1px solid #e8eeff" }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
 
             {/* Mobile: Hamburger side menu */}
             <Sheet open={navMenuOpen} onOpenChange={setNavMenuOpen}>
               <SheetTrigger asChild>
-                <button className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0">
+                <button className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#4F7CFF] hover:text-white transition-all flex-shrink-0">
                   <Menu className="w-6 h-6" />
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
                 <div className="flex items-center justify-between p-4 pr-16 border-b border-[#E0E0E0] flex-shrink-0">
-                  <div className="flex items-center gap-2">
-                    <img src="/Security_n.png" alt="Logo" className="h-8 w-auto object-contain" />
-                    <span className="leading-tight">
-                      <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '0.9rem' }}>US-</span>
-                      <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.8rem' }}> FISHING &amp;<br />HUNTINGSHOP</span>
-                    </span>
+                  <div className="flex flex-col gap-1">
+                    <img src="/pawlogo.png" alt="Hundewagen" className="h-14 w-auto object-contain" />
+                    <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#4F7CFF" }}>hundewagen.shop · Zubehör & Mehr 🐾</div>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="[&_span]:hidden flex items-center">
@@ -647,13 +657,13 @@ export default function ShopGrid() {
                 <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
                   <button
                     onClick={() => { router.push("/"); setNavMenuOpen(false) }}
-                    className={`w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-medium ${pathname === "/" ? "bg-[#2C5F2E] text-white" : "text-[#333333]"}`}
+                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] font-bold text-[#222222]"
                   >
                     Home
                   </button>
                   <button
                     onClick={() => { setActiveCategory("all"); setNavMenuOpen(false) }}
-                    className={`w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-medium ${activeCategory === "all" ? "bg-[#2C5F2E] text-white" : "text-[#333333]"}`}
+                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] font-bold text-[#222222]"
                   >
                     Alle Produkte
                   </button>
@@ -661,36 +671,32 @@ export default function ShopGrid() {
                     <button
                       key={cat.slug}
                       onClick={() => { setActiveCategory(cat.slug); setNavMenuOpen(false) }}
-                      className={`w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-medium ${activeCategory === cat.slug ? "bg-[#2C5F2E] text-white" : "text-[#333333]"}`}
+                      className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] font-bold text-[#222222]"
                     >
                       {cat.name.replace(/\s*\d{4}$/, "")}
                     </button>
                   ))}
-                  <div className="pt-2 mt-1 border-t border-[#E0E0E0]">
-                    <div className="flex">
-                      <button
-                        onClick={() => { router.push("/blog"); setNavMenuOpen(false) }}
-                        className={`flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-semibold ${pathname === "/blog" ? "bg-[#2C5F2E] text-white" : "text-[#2C5F2E]"}`}
-                      >
-                        <Newspaper className="w-4 h-4 shrink-0" />
-                        Blog
-                      </button>
-                      <button
-                        onClick={() => { router.push("/gallery"); setNavMenuOpen(false) }}
-                        className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-semibold text-[#2C5F2E]"
-                      >
-                        <Images className="w-4 h-4 shrink-0" />
-                        Gallery
-                      </button>
-                      <button
-                        onClick={() => { handleDownloadVCard(); setNavMenuOpen(false) }}
-                        className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] font-semibold text-[#2C5F2E]"
-                      >
-                        <Download className="w-4 h-4 shrink-0" />
-                        VCard
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    onClick={() => { router.push("/gutscheine"); setNavMenuOpen(false) }}
+                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 font-bold text-[#4F7CFF]"
+                  >
+                    <Gift className="w-4 h-4 shrink-0" />
+                    Gutscheine
+                  </button>
+                  <button
+                    onClick={() => { router.push("/blog"); setNavMenuOpen(false) }}
+                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 font-bold text-[#4F7CFF]"
+                  >
+                    <Newspaper className="w-4 h-4 shrink-0" />
+                    Blog
+                  </button>
+                  <button
+                    onClick={() => { router.push("/gallery"); setNavMenuOpen(false) }}
+                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 font-bold text-[#4F7CFF]"
+                  >
+                    <Images className="w-4 h-4 shrink-0" />
+                    Gallery
+                  </button>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -698,7 +704,7 @@ export default function ShopGrid() {
             {/* Home button — desktop only (mobile uses hamburger menu) */}
             <button
               onClick={() => router.push("/")}
-              className="hidden lg:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+              className="hidden lg:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#4F7CFF] hover:text-white transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
@@ -706,17 +712,14 @@ export default function ShopGrid() {
             {/* Divider */}
             <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
 
-            {/* Logo — hidden on mobile (too crowded) */}
-            <img src="/Security_n.png" alt="Logo" className="hidden sm:block h-12 w-auto object-contain flex-shrink-0" />
-
-            {/* Title — mobile: simple, desktop: blog style */}
-            <span className="sm:hidden flex-shrink-0" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Online-Shop</span>
-            <div className="hidden sm:block flex-shrink-0">
-              <div className="leading-tight">
-                <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '1rem' }}>US-</span>
-                <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.9rem' }}> FISHING &amp; HUNTINGSHOP</span>
+            {/* Logo */}
+            <div className="flex items-center gap-2.5 flex-shrink-0">
+              <img src="/pawlogo.png" alt="Hundewagen" className="w-12 h-12 rounded-xl object-contain flex-shrink-0" />
+              <div className="hidden sm:block">
+                <div className="font-black text-lg leading-tight" style={{ color: "#1A1A2E" }}>Hundewagen</div>
+                <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#4F7CFF" }}>hundewagen.shop · Online-Shop</div>
               </div>
-              <div className="text-[11px] text-[#888] uppercase tracking-widest mt-0.5">Online-Shop</div>
+              <span className="sm:hidden font-black text-base" style={{ color: "#1A1A2E" }}>Hundewagen</span>
             </div>
 
             <div className="hidden sm:block w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
@@ -729,7 +732,7 @@ export default function ShopGrid() {
                 placeholder="Produkte suchen…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-9 py-2.5 text-sm bg-[#F3F4F6] rounded-full border border-transparent focus:outline-none focus:bg-white focus:border-[#2C5F2E] focus:ring-2 focus:ring-[#2C5F2E]/10 transition-all placeholder-[#9CA3AF]"
+                className="w-full pl-10 pr-9 py-2.5 text-sm bg-[#F3F4F6] rounded-full border border-transparent focus:outline-none focus:bg-white focus:border-[#4F7CFF] focus:ring-2 focus:ring-[#4F7CFF]/15 transition-all placeholder-[#9CA3AF]"
               />
               {search && (
                 <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#AAA] hover:text-[#555]">
@@ -792,7 +795,7 @@ export default function ShopGrid() {
 
           {/* ── Sidebar ── */}
           <aside className={`${sidebarOpen ? "block" : "hidden"} lg:block w-full lg:w-52 xl:w-60 flex-shrink-0 lg:sticky lg:top-20 lg:self-start`}>
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-[#EBEBEB] space-y-5">
+            <div className="bg-white rounded-3xl p-4 space-y-5" style={{ border: "1.5px solid #e8eeff", boxShadow: "0 2px 16px rgba(79,124,255,0.06)" }}>
 
               <div>
                 <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Verfügbarkeit</p>
@@ -805,7 +808,7 @@ export default function ShopGrid() {
                         <button
                           onClick={() => { setShowWishlist(false); setStockFilter(val); setSidebarOpen(false) }}
                           className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
-                            isActive ? "bg-[#2C5F2E] text-white shadow-sm" : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
+                            isActive ? "bg-[#4F7CFF] text-white shadow-sm" : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
                           }`}
                         >
                           <span>{label}</span>
@@ -833,7 +836,7 @@ export default function ShopGrid() {
                           onClick={() => { setShowWishlist(false); setActiveCategory(prev => prev === cat.slug ? "all" : cat.slug); setSidebarOpen(false) }}
                           className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
                             isActive
-                              ? "bg-[#2C5F2E] text-white shadow-sm"
+                              ? "bg-[#4F7CFF] text-white shadow-sm"
                               : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
                           }`}
                         >
@@ -868,7 +871,7 @@ export default function ShopGrid() {
               <div className="border-t border-[#F3F3F3] pt-4">
                 <button
                   onClick={() => router.push("/gutscheine")}
-                  className="w-full text-left flex items-center gap-2 text-sm px-3 py-2 rounded-xl transition-all font-medium text-[#2C5F2E] hover:bg-[#F0F5F0]"
+                  className="w-full text-left flex items-center gap-2 text-sm px-3 py-2 rounded-xl transition-all font-medium text-[#4F7CFF] hover:bg-[#F0F5F0]"
                 >
                   <Gift className="w-3.5 h-3.5 flex-shrink-0" />
                   Gutscheine kaufen
@@ -900,9 +903,9 @@ export default function ShopGrid() {
 
             {/* ── Category section title ── */}
             <div className="hidden lg:flex items-start gap-3 mb-3">
-              <div className="w-1 self-stretch bg-[#2C5F2E] rounded-full flex-shrink-0" />
+              <div className="w-1 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
               <div>
-                <p className="font-black text-[#2C5F2E] text-2xl leading-tight">Kategorien</p>
+                <p className="font-black text-[#4F7CFF] text-2xl leading-tight">Kategorien</p>
                 <p className="text-sm text-[#888] mt-1">Jagd, Angeln & Outdoor-Ausrüstung</p>
               </div>
             </div>
@@ -930,28 +933,28 @@ export default function ShopGrid() {
                 style={{
                   height: "180px", minWidth: "210px", width: "210px", flexShrink: 0,
                   backgroundColor: "#ffffff",
-                  border: activeCategory === "all" ? "2px solid #2C5F2E" : "2px solid #E0E0E0",
+                  border: activeCategory === "all" ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
                   boxShadow: activeCategory === "all" ? "0 8px 32px rgba(44,95,46,0.2)" : "none",
                 }}
               >
                 {/* Decorative circles */}
-                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.08)" }} />
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.06)" }} />
-                <div className="absolute top-1/2 right-6 -translate-y-1/2 w-14 h-14 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.05)" }} />
+                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.08)" }} />
+                <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.06)" }} />
+                <div className="absolute top-1/2 right-6 -translate-y-1/2 w-14 h-14 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.05)" }} />
 
                 {/* Icon */}
                 <div className="relative w-11 h-11 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: "#2C5F2E1A" }}>
-                  <LayoutGrid className="w-6 h-6" style={{ color: "#2C5F2E" }} />
+                  style={{ backgroundColor: "#EEF3FF" }}>
+                  <LayoutGrid className="w-6 h-6" style={{ color: "#4F7CFF" }} />
                 </div>
                 {/* Text */}
                 <div className="relative">
                   {activeCategory === "all" && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: "#2C5F2E" }}>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: "#4F7CFF" }}>
                       <Check className="w-3 h-3" /> Aktiv
                     </span>
                   )}
-                  <p className="font-black text-base leading-tight tracking-tight" style={{ color: "#2C5F2E" }}>Alle Kategorien</p>
+                  <p className="font-black text-base leading-tight tracking-tight" style={{ color: "#4F7CFF" }}>Alle Kategorien</p>
                   <p className="text-[11px] mt-0.5 font-medium text-[#999]">Alles anzeigen →</p>
                 </div>
               </button>
@@ -995,17 +998,17 @@ export default function ShopGrid() {
                   style={{
                     width: "110px", height: "120px",
                     backgroundColor: "#fff",
-                    border: activeCategory === "all" ? "2px solid #2C5F2E" : "2px solid #E0E0E0",
+                    border: activeCategory === "all" ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
                     boxShadow: activeCategory === "all" ? "0 4px 16px rgba(44,95,46,0.2)" : "none",
                   }}
                 >
                   <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.07)" }} />
                   <div className="absolute -bottom-3 -left-3 w-12 h-12 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.05)" }} />
                   <div className="relative w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(44,95,46,0.12)" }}>
-                    <LayoutGrid className="w-4 h-4" style={{ color: "#2C5F2E" }} />
+                    <LayoutGrid className="w-4 h-4" style={{ color: "#D4622A" }} />
                   </div>
                   <div className="relative">
-                    <p className="font-black text-[15px] leading-tight" style={{ color: "#2C5F2E" }}>Alle</p>
+                    <p className="font-black text-[15px] leading-tight" style={{ color: "#D4622A" }}>Alle</p>
                     <p className="text-[12px] text-[#999] mt-0.5">Anzeigen</p>
                   </div>
                 </button>
@@ -1048,9 +1051,9 @@ export default function ShopGrid() {
               return (
                 <div className="border-t border-[#E0E0E0] mt-6 pt-6">
                   <div className="flex items-start gap-2.5 mb-2.5">
-                    <div className="w-0.5 self-stretch bg-[#2C5F2E] rounded-full flex-shrink-0" />
+                    <div className="w-0.5 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
                     <div>
-                      <p className="font-black text-[#2C5F2E] text-xl lg:text-2xl leading-tight">Subkategorien</p>
+                      <p className="font-black text-[#4F7CFF] text-xl lg:text-2xl leading-tight">Subkategorien</p>
                       <p className="text-sm text-[#888] mt-1">{parentCat?.name.replace(/\s*\d{4}$/, "")}</p>
                     </div>
                   </div>
@@ -1064,7 +1067,7 @@ export default function ShopGrid() {
                             onClick={() => setActiveCategory(prev => prev === sub.slug ? parentCat!.slug : sub.slug)}
                             className="px-2.5 py-1 rounded-full border transition-all whitespace-nowrap text-[11px] font-black uppercase tracking-wider"
                             style={isSubActive
-                              ? { backgroundColor: "#2C5F2E", color: "#fff", borderColor: "#2C5F2E" }
+                              ? { backgroundColor: "#D4622A", color: "#fff", borderColor: "#D4622A" }
                               : { backgroundColor: "#4a7f4c", color: "#fff", borderColor: "#4a7f4c" }
                             }
                           >
@@ -1082,9 +1085,9 @@ export default function ShopGrid() {
             {suppliers.length > 0 && (
               <div className="border-t border-[#E0E0E0] mt-6 pt-6">
                 <div className="flex items-start gap-2.5 mb-2.5">
-                  <div className="w-0.5 self-stretch bg-[#2C5F2E] rounded-full flex-shrink-0" />
+                  <div className="w-0.5 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
                   <div>
-                    <p className="font-black text-[#2C5F2E] text-xl lg:text-2xl leading-tight">Lieferanten</p>
+                    <p className="font-black text-[#4F7CFF] text-xl lg:text-2xl leading-tight">Lieferanten</p>
                     <p className="text-sm text-[#888] mt-1">Qualitätsmarken aus aller Welt</p>
                   </div>
                 </div>
@@ -1108,10 +1111,10 @@ export default function ShopGrid() {
                         "BLACKFLASH":   "#1A1A1A",
                         "BÖKER":        "#8B0000",
                         "FISHERMAN'S":  "#1A5276",
-                        "HALLER":       "#2C5F2E",
+                        "HALLER":       "#D4622A",
                         "JENZI":        "#FF6600",
                         "LINDER":       "#333",
-                        "NATURZONE":    "#2C5F2E",
+                        "NATURZONE":    "#D4622A",
                         "POHLFORCE":    "#CC0000",
                         "SMOKI":        "#8B6914",
                         "STEAMBOW":     "#1A1A8C",
@@ -1146,7 +1149,7 @@ export default function ShopGrid() {
                 placeholder="Produkte suchen…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-9 py-2.5 text-sm bg-[#F3F4F6] rounded-full border border-transparent focus:outline-none focus:bg-white focus:border-[#2C5F2E] focus:ring-2 focus:ring-[#2C5F2E]/10 transition-all placeholder-[#9CA3AF]"
+                className="w-full pl-10 pr-9 py-2.5 text-sm bg-[#F3F4F6] rounded-full border border-transparent focus:outline-none focus:bg-white focus:border-[#4F7CFF] focus:ring-2 focus:ring-[#4F7CFF]/15 transition-all placeholder-[#9CA3AF]"
               />
               {search && (
                 <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#AAA] hover:text-[#555]">
@@ -1164,7 +1167,7 @@ export default function ShopGrid() {
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value as typeof sortBy)}
-                  className="appearance-none text-sm font-semibold text-[#555] bg-white border border-[#E5E5E5] rounded-full pl-4 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-[#2C5F2E]/20 cursor-pointer"
+                  className="appearance-none text-sm font-semibold text-[#555] bg-white border border-[#E5E5E5] rounded-full pl-4 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-[#D4622A]/20 cursor-pointer"
                 >
                   <option value="default">Empfehlung</option>
                   <option value="name_asc">Name A–Z</option>
@@ -1183,7 +1186,7 @@ export default function ShopGrid() {
                     <Heart className="w-14 h-14 text-red-200 mx-auto mb-4" />
                     <p className="text-lg font-bold text-gray-300 mb-2">Wunschliste ist leer</p>
                     <p className="text-sm text-gray-400 mb-4">Klicke auf das Herz bei einem Produkt, um es hinzuzufügen.</p>
-                    <button onClick={() => setShowWishlist(false)} className="text-sm font-semibold text-[#2C5F2E] hover:underline">Alle Produkte anzeigen</button>
+                    <button onClick={() => setShowWishlist(false)} className="text-sm font-semibold text-[#4F7CFF] hover:underline">Alle Produkte anzeigen</button>
                   </>
                 ) : (
                   <>
@@ -1203,6 +1206,7 @@ export default function ShopGrid() {
                       product={product}
                       addedIds={addedIds}
                       wishlist={wishlist}
+                      affiliateUrl={affiliateLinks[String(product.id)]}
                       onSelect={handleSelect}
                       onAddToCart={handleAddToCart}
                       onToggleWishlist={toggleWishlist}
@@ -1214,7 +1218,7 @@ export default function ShopGrid() {
                 <div ref={sentinelRef} className="mt-10 flex flex-col items-center gap-3 pb-6">
                   {loadingMore && (
                     <>
-                      <div className="w-8 h-8 rounded-full border-[3px] border-[#2C5F2E]/20 border-t-[#2C5F2E] animate-spin" />
+                      <div className="w-8 h-8 rounded-full border-[3px] border-[#4F7CFF]/20 border-t-[#D4622A] animate-spin" />
                       <span className="text-xs text-[#999] font-semibold">Mehr laden…</span>
                     </>
                   )}

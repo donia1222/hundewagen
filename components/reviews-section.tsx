@@ -2,57 +2,57 @@
 
 const reviews = [
   {
-    name: "Camille Dürr",
-    date: "Vor 1 Jahr",
-    text: "Ich habe meine Leidenschaft für das Angeln entdeckt. Die Auswahl ist hervorragend. Die Öffnungszeiten sind sehr praktisch und das Personal ist sehr aufmerksam und kompetent. Ich komme sehr gerne wieder.",
+    name: "Laura M.",
+    date: "Vor 2 Monaten",
+    text: "Der Hundewagen ist perfekt für meine ältere Hündin! Sie kann keine langen Strecken mehr laufen und kann jetzt überall mit uns hin. Die Qualität ist ausgezeichnet und der Preis sehr gut. 🐾",
     stars: 5,
   },
   {
-    name: "Ikarus von Roll",
-    date: "Vor 1 Jahr",
-    text: "Ein gutes und kompetentes Angelgeschäft, die Beratung ist ausgezeichnet und selbst Anfänger fühlen sich gut betreut. 👍🏻",
+    name: "Carlos R.",
+    date: "Vor 1 Monat",
+    text: "Ich habe genau das gefunden, was ich für meinen Golden Retriever gesucht habe. Der Wagen ist sehr robust und lässt sich leicht falten. Der Service war schnell und alles gut verpackt.",
     stars: 5,
   },
   {
-    name: "Damian",
-    date: "Vor 2 Jahren",
-    text: "Ausgezeichnetes Angelgeschäft. Hervorragende Auswahl und ausgezeichnete Köder.",
+    name: "Sophie K.",
+    date: "Vor 3 Monaten",
+    text: "Wir haben den Wagen auf unserer Europareise mitgenommen und er war ein voller Erfolg. Mein Hund reiste bequem und sicher. Sehr gute Produktauswahl, ich würde es jederzeit wieder kaufen.",
     stars: 5,
   },
   {
-    name: "Paaatrice",
-    date: "Vor 1 Jahr",
-    text: "Ausgezeichnete Beratung und Service. Würde dort wieder einkaufen. 💪🏻",
+    name: "Miguel A.",
+    date: "Vor 2 Wochen",
+    text: "Nach langer Suche habe ich diesen Shop gefunden. Sie haben die besten Wagen für grosse Hunde, die ich je gesehen habe. Mein 35 kg schwerer Schäferhund passt perfekt hinein. Sehr empfehlenswert.",
     stars: 5,
   },
   {
-    name: "Frog Gray",
-    date: "Vor 4 Jahren",
-    text: "Amazing guy very helpful great shop.",
+    name: "Anna B.",
+    date: "Vor 4 Monaten",
+    text: "Wir haben den Geländewagen für Spaziergänge auf dem Land gekauft. Die 4 Räder funktionieren hervorragend auf Schotterwegen. Mein Hund liebt ihn. Danke für die Empfehlung!",
     stars: 5,
   },
   {
-    name: "C. Mullis",
-    date: "Vor 7 Monaten",
-    text: "Toller Verkäufer, sehr gut informiert.",
+    name: "Thomas W.",
+    date: "Vor 1 Woche",
+    text: "Hervorragende Auswahl an Hundeprodukten. Ich habe das perfekte Zubehör für meinen kleinen Begleiter gefunden. Die Lieferung war sehr schnell und das Produkt von grosser Qualität. 👍",
     stars: 5,
   },
   {
-    name: "Bierschnecke Liechtenstein",
-    date: "Vor 4 Jahren",
-    text: "Eine tolle Beratung und auch für Angelliebhaber geeignet :-) Ich fand die vollständige Köderauswahl, insbesondere Lebendköder, und die 24-Stunden-Angel-Notfallversorgung einzigartig.",
+    name: "Isabel F.",
+    date: "Vor 5 Monaten",
+    text: "Meine Hündin hat Mobilitätsprobleme und dieser Wagen hat ihr Leben verändert. Sie kommt jetzt zum Markt, in den Park und sogar in den Urlaub. Ich bin diesem Shop sehr dankbar.",
     stars: 5,
   },
 ]
 
 const avatarGradients = [
-  "from-[#2C5F2E] to-[#4a8f4c]",
-  "from-[#1A6B8A] to-[#2a9bbf]",
-  "from-[#7C3AED] to-[#a855f7]",
-  "from-[#DC2626] to-[#ef4444]",
-  "from-[#D97706] to-[#f59e0b]",
-  "from-[#0891B2] to-[#06b6d4]",
-  "from-[#059669] to-[#10b981]",
+  "from-[#4F7CFF] to-[#818cf8]",
+  "from-[#FF6B9D] to-[#f9a8d4]",
+  "from-[#22C55E] to-[#86efac]",
+  "from-[#F59E0B] to-[#fcd34d]",
+  "from-[#8B5CF6] to-[#c4b5fd]",
+  "from-[#06B6D4] to-[#67e8f9]",
+  "from-[#EC4899] to-[#fbcfe8]",
 ]
 
 const GoogleLogo = ({ size = 5 }: { size?: number }) => (
@@ -78,29 +78,39 @@ function Stars({ count }: { count: number }) {
 
 export function ReviewsSection() {
   return (
-    <section className="bg-gradient-to-b from-[#F0F1F3] to-white border-t border-[#E0E0E0] py-14">
+    <section className="py-16" style={{ background: "white", borderTop: "1px solid #e8eeff" }}>
       <div className="container mx-auto px-4">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-5">
           <div>
-            <div className="inline-flex items-center gap-2 bg-[#FFF8E1] border border-[#FBBC04]/30 text-[#92650A] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-              <span className="w-1.5 h-1.5 bg-[#FBBC04] rounded-full" />
-              Verifizierte Kundenbewertungen
-            </div>
-            <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">Was unsere Kunden sagen</h2>
-            <p className="text-sm text-[#888] mt-1">Echte Erfahrungen — direkt von Google.</p>
+            <span
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3"
+              style={{ background: "#FFFBEE", color: "#92650A", border: "1px solid #fde68a" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#F59E0B" }} />
+              Verifizierte Bewertungen
+            </span>
+            <h2 className="text-2xl font-black tracking-tight" style={{ color: "var(--ap-dark)" }}>
+              Was unsere Kunden sagen
+            </h2>
+            <p className="text-sm mt-1" style={{ color: "var(--ap-muted)" }}>
+              Echte Erfahrungen glücklicher Hundebesitzer 🐾
+            </p>
           </div>
 
           {/* Google rating badge */}
-          <div className="flex items-center gap-4 bg-white border border-[#E5E7EB] rounded-2xl px-6 py-4 shadow-sm self-start sm:self-auto">
+          <div
+            className="flex items-center gap-4 rounded-2xl px-6 py-4 shadow-sm self-start sm:self-auto"
+            style={{ background: "var(--ap-blue-pale)", border: "1.5px solid #c3d4ff" }}
+          >
             <GoogleLogo size={8} />
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-3xl text-[#1A1A1A] leading-none">4.8</span>
+                <span className="font-black text-3xl leading-none" style={{ color: "var(--ap-dark)" }}>4.8</span>
                 <div className="flex flex-col gap-0.5">
                   <Stars count={5} />
-                  <span className="text-xs text-[#888]">41 Bewertungen</span>
+                  <span className="text-xs" style={{ color: "var(--ap-muted)" }}>41 Bewertungen</span>
                 </div>
               </div>
             </div>
@@ -109,38 +119,46 @@ export function ReviewsSection() {
 
         {/* Reviews carousel */}
         <div className="relative">
-          {/* Fade right */}
-          <div className="absolute right-0 top-0 bottom-4 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+          <div
+            className="absolute right-0 top-0 bottom-4 w-20 z-10 pointer-events-none"
+            style={{ background: "linear-gradient(to left, white, transparent)" }}
+          />
 
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
+          <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollbarWidth: "none" }}>
             {reviews.map((review, i) => {
               const gradient = avatarGradients[i % avatarGradients.length]
               return (
                 <div
                   key={i}
-                  className="flex-shrink-0 bg-white rounded-2xl border border-[#EBEBEB] p-5 hover:shadow-lg hover:border-[#D0D0D0] hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
-                  style={{ width: "296px" }}
+                  className="flex-shrink-0 rounded-3xl p-5 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex flex-col"
+                  style={{
+                    width: "296px",
+                    background: i % 2 === 0 ? "var(--ap-blue-pale)" : "var(--ap-pink-pale)",
+                    border: `1.5px solid ${i % 2 === 0 ? "#c3d4ff" : "#ffd0e5"}`,
+                  }}
                 >
-                  {/* Decorative quote mark */}
-                  <div className="text-5xl text-[#F0F0F0] font-serif leading-none select-none mb-1">&ldquo;</div>
+                  {/* Quote */}
+                  <div
+                    className="text-5xl font-serif leading-none select-none mb-1"
+                    style={{ color: i % 2 === 0 ? "#c3d4ff" : "#ffd0e5" }}
+                  >&ldquo;</div>
 
-                  {/* Review text */}
-                  <p className="text-[#444] text-sm leading-relaxed line-clamp-4 flex-1 -mt-2">
+                  {/* Text */}
+                  <p className="text-sm leading-relaxed line-clamp-4 flex-1 -mt-2" style={{ color: "#374151" }}>
                     {review.text}
                   </p>
 
                   {/* Footer */}
-                  <div className="mt-4 pt-4 border-t border-[#F5F5F5] flex items-center justify-between gap-2">
+                  <div className="mt-4 pt-4 flex items-center justify-between gap-2" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
                     <div className="flex items-center gap-2.5 min-w-0">
-                      {/* Gradient avatar */}
                       <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center flex-shrink-0 shadow-sm`}>
                         <span className="text-white font-bold text-sm">{review.name.charAt(0)}</span>
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-[#1A1A1A] text-sm leading-tight truncate">{review.name}</p>
+                        <p className="font-bold text-sm leading-tight truncate" style={{ color: "var(--ap-dark)" }}>{review.name}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <Stars count={review.stars} />
-                          <span className="text-[#CCC] text-xs">· {review.date}</span>
+                          <span className="text-xs" style={{ color: "#CBD5E0" }}>· {review.date}</span>
                         </div>
                       </div>
                     </div>

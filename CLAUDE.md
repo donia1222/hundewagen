@@ -46,7 +46,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Admin dashboard: Product management, order tracking (`components/admin.tsx`)
 - AI chatbot: OpenAI-powered customer support (`components/bot.tsx`)
 - User authentication: Admin auth system (`components/admin-auth.tsx`)
-- German branding: "FEUER KÖNIGREICH" premium hot sauce store
+- Branding: "Alpine Paws" — tienda para perros activos en Suiza (outdoor, senderismo, naturaleza)
 
 **External Dependencies:**
 - All UI components use Radix UI primitives

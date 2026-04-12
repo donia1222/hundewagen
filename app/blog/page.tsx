@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, ChevronLeft, Calendar, X, ChevronRight, Menu, Newspaper, Images, Download, ShoppingCart } from "lucide-react"
+import { ArrowLeft, ChevronLeft, Calendar, X, ChevronRight } from "lucide-react"
 import { Footer } from "@/components/footer"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { LoginAuth } from "@/components/login-auth"
 
 interface BlogPost {
   id: number
@@ -131,8 +129,8 @@ function PostModal({ post, onClose }: { post: BlogPost; onClose: () => void }) {
           <div className="p-8 sm:p-10">
             {/* Date + badge */}
             <div className="flex items-center gap-3 mb-5">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#2C5F2E] bg-[#2C5F2E]/8 px-3 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 bg-[#2C5F2E] rounded-full" />
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#4F7CFF] bg-[#EEF3FF] px-3 py-1 rounded-full">
+                <span className="w-1.5 h-1.5 bg-[#4F7CFF] rounded-full" />
                 Beitrag
               </span>
               <span className="flex items-center gap-1.5 text-xs text-[#AAA] font-medium">
@@ -147,7 +145,7 @@ function PostModal({ post, onClose }: { post: BlogPost; onClose: () => void }) {
             </h2>
 
             {/* Divider */}
-            <div className="w-12 h-1 bg-[#2C5F2E] rounded-full mb-6" />
+            <div className="w-12 h-1 rounded-full mb-6" style={{ background: "linear-gradient(90deg, #4F7CFF, #FF6B9D)" }} />
 
             {/* Content */}
             <p className="text-base text-[#444] leading-[1.85] whitespace-pre-line">
@@ -209,98 +207,39 @@ export default function BlogPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5]">
+    <div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
 
       {/* Header */}
-      <div className="bg-white border-b border-[#E0E0E0] sticky top-0 z-30 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-20 flex items-center gap-3">
-          {/* Mobile: hamburger menu */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <button className="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0 focus:outline-none">
-                <Menu className="w-6 h-6" />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="left" className="bg-white border-r border-gray-100 w-full sm:w-72 flex flex-col p-0 shadow-2xl h-full">
-              <SheetTitle className="sr-only">Navigation</SheetTitle>
-              <div className="flex items-center justify-between p-4 pr-16 border-b border-[#E0E0E0] flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  <img src="/Security_n.png" alt="Logo" className="h-14 w-auto object-contain" />
-                  <span className="leading-tight">
-                    <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '0.9rem' }}>US-</span>
-                    <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.8rem' }}> FISHING &amp;<br />HUNTINGSHOP</span>
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="[&_span]:hidden flex items-center">
-                    <LoginAuth onLoginSuccess={() => {}} onLogout={() => {}} onShowProfile={() => router.push("/profile")} isLightSection={true} variant="button" />
-                  </div>
-                  <button onClick={() => router.push("/shop")} className="relative p-2 rounded-xl hover:bg-[#F5F5F5] text-[#555]">
-                    <ShoppingCart className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-              <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
-                <button onClick={() => router.push("/")} className="w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#333] font-medium">Home</button>
-                <button onClick={() => router.push("/shop")} className="w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#333] font-medium">Alle Produkte</button>
-                {categories.map(cat => (
-                  <button key={cat.slug} onClick={() => router.push(`/shop?cat=${encodeURIComponent(cat.name)}`)} className="w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#333] font-medium">
-                    {cat.name.replace(/\s*\d{4}$/, "")}
-                  </button>
-                ))}
-                <div className="pt-2 mt-1 border-t border-[#E0E0E0]">
-                  <div className="flex">
-                    <button onClick={() => router.push("/blog")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded font-semibold bg-gray-100 text-[#2C5F2E]"><Newspaper className="w-4 h-4 shrink-0" />Blog</button>
-                    <button onClick={() => router.push("/gallery")} className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#2C5F2E] font-semibold"><Images className="w-4 h-4 shrink-0" />Gallery</button>
-                    <button
-                      onClick={() => {
-                        const imageUrl = "https://online-shop-seven-delta.vercel.app/Security_n.png"
-                        fetch(imageUrl).then(r => r.blob()).then(blob => {
-                          const reader = new FileReader(); reader.onloadend = () => {
-                            const b64 = (reader.result as string).split(",")[1]
-                            const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:US - Fishing & Huntingshop\nORG:US - Fishing & Huntingshop\nTITLE:JAGD · ANGELN · OUTDOOR\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@usfh.ch\nURL:https://usfh.ch\nPHOTO;ENCODING=b;TYPE=PNG:${b64}\nEND:VCARD`
-                            const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([vcard], { type: "text/vcard" })); a.download = "US-Fishing-Huntingshop.vcf"; document.body.appendChild(a); a.click(); document.body.removeChild(a)
-                          }; reader.readAsDataURL(blob)
-                        }).catch(() => {
-                          const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:US - Fishing & Huntingshop\nORG:US - Fishing & Huntingshop\nTEL:+41786066105\nEMAIL:info@usfh.ch\nURL:https://usfh.ch\nEND:VCARD`
-                          const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([vcard], { type: "text/vcard" })); a.download = "US-Fishing-Huntingshop.vcf"; document.body.appendChild(a); a.click(); document.body.removeChild(a)
-                        })
-                      }}
-                      className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#2C5F2E] font-semibold"
-                    ><Download className="w-4 h-4 shrink-0" />VCard</button>
-                  </div>
-                  <p className="px-3 pt-3 pb-1 text-sm text-[#AAA] tracking-wide">Jagd · Angeln · Outdoor · Schweiz🇨🇭</p>
-                </div>
-              </nav>
-            </SheetContent>
-          </Sheet>
-          {/* Desktop: back button */}
+      <div className="bg-white sticky top-0 z-30 shadow-sm" style={{ borderBottom: "1px solid #e8eeff" }}>
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center gap-3">
+          {/* Back button — all screens */}
           <button
             onClick={() => router.push("/")}
-            className="hidden sm:flex w-9 h-9 items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+            className="flex w-9 h-9 items-center justify-center rounded-xl transition-all flex-shrink-0"
+            style={{ background: "#EEF3FF", color: "#4F7CFF" }}
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <div className="w-px h-6 bg-[#E5E5E5]" />
-          <img src="/Security_n.png" alt="Logo" className="hidden sm:block h-12 w-auto object-contain" />
-          <span className="sm:hidden" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.1rem', color: '#333333' }}>Blog</span>
-          <div className="hidden sm:block">
-            <div className="leading-tight">
-              <span style={{ fontFamily: 'Impact, Arial Narrow, sans-serif', fontStyle: 'italic', fontWeight: 900, color: '#CC0000', fontSize: '1rem' }}>US-</span>
-              <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.9rem' }}> FISHING &amp; HUNTINGSHOP</span>
+          <div className="w-px h-6 bg-[#e8eeff]" />
+          <div className="hidden sm:flex items-center gap-2.5">
+            <img src="/pawlogo.png" alt="Hundewagen" className="w-12 h-12 rounded-xl object-contain flex-shrink-0" />
+            <div>
+              <div className="font-black text-base leading-tight" style={{ color: "#1A1A2E" }}>Hundewagen</div>
+              <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#4F7CFF" }}>Blog & Tipps</div>
             </div>
-            <div className="text-[11px] text-[#888] uppercase tracking-widest mt-0.5">News · Tipps · Wissen</div>
           </div>
+          <span className="sm:hidden font-black text-base" style={{ color: "#1A1A2E" }}>Blog</span>
         </div>
       </div>
 
       {/* Page title */}
       <div className="max-w-5xl mx-auto px-4 pt-10 pb-2">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-1 h-7 bg-[#2C5F2E] rounded-full" />
-          <h1 className="text-3xl font-black text-[#1A1A1A] tracking-tight">Aktuelles & Tipps</h1>
-        </div>
-        <p className="text-sm text-[#888] ml-4">Neuigkeiten, Produkttests und Expertentipps aus unserem Shop.</p>
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3" style={{ background: "#EEF3FF", color: "#3A63E0" }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4F7CFF]" />
+          Blog & Tipps
+        </span>
+        <h1 className="text-3xl font-black tracking-tight" style={{ color: "#1A1A2E" }}>Aktuelles & Tipps</h1>
+        <p className="text-sm mt-1" style={{ color: "#6B7280" }}>Neuigkeiten, Produkttests und Expertentipps für dich und deinen Hund.</p>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -309,7 +248,7 @@ export default function BlogPage() {
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[0,1,2].map(i => (
-              <div key={i} className="bg-white rounded-3xl overflow-hidden border border-[#EBEBEB] shadow-sm animate-pulse">
+              <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm animate-pulse" style={{ border: "1.5px solid #e8eeff" }}>
                 <div className="h-52 bg-gray-100" />
                 <div className="p-5 space-y-3">
                   <div className="h-3 w-28 bg-gray-100 rounded-full" />
@@ -334,7 +273,7 @@ export default function BlogPage() {
           const extraImgs = [post.image2_url, post.image3_url, post.image4_url].filter(Boolean) as string[]
           const allImgs = [post.hero_image_url, ...extraImgs].filter(Boolean) as string[]
           return (
-            <article key={post.id} className="bg-white rounded-3xl overflow-hidden border border-[#EBEBEB] shadow-sm mb-10">
+            <article key={post.id} className="bg-white rounded-3xl overflow-hidden shadow-sm mb-10" style={{ border: "1.5px solid #e8eeff" }}>
               {post.hero_image_url && (
                 <div
                   className="h-[420px] overflow-hidden bg-[#F0F0F0] cursor-zoom-in"
@@ -345,8 +284,8 @@ export default function BlogPage() {
               )}
               <div className="p-8 sm:p-10">
                 <div className="flex items-center gap-3 mb-5">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#2C5F2E] bg-[#2C5F2E]/8 px-3 py-1 rounded-full">
-                    <span className="w-1.5 h-1.5 bg-[#2C5F2E] rounded-full" />
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#4F7CFF] bg-[#EEF3FF] px-3 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 bg-[#4F7CFF] rounded-full" />
                     Beitrag
                   </span>
                   <span className="flex items-center gap-1.5 text-xs text-[#AAA] font-medium">
@@ -355,7 +294,7 @@ export default function BlogPage() {
                   </span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-black text-[#1A1A1A] tracking-tight leading-tight mb-5">{post.title}</h2>
-                <div className="w-12 h-1 bg-[#2C5F2E] rounded-full mb-6" />
+                <div className="w-12 h-1 rounded-full mb-6" style={{ background: "linear-gradient(90deg, #4F7CFF, #FF6B9D)" }} />
                 <p className="text-base text-[#444] leading-[1.85] whitespace-pre-line">{post.content}</p>
                 {extraImgs.length > 0 && (
                   <div className={`mt-8 grid gap-4 ${extraImgs.length === 1 ? "grid-cols-1" : extraImgs.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
@@ -378,7 +317,7 @@ export default function BlogPage() {
         {/* Rest of posts — card grid */}
         {!loading && posts.length > 1 && (
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-6 bg-[#2C5F2E] rounded-full" />
+            <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #4F7CFF, #FF6B9D)" }} />
             <h2 className="text-xl font-black text-[#1A1A1A] tracking-tight">Weitere Beiträge</h2>
           </div>
         )}
@@ -388,7 +327,8 @@ export default function BlogPage() {
               <article
                 key={post.id}
                 onClick={() => setSelectedPost(post)}
-                className="bg-white rounded-3xl overflow-hidden border border-[#EBEBEB] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer group"
+                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 cursor-pointer group"
+                style={{ border: "1.5px solid #e8eeff" }}
               >
                 <div className="h-52 overflow-hidden bg-[#F0F0F0]">
                   {post.hero_image_url ? (
@@ -404,7 +344,7 @@ export default function BlogPage() {
                   </span>
                   <h2 className="font-black text-[#1A1A1A] text-base leading-tight mb-2 line-clamp-2">{post.title}</h2>
                   <p className="text-sm text-[#666] leading-relaxed line-clamp-3">{post.content}</p>
-                  <div className="mt-4 text-xs font-bold text-[#2C5F2E] group-hover:underline">Weiterlesen →</div>
+                  <div className="mt-4 text-xs font-bold text-[#4F7CFF] group-hover:underline">Weiterlesen →</div>
                 </div>
               </article>
             ))}

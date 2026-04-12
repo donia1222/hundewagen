@@ -298,7 +298,7 @@ function DetectedProductsDisplay({ products, onCloseChat }: { products: Detected
               </span>
               <div className="flex items-center gap-1">
                 <span className="text-sm text-gray-600 font-medium group-hover:text-[#B8864E] transition-colors duration-200">
-                  {product.price.toFixed(2)} CHF
+                  {product.price.toFixed(2)} €
                 </span>
                 {/* Indicador visual de nivel de picor */}
                 <div className="flex">

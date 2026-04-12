@@ -386,7 +386,7 @@ function PremiumHotSauceStoreInner() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCloseAnnouncement}
-                  className="mt-4 w-full flex items-center justify-center gap-2 bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-bold py-3 px-6 rounded-xl transition-colors"
+                  className="mt-4 w-full flex items-center justify-center gap-2 bg-[#D4622A] hover:bg-[#B8501F] text-white font-bold py-3 px-6 rounded-xl transition-colors"
                 >
                   Produkt ansehen →
                 </a>
@@ -410,12 +410,12 @@ function PremiumHotSauceStoreInner() {
         <ReviewsSection />
       </FadeSection>
             <FadeSection>
-        <section className="py-10 bg-white border-t border-[#E0E0E0]">
+        <section className="py-12" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
           <div className="container mx-auto px-4">
             <div className="mb-4">
               <FischenBanner />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <BlogBanner />
               <GalleryBanner />
             </div>

@@ -815,9 +815,9 @@ export default function ProductsGridCompact({
             <div className="border-t pt-3 sm:pt-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2">
                 <div className="text-xl sm:text-2xl font-bold text-[#1A1A1A]">
-                  {(product.price * modalCurrentQuantity).toFixed(2)} CHF
+                  {(product.price * modalCurrentQuantity).toFixed(2)} €
                 </div>
-                <div className="text-xs sm:text-sm text-gray-500">Einzelpreis: {product.price.toFixed(2)} CHF</div>
+                <div className="text-xs sm:text-sm text-gray-500">Einzelpreis: {product.price.toFixed(2)} €</div>
               </div>
 
               {/* Controles de cantidad */}
@@ -856,7 +856,7 @@ export default function ProductsGridCompact({
                     ? "bg-green-600 hover:bg-green-700"
                     : (product.stock || 0) === 0
                       ? "bg-gray-500 hover:bg-gray-600"
-                      : "bg-[#2C5F2E] hover:bg-[#1A4520]"
+                      : "bg-[#D4622A] hover:bg-[#B8501F]"
                 } disabled:opacity-50 disabled:cursor-not-allowed text-white`}
               >
                 <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -878,7 +878,7 @@ export default function ProductsGridCompact({
     return (
       <Card
         key={product.id}
-        className={`group relative bg-white border border-[#E0E0E0] hover:border-[#2C5F2E] hover:shadow-md transition-all duration-300 rounded-none overflow-hidden ${
+        className={`group relative bg-white border border-[#E0E0E0] hover:border-[#D4622A] hover:shadow-md transition-all duration-300 rounded-none overflow-hidden ${
           visibleProducts.has(index) ? "animate-slide-in opacity-100" : "opacity-0 translate-y-4"
         } ${addedItems.has(product.id!) ? "animate-success-glow" : ""} ${
           animatingProducts.has(product.id!) ? "animate-compress" : ""
@@ -959,13 +959,13 @@ export default function ProductsGridCompact({
 
             {/* MEJORADO: Contenido principal con mejor espaciado */}
             <div className="flex-1 min-w-0">
-                   <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-[#1A1A1A] line-clamp-1 lg:line-clamp-2 group-hover:text-[#2C5F2E] transition-colors duration-300 flex-1 mr-2">
+                   <h4 className="text-lg lg:text-xl xl:text-2xl font-bold text-[#1A1A1A] line-clamp-1 lg:line-clamp-2 group-hover:text-[#D4622A] transition-colors duration-300 flex-1 mr-2">
                   {product.name}
                 </h4>
               {/* MEJORADO: Header con título y precio mejor distribuidos */}
               <div className="flex items-start justify-between mb-2 lg:mb-3">
            
-                <div className="text-lg lg:text-xl xl:text-1xl font-bold text-[#1A1A1A] flex-shrink-0">{product.price.toFixed(2)} CHF</div>
+                <div className="text-lg lg:text-xl xl:text-1xl font-bold text-[#1A1A1A] flex-shrink-0">{product.price.toFixed(2)} €</div>
               </div>
 
               {/* MEJORADO: Descripción visible en pantallas grandes */}
@@ -1089,7 +1089,7 @@ export default function ProductsGridCompact({
     return (
       <section className="py-12 px-4 bg-white min-h-screen">
         <div className="max-w-4xl lg:max-w-7xl mx-auto text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5F2E] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4622A] mx-auto"></div>
           <p className="mt-4 text-gray-600">Produkte werden geladen...</p>
         </div>
       </section>
@@ -1132,7 +1132,7 @@ export default function ProductsGridCompact({
           {/* MEJORADO: Header con mejor tipografía */}
           <div className="mb-8 animate-fade-in-up border-b border-[#E0E0E0] pb-4">
             <h3 className="text-2xl font-bold text-[#1A1A1A]">Empfohlene Produkte</h3>
-            <p className="text-sm text-[#666] mt-1">Für jeden Bedarf das Richtige. <button className="text-[#2C5F2E] hover:underline">Alle anzeigen</button></p>
+            <p className="text-sm text-[#666] mt-1">Für jeden Bedarf das Richtige. <button className="text-[#D4622A] hover:underline">Alle anzeigen</button></p>
           </div>
 
           {/* Tabs dinámicos desde la API */}
@@ -1142,7 +1142,7 @@ export default function ProductsGridCompact({
             >
               <TabsTrigger
                 value="all"
-                className="flex-shrink-0 rounded-none data-[state=active]:bg-[#2C5F2E] data-[state=active]:text-white font-medium transition-all duration-200 text-sm px-4 py-2 text-[#555] hover:text-[#2C5F2E] hover:bg-[#F5FAF5]"
+                className="flex-shrink-0 rounded-none data-[state=active]:bg-[#D4622A] data-[state=active]:text-white font-medium transition-all duration-200 text-sm px-4 py-2 text-[#555] hover:text-[#D4622A] hover:bg-[#F5FAF5]"
               >
                 Alle
               </TabsTrigger>
@@ -1150,7 +1150,7 @@ export default function ProductsGridCompact({
                 <TabsTrigger
                   key={cat.slug}
                   value={cat.slug}
-                  className="flex-shrink-0 rounded-none data-[state=active]:bg-[#2C5F2E] data-[state=active]:text-white font-medium transition-all duration-200 text-sm px-4 py-2 text-[#555] hover:text-[#2C5F2E] hover:bg-[#F5FAF5]"
+                  className="flex-shrink-0 rounded-none data-[state=active]:bg-[#D4622A] data-[state=active]:text-white font-medium transition-all duration-200 text-sm px-4 py-2 text-[#555] hover:text-[#D4622A] hover:bg-[#F5FAF5]"
                 >
                   {cat.name}
                 </TabsTrigger>
@@ -1187,7 +1187,7 @@ export default function ProductsGridCompact({
                   <Button
                     onClick={() => setVisibleCount((prev) => prev + 20)}
                     variant="outline"
-                    className="border-[#2C5F2E] text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white px-8 py-3 rounded-none font-semibold"
+                    className="border-[#D4622A] text-[#D4622A] hover:bg-[#D4622A] hover:text-white px-8 py-3 rounded-none font-semibold"
                   >
                     20 weitere Produkte anzeigen
                   </Button>

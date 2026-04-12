@@ -124,6 +124,7 @@ interface Product {
   image_url_candidates?: string[]
   created_at: string
   weight_kg: number
+  affiliate_url?: string
 }
 
 // Interfaces für Shipping
@@ -197,6 +198,8 @@ export function Admin({ onClose }: AdminProps) {
   const [currentEditingProduct, setCurrentEditingProduct] = useState<Product | null>(null)
   const [deleteProductId, setDeleteProductId] = useState<number | null>(null)
   const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([null, null, null, null])
+  const [affiliateLinks, setAffiliateLinks] = useState<Record<string, string>>({})
+  const [currentAffiliateUrl, setCurrentAffiliateUrl] = useState("")
 
   // Bulk selection
   const [selectedProductIds, setSelectedProductIds] = useState<Set<number>>(new Set())
@@ -206,6 +209,11 @@ export function Admin({ onClose }: AdminProps) {
   const filterCardRef = useRef<HTMLDivElement>(null)
   const statusSectionRef = useRef<HTMLDivElement>(null)
   const productsGridRef = useRef<HTMLDivElement>(null)
+  const productFormRef = useRef<HTMLFormElement>(null)
+  const [amazonPreview, setAmazonPreview] = useState<{
+    title: string; image: string; description: string; price: number | null
+  } | null>(null)
+  const [amazonFetching, setAmazonFetching] = useState(false)
   const [bulkLoading, setBulkLoading] = useState(false)
   const [removedImages, setRemovedImages] = useState<boolean[]>([false, false, false, false])
 
@@ -391,6 +399,14 @@ export function Admin({ onClose }: AdminProps) {
     }
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  // Load affiliate links on mount
+  useEffect(() => {
+    fetch("/api/affiliate-links")
+      .then(r => r.json())
+      .then(data => setAffiliateLinks(data))
+      .catch(() => {})
   }, [])
 
   // Load all data on mount
@@ -1007,10 +1023,78 @@ export function Admin({ onClose }: AdminProps) {
     setFilteredProducts(filtered)
   }
 
+  const fetchAmazonPreview = async (url: string) => {
+    if (!url.trim()) { setAmazonPreview(null); return }
+    setAmazonFetching(true)
+    setAmazonPreview(null)
+    try {
+      const res = await fetch(`/api/fetch-product-preview?url=${encodeURIComponent(url)}`)
+      const data = await res.json()
+      if (data.title || data.image) {
+        setAmazonPreview({ title: data.title, image: data.image, description: data.description, price: data.price })
+      }
+    } catch {}
+    finally { setAmazonFetching(false) }
+  }
+
+  const applyAmazonData = async () => {
+    if (!amazonPreview || !productFormRef.current) return
+    const form = productFormRef.current
+
+    const setVal = (name: string, val: string) => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null
+      if (el && val) {
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+          el.tagName === "TEXTAREA" ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype, "value"
+        )?.set
+        nativeInputValueSetter?.call(el, val)
+        el.dispatchEvent(new Event("input", { bubbles: true }))
+      }
+    }
+
+    if (amazonPreview.title) setVal("name", amazonPreview.title)
+    if (amazonPreview.description) setVal("description", amazonPreview.description)
+    if (amazonPreview.price) setVal("price", String(amazonPreview.price))
+
+    // Import Amazon image into the file input
+    if (amazonPreview.image) {
+      try {
+        const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(amazonPreview.image)}`
+        const imgRes = await fetch(proxyUrl)
+        if (imgRes.ok) {
+          const blob = await imgRes.blob()
+          const ext = blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg"
+          const file = new File([blob], `amazon-product.${ext}`, { type: blob.type })
+          const dt = new DataTransfer()
+          dt.items.add(file)
+          const fileInput = form.elements.namedItem("image_0") as HTMLInputElement | null
+          if (fileInput) {
+            fileInput.files = dt.files
+            fileInput.dispatchEvent(new Event("change", { bubbles: true }))
+          }
+          // Also update the preview shown in the form
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            setImagePreviews(prev => {
+              const next = [...prev]
+              next[0] = e.target?.result as string
+              return next
+            })
+          }
+          reader.readAsDataURL(file)
+        }
+      } catch {}
+    }
+
+    toast({ title: "✓ Datos aplicados", description: "Revisa el precio y guarda el producto." })
+  }
+
   const showAddProductModal = () => {
     setCurrentEditingProduct(null)
     setImagePreviews([null, null, null, null])
     setRemovedImages([false, false, false, false])
+    setCurrentAffiliateUrl("")
+    setAmazonPreview(null)
     setIsProductModalOpen(true)
   }
 
@@ -1023,6 +1107,8 @@ export function Admin({ onClose }: AdminProps) {
         setCurrentEditingProduct(data.product)
         setImagePreviews(data.product.image_urls || [data.product.image_url, null, null, null])
         setRemovedImages([false, false, false, false])
+        setCurrentAffiliateUrl(affiliateLinks[String(data.product.id)] ?? "")
+        setAmazonPreview(null)
         setIsProductModalOpen(true)
       } else {
         toast({
@@ -1135,6 +1221,16 @@ export function Admin({ onClose }: AdminProps) {
       const data = await response.json()
 
       if (data.success) {
+        const savedProductId = isEditing ? currentEditingProduct!.id : data.id
+        if (savedProductId) {
+          await fetch("/api/affiliate-links", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId: savedProductId, url: currentAffiliateUrl }),
+          })
+          const updatedLinks = await fetch("/api/affiliate-links").then(r => r.json())
+          setAffiliateLinks(updatedLinks)
+        }
         toast({
           title: "Erfolg",
           description: isEditing ? "Produkt erfolgreich aktualisiert" : "Produkt erfolgreich hinzugefügt",
@@ -1302,12 +1398,12 @@ export function Admin({ onClose }: AdminProps) {
 
     // Firmendaten
     doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(44, 95, 46)
-    doc.text("US - Fishing & Huntingshop", margin, 36)
+    doc.text("Hundewagen", margin, 36)
     doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(80, 80, 80)
-    doc.text("JAGD · ANGELN · OUTDOOR", margin, 41)
+    doc.text("HUNDEPRODUKTE · OUTDOOR · SCHWEIZ", margin, 41)
     doc.text("Bahnhofstrasse 2, 9475 Sevelen", margin, 46)
     doc.text("Tel: 078 606 61 05", margin, 51)
-    doc.text("info@usfh.ch", margin, 56)
+    doc.text("info@hundewagen.shop", margin, 56)
 
     // Titel Rechnung
     doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(44, 95, 46)
@@ -1376,12 +1472,12 @@ export function Admin({ onClose }: AdminProps) {
       doc.setFontSize(9); doc.setFont("helvetica", "bold"); doc.setTextColor(40, 40, 40)
       doc.text(item.product_name.substring(0, 50), margin + 2, y + 4)
       doc.text(`${item.quantity}x`, colQty, y + 4)
-      doc.text(`${(Number(item.price) || 0).toFixed(2)} CHF`, colPrice, y + 4, { align: "right" })
-      doc.text(`${subtotal.toFixed(2)} CHF`, colTotal, y + 4, { align: "right" })
+      doc.text(`${(Number(item.price) || 0).toFixed(2)} €`, colPrice, y + 4, { align: "right" })
+      doc.text(`${subtotal.toFixed(2)} €`, colTotal, y + 4, { align: "right" })
       doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(130, 130, 130)
       doc.text(`Art.-Nr: ${item.product_id}`, margin + 2, y + 10)
       if (Number(item.product_id) >= 0) {
-        doc.text(`Steuersatz: ${itemMwst.toFixed(2)} CHF`, colTotal, y + 10, { align: "right" })
+        doc.text(`Steuersatz: ${itemMwst.toFixed(2)} €`, colTotal, y + 10, { align: "right" })
       }
       doc.setTextColor(40, 40, 40)
       y += rowH
@@ -1400,15 +1496,15 @@ export function Admin({ onClose }: AdminProps) {
     const roundedTotal = onlyGutscheine ? itemsSubtotal : Math.ceil(grossTotal / 0.5) * 0.5
 
     doc.text("Zwischensumme (Artikel):", pageW - 75, y)
-    doc.text(`${itemsSubtotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    doc.text(`${itemsSubtotal.toFixed(2)} €`, pageW - margin, y, { align: "right" })
     y += 6
     if (!onlyGutscheine) {
       doc.text("MwSt. 8.1%:", pageW - 75, y)
-      doc.text(`${mwstAmount.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+      doc.text(`${mwstAmount.toFixed(2)} €`, pageW - margin, y, { align: "right" })
       y += 6
       if (shipping > 0) {
         doc.text("Versandkosten:", pageW - 75, y)
-        doc.text(`${shipping.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+        doc.text(`${shipping.toFixed(2)} €`, pageW - margin, y, { align: "right" })
         y += 6
       }
     }
@@ -1416,7 +1512,7 @@ export function Admin({ onClose }: AdminProps) {
     doc.setDrawColor(44, 95, 46); doc.line(pageW - 75, y, pageW - margin, y); y += 5
     doc.setFont("helvetica", "bold"); doc.setFontSize(12); doc.setTextColor(44, 95, 46)
     doc.text("TOTAL:", pageW - 55, y)
-    doc.text(`${roundedTotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    doc.text(`${roundedTotal.toFixed(2)} €`, pageW - margin, y, { align: "right" })
 
     doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(150, 150, 150)
     doc.text("Vielen Dank für Ihren Einkauf!", pageW / 2, 285, { align: "center" })
@@ -1520,7 +1616,7 @@ export function Admin({ onClose }: AdminProps) {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5F2E] mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4622A] mx-auto mb-4"></div>
               <p className="text-gray-600">Verwaltungspanel wird geladen...</p>
             </div>
           </div>
@@ -1536,16 +1632,16 @@ export function Admin({ onClose }: AdminProps) {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all">
+              <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#D4622A] hover:text-white transition-all">
                 <ArrowLeft className="w-4 h-4" />
               </button>
               <div className="w-px h-6 bg-[#E0E0E0]" />
-              <img src="/Security_n.png" alt="Logo" className="h-10 w-auto object-contain" />
+              <img src="/pawlogo.png" alt="Hundewagen" className="w-12 h-12 rounded-xl object-contain flex-shrink-0" />
               <div>
                 <div className="leading-tight">
-                  <span className="text-base font-black text-gray-900 tracking-tight">Verwaltungspanel</span>
+                  <span className="text-base font-black text-gray-900 tracking-tight">Hundewagen</span>
                 </div>
-                <p className="text-xs text-gray-400 hidden sm:block">Admin Dashboard</p>
+                <p className="text-xs text-gray-400 hidden sm:block">Verwaltungspanel · Admin</p>
               </div>
             </div>
 
@@ -1764,7 +1860,7 @@ export function Admin({ onClose }: AdminProps) {
                       <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
                       <Tooltip
                         contentStyle={{ borderRadius: 12, border: "1px solid #e5e7eb", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }}
-                        formatter={(value: number) => [`${value.toFixed(2)} CHF`, "Umsatz"]}
+                        formatter={(value: number) => [`${value.toFixed(2)} €`, "Umsatz"]}
                       />
                       <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2.5} fill="url(#revenueGradient)" />
                     </AreaChart>
@@ -2031,7 +2127,7 @@ export function Admin({ onClose }: AdminProps) {
                       <Button
                         onClick={() => showOrderDetail(order)}
                         size="sm"
-                        className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white rounded-lg px-3 text-xs h-8 shadow-sm shadow-green-500/20"
+                        className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white rounded-lg px-3 text-xs h-8 shadow-sm shadow-green-500/20"
                       >
                         <Eye className="w-3.5 h-3.5 mr-1" />
                         Details
@@ -2040,7 +2136,7 @@ export function Admin({ onClose }: AdminProps) {
                         onClick={() => downloadInvoicePDF(order)}
                         variant="outline"
                         size="sm"
-                        className="rounded-lg px-2.5 text-xs h-8 border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-[#2C5F2E] hover:border-[#2C5F2E]/30"
+                        className="rounded-lg px-2.5 text-xs h-8 border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-[#D4622A] hover:border-[#D4622A]/30"
                       >
                         <Receipt className="w-3.5 h-3.5 mr-1" />
                         PDF
@@ -2112,7 +2208,7 @@ export function Admin({ onClose }: AdminProps) {
                       variant={pageNum === currentOrderPage ? "default" : "outline"}
                       className={`rounded-xl w-9 h-9 p-0 text-sm ${
                         pageNum === currentOrderPage
-                          ? "bg-[#2C5F2E] hover:bg-[#1A4520] text-white shadow-sm"
+                          ? "bg-[#D4622A] hover:bg-[#B8501F] text-white shadow-sm"
                           : "border-gray-200 text-gray-600 hover:bg-gray-50"
                       }`}
                     >
@@ -2327,7 +2423,7 @@ export function Admin({ onClose }: AdminProps) {
                 {/* Banner: Neues Produkt */}
                 <button
                   onClick={showAddProductModal}
-                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] p-5 text-left shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] p-5 text-left shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
                   <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
@@ -2604,7 +2700,7 @@ export function Admin({ onClose }: AdminProps) {
             {/* Bulk action bar — sticky, solo visible con selección */}
             {selectedProductIds.size > 0 && (
               <div className="sticky top-16 z-20 mb-4">
-                <div className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] rounded-2xl px-4 py-3 shadow-lg shadow-green-500/20 flex flex-wrap items-center gap-3">
+                <div className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] rounded-2xl px-4 py-3 shadow-lg shadow-green-500/20 flex flex-wrap items-center gap-3">
                   <div className="mr-2">
                     <p className="text-white font-bold text-sm leading-tight">Produktstatus ändern</p>
                     <p className="text-green-100 text-xs">{selectedProductIds.size} Produkt{selectedProductIds.size !== 1 ? "e" : ""} ausgewählt</p>
@@ -2631,7 +2727,7 @@ export function Admin({ onClose }: AdminProps) {
                     size="sm"
                     onClick={handleBulkStatusUpdate}
                     disabled={!bulkStatus || bulkLoading}
-                    className="bg-white text-[#2C5F2E] hover:bg-green-50 font-semibold"
+                    className="bg-white text-[#D4622A] hover:bg-green-50 font-semibold"
                   >
                     {bulkLoading ? "Speichern..." : "Anwenden"}
                   </Button>
@@ -2658,7 +2754,7 @@ export function Admin({ onClose }: AdminProps) {
                 <div
                   key={product.id}
                   className={`group relative rounded-xl bg-white border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden ${
-                    selectedProductIds.has(product.id) ? "ring-2 ring-[#2C5F2E] border-[#2C5F2E]" : "border-gray-100 hover:border-gray-200"
+                    selectedProductIds.has(product.id) ? "ring-2 ring-[#D4622A] border-[#D4622A]" : "border-gray-100 hover:border-gray-200"
                   }`}
                   onClick={() => toggleProductSelection(product.id)}
                 >
@@ -2667,7 +2763,7 @@ export function Admin({ onClose }: AdminProps) {
                     <div
                       className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
                         selectedProductIds.has(product.id)
-                          ? "bg-[#2C5F2E] border-[#2C5F2E]"
+                          ? "bg-[#D4622A] border-[#D4622A]"
                           : "border-gray-300 bg-white/80 backdrop-blur-sm"
                       }`}
                     >
@@ -2760,7 +2856,7 @@ export function Admin({ onClose }: AdminProps) {
                   <p className="text-sm text-gray-400 mt-0.5">{blogPosts.length} Beiträge</p>
                 </div>
               </div>
-              <Button onClick={() => openBlogModal()} className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20">
+              <Button onClick={() => openBlogModal()} className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20">
                 <Plus className="w-4 h-4" /> Neuer Beitrag
               </Button>
             </div>
@@ -2827,7 +2923,7 @@ export function Admin({ onClose }: AdminProps) {
                   <p className="text-sm text-gray-400 mt-0.5">{galleryImages.length} Bilder</p>
                 </div>
               </div>
-              <Button onClick={openGalleryModal} className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20">
+              <Button onClick={openGalleryModal} className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20">
                 <Plus className="w-4 h-4" /> Bild hochladen
               </Button>
             </div>
@@ -2928,7 +3024,7 @@ export function Admin({ onClose }: AdminProps) {
                           required
                           value={gcFormData.name}
                           onChange={e => setGcFormData(p => ({ ...p, name: e.target.value }))}
-                          placeholder="z.B. Gutschein CHF 50"
+                          placeholder="z.B. Gutschein € 50"
                           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                         />
                       </div>
@@ -2964,7 +3060,7 @@ export function Admin({ onClose }: AdminProps) {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
-                      <Button type="submit" className="bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-xl flex-1">
+                      <Button type="submit" className="bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-xl flex-1">
                         {gcEditItem ? "Speichern" : "Erstellen"}
                       </Button>
                       <Button type="button" variant="outline" onClick={() => { setGcFormOpen(false); setGcEditItem(null) }} className="rounded-xl">
@@ -2998,7 +3094,7 @@ export function Admin({ onClose }: AdminProps) {
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-black text-[#1A1A1A]">CHF {Number(gc.amount).toFixed(2)}</span>
+                          <span className="text-sm font-black text-[#1A1A1A]">€ {Number(gc.amount).toFixed(2)}</span>
                           <Button
                             size="sm" variant="outline"
                             onClick={() => { setGcEditItem(gc); setGcFormData({ name: gc.name, description: gc.description ?? "", amount: String(gc.amount), is_active: String(gc.is_active) }); setGcFormOpen(true) }}
@@ -3054,7 +3150,7 @@ export function Admin({ onClose }: AdminProps) {
                         </div>
                         {/* Betrag */}
                         <span className="text-sm font-black text-[#1A1A1A] shrink-0">
-                          CHF {Number(p.amount).toFixed(2)}
+                          € {Number(p.amount).toFixed(2)}
                         </span>
                         {/* Status chip */}
                         {p.status === "aktiv" || p.status === "used" ? (
@@ -3107,7 +3203,7 @@ export function Admin({ onClose }: AdminProps) {
                 </div>
                 <div>
                   <h2 className="text-xl font-black text-gray-900 tracking-tight">Versandkosten</h2>
-                  <p className="text-sm text-gray-400 mt-0.5">Preise in CHF nach Zone und Gewicht</p>
+                  <p className="text-sm text-gray-400 mt-0.5">Preise in € nach Zone und Gewicht</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -3117,7 +3213,7 @@ export function Admin({ onClose }: AdminProps) {
                 <Button
                   onClick={saveShippingSettings}
                   disabled={isSavingShipping}
-                  className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20"
+                  className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20"
                 >
                   {isSavingShipping ? "Speichern..." : "Speichern"}
                 </Button>
@@ -3206,7 +3302,7 @@ export function Admin({ onClose }: AdminProps) {
                 <Button
                   onClick={savePaymentSettings}
                   disabled={isSavingPay}
-                  className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20"
+                  className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white gap-2 rounded-xl shadow-sm shadow-green-500/20"
                 >
                   {isSavingPay ? "Speichern..." : "Speichern"}
                 </Button>
@@ -3396,7 +3492,7 @@ export function Admin({ onClose }: AdminProps) {
                   <p className="text-sm text-gray-400 mt-0.5">Anzeigen verwalten, die beim Öffnen der Website erscheinen</p>
                 </div>
               </div>
-              <Button onClick={() => openAnnModal()} className="bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white rounded-xl gap-2 shadow-sm shadow-green-500/20">
+              <Button onClick={() => openAnnModal()} className="bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white rounded-xl gap-2 shadow-sm shadow-green-500/20">
                 <Plus className="w-4 h-4" />
                 Neue Anzeige
               </Button>
@@ -3530,12 +3626,12 @@ export function Admin({ onClose }: AdminProps) {
                   <div className="space-y-2">
                     <p>
                       <span className="font-medium">Gesamt:</span>{" "}
-                      {(Number.parseFloat(selectedOrder.total_amount.toString()) || 0).toFixed(2)} CHF
+                      {(Number.parseFloat(selectedOrder.total_amount.toString()) || 0).toFixed(2)} €
                     </p>
                     {(Number.parseFloat(selectedOrder.shipping_cost.toString()) || 0) > 0 && (
                       <p>
                         <span className="font-medium">Versandkosten:</span>{" "}
-                        {(Number.parseFloat(selectedOrder.shipping_cost.toString()) || 0).toFixed(2)} CHF
+                        {(Number.parseFloat(selectedOrder.shipping_cost.toString()) || 0).toFixed(2)} €
                       </p>
                     )}
                     <p>
@@ -3565,9 +3661,9 @@ export function Admin({ onClose }: AdminProps) {
                             <h4 className="font-medium">{item.product_name}</h4>
                             <div className="flex items-center gap-6 text-sm text-gray-700">
                               <span>{item.quantity}x</span>
-                              <span>{Number.parseFloat(item.price.toString()).toFixed(2)} CHF</span>
-                              <span className="font-semibold text-[#2C5F2E]">
-                                {Number.parseFloat(item.subtotal.toString()).toFixed(2)} CHF
+                              <span>{Number.parseFloat(item.price.toString()).toFixed(2)} €</span>
+                              <span className="font-semibold text-[#D4622A]">
+                                {Number.parseFloat(item.subtotal.toString()).toFixed(2)} €
                               </span>
                             </div>
                           </div>
@@ -3581,7 +3677,7 @@ export function Admin({ onClose }: AdminProps) {
               <div className="pt-4 border-t mt-4">
                 <Button
                   onClick={() => downloadInvoicePDF(selectedOrder)}
-                  className="bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-full px-5 text-sm"
+                  className="bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-full px-5 text-sm"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Rechnung als PDF herunterladen
@@ -3598,7 +3694,7 @@ export function Admin({ onClose }: AdminProps) {
               <DialogTitle>{currentEditingProduct ? "Produkt bearbeiten" : "Produkt hinzufügen"}</DialogTitle>
             </DialogHeader>
 
-            <form onSubmit={handleProductSubmit} className="space-y-4 bg-white">
+            <form ref={productFormRef} onSubmit={handleProductSubmit} className="space-y-4 bg-white">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="name">Produktname *</Label>
@@ -3658,7 +3754,7 @@ export function Admin({ onClose }: AdminProps) {
                     type="number"
                     min="0"
                     required
-                    defaultValue={currentEditingProduct?.stock || "0"}
+                    defaultValue={currentEditingProduct?.stock ?? "10"}
                     className="bg-white"
                   />
                 </div>
@@ -3729,6 +3825,89 @@ export function Admin({ onClose }: AdminProps) {
                 </div>
               </div>
 
+              <div className="border border-[#FF9900]/40 rounded-lg p-4 bg-[#FFF8F0] space-y-3">
+                <Label htmlFor="affiliate_url" className="text-[#CC7700] font-bold flex items-center gap-2">
+                  🛒 Amazon Affiliate Link (Dropshipping)
+                </Label>
+                <p className="text-xs text-[#999]">
+                  Pega el link de Amazon — se intentará importar nombre, imagen y descripción automáticamente.
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    id="affiliate_url"
+                    name="affiliate_url"
+                    type="url"
+                    placeholder="https://amzn.to/XXXXXXX"
+                    value={currentAffiliateUrl}
+                    onChange={e => setCurrentAffiliateUrl(e.target.value)}
+                    onPaste={e => {
+                      const pasted = e.clipboardData.getData("text").trim()
+                      if (pasted.includes("amzn") || pasted.includes("amazon")) {
+                        setCurrentAffiliateUrl(pasted)
+                        e.preventDefault()
+                        fetchAmazonPreview(pasted)
+                      }
+                    }}
+                    className="bg-white flex-1"
+                  />
+                  <Button
+                    type="button"
+                    disabled={!currentAffiliateUrl || amazonFetching}
+                    onClick={() => fetchAmazonPreview(currentAffiliateUrl)}
+                    className="bg-[#FF9900] hover:bg-[#e88a00] text-white shrink-0"
+                  >
+                    {amazonFetching ? "..." : "Importar"}
+                  </Button>
+                </div>
+
+                {amazonFetching && (
+                  <p className="text-xs text-[#999] animate-pulse">Buscando datos en Amazon...</p>
+                )}
+
+                {amazonPreview && (
+                  <div className="border border-[#FF9900]/30 rounded-lg p-3 bg-white space-y-2">
+                    <p className="text-xs font-bold text-[#CC7700] uppercase tracking-wide">Vista previa de Amazon</p>
+                    <div className="flex gap-3 items-start">
+                      {amazonPreview.image && (
+                        <img
+                          src={amazonPreview.image}
+                          alt=""
+                          className="w-20 h-20 object-contain rounded border border-gray-100 bg-gray-50 shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 space-y-1 min-w-0">
+                        {amazonPreview.title && (
+                          <p className="text-sm font-semibold text-[#1A1A1A] line-clamp-2">{amazonPreview.title}</p>
+                        )}
+                        {amazonPreview.price
+                          ? <p className="text-sm font-bold text-[#D4622A]">€ {amazonPreview.price.toFixed(2)}</p>
+                          : <p className="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg">⚠️ Precio no detectado — ponlo manualmente</p>
+                        }
+                        {amazonPreview.description && (
+                          <p className="text-xs text-[#666] line-clamp-2">{amazonPreview.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={applyAmazonData}
+                      className="w-full bg-[#D4622A] hover:bg-[#B8501F] text-white text-xs py-2"
+                    >
+                      ✓ Aplicar datos al formulario
+                    </Button>
+                    <p className="text-[10px] text-[#999]">
+                      * La imagen se importa automáticamente a "Bild 1" al aplicar.
+                    </p>
+                  </div>
+                )}
+
+                {currentAffiliateUrl && !amazonPreview && !amazonFetching && (
+                  <p className="text-xs text-green-600 font-semibold">
+                    ✓ El botón mostrará "Jetzt bei Amazon kaufen"
+                  </p>
+                )}
+              </div>
+
               <div>
                 <Label>Produktbilder</Label>
                 <div className="grid grid-cols-2 gap-4">
@@ -3778,7 +3957,7 @@ export function Admin({ onClose }: AdminProps) {
                 <Button type="button" variant="outline" onClick={() => setIsProductModalOpen(false)} className="bg-white text-gray-700 hover:bg-gray-50">
                   Abbrechen
                 </Button>
-                <Button type="submit" className="bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-full px-6">
+                <Button type="submit" className="bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-full px-6">
                   {currentEditingProduct ? "Aktualisieren" : "Erstellen"}
                 </Button>
               </div>
@@ -3852,7 +4031,7 @@ export function Admin({ onClose }: AdminProps) {
                     name="parent_id"
                     defaultValue={editingCategory?.parent_id ?? ""}
                     key={(editingCategory?.id ?? "new") + "-parent"}
-                    className="w-full mt-1 h-12 sm:h-10 px-3 text-base sm:text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#2C5F2E]"
+                    className="w-full mt-1 h-12 sm:h-10 px-3 text-base sm:text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#D4622A]"
                   >
                     <option value="">— Keine (Hauptkategorie) —</option>
                     {categories
@@ -3880,7 +4059,7 @@ export function Admin({ onClose }: AdminProps) {
                 <Button type="button" variant="outline" onClick={() => { setIsCategoryModalOpen(false); setEditingCategory(null) }} className="bg-white text-gray-700 hover:bg-gray-50">
                   Abbrechen
                 </Button>
-                <Button type="submit" className="bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-full px-6">
+                <Button type="submit" className="bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-full px-6">
                   {editingCategory ? "Speichern" : "Erstellen"}
                 </Button>
               </div>
@@ -3953,7 +4132,7 @@ export function Admin({ onClose }: AdminProps) {
                   ) : (
                     <div className="grid grid-cols-2 gap-2">
                       {/* Upload file */}
-                      <label className="flex flex-col items-center justify-center h-20 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#2C5F2E] hover:bg-[#2C5F2E]/5 transition-colors">
+                      <label className="flex flex-col items-center justify-center h-20 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#D4622A] hover:bg-[#D4622A]/5 transition-colors">
                         <Upload className="w-4 h-4 text-[#AAA] mb-1" />
                         <span className="text-[11px] text-[#AAA]">Datei hochladen</span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
@@ -3977,7 +4156,7 @@ export function Admin({ onClose }: AdminProps) {
                               const f = [...blogImageFiles]; f[i] = null; setBlogImageFiles(f)
                             }
                           }}
-                          className="h-20 text-xs px-3 border border-[#D5D5D5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2C5F2E]/20 focus:border-[#2C5F2E] placeholder-[#CCC]"
+                          className="h-20 text-xs px-3 border border-[#D5D5D5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D4622A]/20 focus:border-[#D4622A] placeholder-[#CCC]"
                         />
                       </div>
                     </div>
@@ -3987,7 +4166,7 @@ export function Admin({ onClose }: AdminProps) {
 
             </div>
             <div className="flex gap-3 px-6 py-4 border-t border-gray-100 bg-white shrink-0">
-              <Button onClick={saveBlogPost} disabled={blogSaving} className="flex-1 bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-xl">
+              <Button onClick={saveBlogPost} disabled={blogSaving} className="flex-1 bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-xl">
                 {blogSaving ? "Speichern..." : currentEditingPost ? "Aktualisieren" : "Veröffentlichen"}
               </Button>
               <Button variant="outline" onClick={() => setIsBlogModalOpen(false)} className="rounded-xl">Abbrechen</Button>
@@ -4032,7 +4211,7 @@ export function Admin({ onClose }: AdminProps) {
                     ><X className="w-3.5 h-3.5" /></button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#2C5F2E] hover:bg-[#2C5F2E]/5 transition-colors">
+                  <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#D4622A] hover:bg-[#D4622A]/5 transition-colors">
                     <Upload className="w-8 h-8 text-[#AAA] mb-2" />
                     <span className="text-sm text-[#AAA] font-medium">Datei auswählen</span>
                     <span className="text-[11px] text-[#CCC] mt-1">JPG, PNG, GIF, WebP — max. 8MB</span>
@@ -4046,7 +4225,7 @@ export function Admin({ onClose }: AdminProps) {
               </div>
             </div>
             <div className="flex gap-3 px-6 py-4 border-t border-gray-100 bg-white shrink-0">
-              <Button onClick={saveGalleryImage} disabled={gallerySaving || !galleryFile} className="flex-1 bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-xl">
+              <Button onClick={saveGalleryImage} disabled={gallerySaving || !galleryFile} className="flex-1 bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-xl">
                 {gallerySaving ? "Hochladen..." : "Hochladen"}
               </Button>
               <Button variant="outline" onClick={() => setIsGalleryModalOpen(false)} className="rounded-xl">Abbrechen</Button>
@@ -4081,7 +4260,7 @@ export function Admin({ onClose }: AdminProps) {
                     <button
                       key={t}
                       onClick={() => setAnnForm(f => ({ ...f, type: t }))}
-                      className={`p-3 rounded-xl border-2 text-sm font-semibold flex flex-col items-center gap-1.5 transition-all ${annForm.type === t ? 'border-[#2C5F2E] bg-[#2C5F2E]/5 text-[#2C5F2E]' : 'border-[#E5E5E5] text-[#888] hover:border-[#CCC]'}`}
+                      className={`p-3 rounded-xl border-2 text-sm font-semibold flex flex-col items-center gap-1.5 transition-all ${annForm.type === t ? 'border-[#D4622A] bg-[#D4622A]/5 text-[#D4622A]' : 'border-[#E5E5E5] text-[#888] hover:border-[#CCC]'}`}
                     >
                       {t === 'general' ? <Bell className="w-5 h-5" /> : <Package className="w-5 h-5" />}
                       {t === 'general' ? 'Allgemeine Anzeige' : 'Produktaktion'}
@@ -4132,7 +4311,7 @@ export function Admin({ onClose }: AdminProps) {
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 gap-2">
-                      <label className="flex flex-col items-center justify-center h-20 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#2C5F2E] hover:bg-[#2C5F2E]/5 transition-colors">
+                      <label className="flex flex-col items-center justify-center h-20 border-2 border-dashed border-[#D5D5D5] rounded-xl cursor-pointer hover:border-[#D4622A] hover:bg-[#D4622A]/5 transition-colors">
                         <Upload className="w-4 h-4 text-[#AAA] mb-1" />
                         <span className="text-[11px] text-[#AAA]">Datei hochladen</span>
                         <input type="file" accept="image/*" className="hidden" onChange={e => {
@@ -4155,7 +4334,7 @@ export function Admin({ onClose }: AdminProps) {
                               const f: [File|null,File|null] = [...annImageFiles] as [File|null,File|null]; f[i] = null; setAnnImageFiles(f)
                             }
                           }}
-                          className="h-20 text-xs px-3 border border-[#D5D5D5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2C5F2E]/20 focus:border-[#2C5F2E] placeholder-[#CCC]"
+                          className="h-20 text-xs px-3 border border-[#D5D5D5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D4622A]/20 focus:border-[#D4622A] placeholder-[#CCC]"
                         />
                       </div>
                     </div>
@@ -4169,7 +4348,7 @@ export function Admin({ onClose }: AdminProps) {
                   type="checkbox"
                   checked={annForm.show_once}
                   onChange={e => setAnnForm(f => ({ ...f, show_once: e.target.checked }))}
-                  className="w-4 h-4 accent-[#2C5F2E]"
+                  className="w-4 h-4 accent-[#D4622A]"
                 />
                 <div>
                   <p className="text-sm font-semibold text-[#1A1A1A]">Nur einmal anzeigen</p>
@@ -4178,7 +4357,7 @@ export function Admin({ onClose }: AdminProps) {
               </label>
 
               <div className="flex gap-3 pt-1">
-                <Button onClick={saveAnnouncement} disabled={annSaving} className="flex-1 bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-xl">
+                <Button onClick={saveAnnouncement} disabled={annSaving} className="flex-1 bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-xl">
                   {annSaving ? "Speichern..." : editingAnn ? "Aktualisieren" : "Erstellen"}
                 </Button>
                 <Button variant="outline" onClick={() => setIsAnnModalOpen(false)} className="rounded-xl">Abbrechen</Button>

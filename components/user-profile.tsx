@@ -726,12 +726,12 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
       doc.setFontSize(9); doc.setFont("helvetica", "bold"); doc.setTextColor(40, 40, 40)
       doc.text(item.product_name.substring(0, 50), margin + 2, y + 4)
       doc.text(`${item.quantity}x`, colQty, y + 4)
-      doc.text(`${(Number(item.price) || 0).toFixed(2)} CHF`, colPrice, y + 4, { align: "right" })
-      doc.text(`${subtotal.toFixed(2)} CHF`, colTotal, y + 4, { align: "right" })
+      doc.text(`${(Number(item.price) || 0).toFixed(2)} €`, colPrice, y + 4, { align: "right" })
+      doc.text(`${subtotal.toFixed(2)} €`, colTotal, y + 4, { align: "right" })
       doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(130, 130, 130)
       doc.text(`Art.-Nr: ${item.product_id}`, margin + 2, y + 10)
       if (Number(item.product_id) >= 0) {
-        doc.text(`Steuersatz: ${itemMwst.toFixed(2)} CHF`, colTotal, y + 10, { align: "right" })
+        doc.text(`Steuersatz: ${itemMwst.toFixed(2)} €`, colTotal, y + 10, { align: "right" })
       }
       doc.setTextColor(40, 40, 40)
       y += rowH
@@ -752,15 +752,15 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
 
     doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(40, 40, 40)
     doc.text("Zwischensumme (Artikel):", pageW - 75, y)
-    doc.text(`${itemsSubtotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    doc.text(`${itemsSubtotal.toFixed(2)} €`, pageW - margin, y, { align: "right" })
     y += 6
     if (!onlyGutscheine) {
       doc.text("MwSt. 8.1%:", pageW - 75, y)
-      doc.text(`${mwstAmount.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+      doc.text(`${mwstAmount.toFixed(2)} €`, pageW - margin, y, { align: "right" })
       y += 6
       if (shipping > 0) {
         doc.text("Versandkosten:", pageW - 75, y)
-        doc.text(`${shipping.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+        doc.text(`${shipping.toFixed(2)} €`, pageW - margin, y, { align: "right" })
         y += 6
       }
     }
@@ -768,7 +768,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
     doc.setDrawColor(44, 95, 46); doc.line(pageW - 75, y, pageW - margin, y); y += 5
     doc.setFont("helvetica", "bold"); doc.setFontSize(12); doc.setTextColor(44, 95, 46)
     doc.text("TOTAL:", pageW - 55, y)
-    doc.text(`${roundedTotal.toFixed(2)} CHF`, pageW - margin, y, { align: "right" })
+    doc.text(`${roundedTotal.toFixed(2)} €`, pageW - margin, y, { align: "right" })
 
     // --- Footer ---
     doc.setFont("helvetica", "normal")
@@ -852,7 +852,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5F2E] mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4622A] mx-auto mb-4"></div>
               <p className="text-gray-600">Lade Benutzerprofil...</p>
             </div>
           </div>
@@ -893,12 +893,12 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={onClose}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#D4622A] hover:text-white transition-all flex-shrink-0"
                     type="button"
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#2C5F2E] to-[#3a7a3d] rounded-xl flex items-center justify-center shadow-sm shadow-green-500/20">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#D4622A] to-[#3a7a3d] rounded-xl flex items-center justify-center shadow-sm shadow-green-500/20">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -937,7 +937,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                       <TrendingUp className="w-4 h-4" />
                     </div>
                     <p className="text-3xl font-black">{Math.round(Number(orderStats?.total_spent) || 0)}</p>
-                    <p className="text-xs text-emerald-100 mt-0.5">CHF ausgegeben</p>
+                    <p className="text-xs text-emerald-100 mt-0.5">€ ausgegeben</p>
                   </div>
                 </div>
                 <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 p-4 text-white shadow-lg shadow-violet-500/20">
@@ -1114,7 +1114,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                       </div>
                     </div>
                     <div className="p-5">
-                      <Button onClick={openPasswordDialog} className="w-full bg-gradient-to-r from-[#2C5F2E] to-[#3a7a3d] hover:from-[#1A4520] hover:to-[#2C5F2E] text-white rounded-xl shadow-sm shadow-green-500/20" size="sm">
+                      <Button onClick={openPasswordDialog} className="w-full bg-gradient-to-r from-[#D4622A] to-[#3a7a3d] hover:from-[#B8501F] hover:to-[#D4622A] text-white rounded-xl shadow-sm shadow-green-500/20" size="sm">
                         <Lock className="w-4 h-4 mr-2" />
                         Passwort ändern
                       </Button>
@@ -1224,7 +1224,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                                         </div>
                                       </div>
                                       <div className="text-right">
-                                        <p className="font-black text-base text-gray-900">{(Number(order.total_amount) || 0).toFixed(2)} <span className="text-xs text-gray-400 font-medium">CHF</span></p>
+                                        <p className="font-black text-base text-gray-900">{(Number(order.total_amount) || 0).toFixed(2)} <span className="text-xs text-gray-400 font-medium">€</span></p>
                                         <p className="text-[10px] text-gray-400">{order.items_count} Artikel</p>
                                       </div>
                                     </div>
@@ -1273,9 +1273,9 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                                           <div key={index} className="flex items-center justify-between bg-gray-50/80 rounded-lg px-3 py-2">
                                             <div className="min-w-0 flex-1">
                                               <p className="text-xs font-semibold text-gray-800 truncate">{item.product_name}</p>
-                                              <p className="text-[10px] text-gray-400">{item.quantity}x {(Number(item.price) || 0).toFixed(2)} CHF</p>
+                                              <p className="text-[10px] text-gray-400">{item.quantity}x {(Number(item.price) || 0).toFixed(2)} €</p>
                                             </div>
-                                            <p className="text-xs font-bold text-gray-900 ml-3">{(Number(item.subtotal) || 0).toFixed(2)} CHF</p>
+                                            <p className="text-xs font-bold text-gray-900 ml-3">{(Number(item.subtotal) || 0).toFixed(2)} €</p>
                                           </div>
                                         ))}
                                       </div>
@@ -1391,7 +1391,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
         <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
           <DialogContent className="sm:max-w-md bg-white mx-4 max-w-[calc(100vw-2rem)]">
             <DialogHeader>
-              <DialogTitle className="flex items-center text-[#2C5F2E]">
+              <DialogTitle className="flex items-center text-[#D4622A]">
                 <Lock className="w-5 h-5 mr-2" />
                 Passwort ändern
               </DialogTitle>
@@ -1466,7 +1466,7 @@ export function UserProfile({ onClose, onAccountDeleted }: UserProfileProps) {
                 disabled={
                   isChangingPassword || !passwordData.currentPassword.trim() || !passwordData.newPassword.trim()
                 }
-                className="w-full sm:w-auto bg-[#2C5F2E] hover:bg-[#1A4520]"
+                className="w-full sm:w-auto bg-[#D4622A] hover:bg-[#B8501F]"
               >
                 <Lock className="w-4 h-4 mr-2" />
                 {isChangingPassword ? "Ändere Passwort..." : "Passwort ändern"}

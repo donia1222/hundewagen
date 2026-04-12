@@ -558,7 +558,7 @@ export function LoginAuth({
         onClick={handleUserIconClick}
         className={`relative flex flex-col items-center p-2 hover:bg-[#F5F5F5] rounded min-w-[64px] focus:outline-none focus-visible:outline-none ${className}`}
       >
-        <User className={`w-6 h-6 ${isLoggedIn ? "text-[#2C5F2E]" : "text-[#555]"}`} />
+        <User className={`w-6 h-6 ${isLoggedIn ? "text-[#D4622A]" : "text-[#555]"}`} />
         <span className="text-xs text-[#555] mt-0.5 leading-none text-center font-medium">
           {isLoggedIn && currentUser ? currentUser.firstName || "Konto" : "Anmelden"}
         </span>
@@ -651,7 +651,7 @@ export function LoginAuth({
                   <button
                     type="button"
                     onClick={openPasswordReset}
-                    className="text-sm text-[#2C5F2E] underline mt-1.5 pl-1 hover:text-[#1A4520]"
+                    className="text-sm text-[#D4622A] underline mt-1.5 pl-1 hover:text-[#B8501F]"
                   >
                     Passwort vergessen?
                   </button>
@@ -660,7 +660,7 @@ export function LoginAuth({
                 <Button
                   onClick={handleLogin}
                   disabled={isLoggingIn || !loginData.email || !loginData.password}
-                  className="w-full h-12 rounded-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-semibold text-base"
+                  className="w-full h-12 rounded-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-semibold text-base"
                 >
                   {isLoggingIn ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -766,7 +766,7 @@ export function LoginAuth({
                 <Button
                   onClick={handleRegister}
                   disabled={isRegistering || !registerData.email || !registerData.password || !registerData.firstName || !registerData.lastName}
-                  className="w-full h-12 rounded-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-semibold text-base"
+                  className="w-full h-12 rounded-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-semibold text-base"
                 >
                   {isRegistering ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
@@ -793,7 +793,7 @@ export function LoginAuth({
 
           {/* Bottom tagline */}
           <p className="text-center text-sm text-gray-500 pb-6 px-4">
-            Jagd · Angeln · <span className="text-[#2C5F2E] font-semibold">Outdoor</span> · Schweiz🇨🇭
+            Jagd · Angeln · <span className="text-[#D4622A] font-semibold">Outdoor</span> · Schweiz🇨🇭
           </p>
         </DialogContent>
       </Dialog>
@@ -814,8 +814,8 @@ export function LoginAuth({
           {/* Card */}
           <div className="mx-4 my-5 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-[#2C5F2E]/10 flex items-center justify-center mx-auto mb-2">
-                <User className="w-6 h-6 text-[#2C5F2E]" />
+              <div className="w-12 h-12 rounded-full bg-[#D4622A]/10 flex items-center justify-center mx-auto mb-2">
+                <User className="w-6 h-6 text-[#D4622A]" />
               </div>
               <p className="font-bold text-[#1A1A1A] text-lg">{currentUser?.firstName} {currentUser?.lastName}</p>
               <p className="text-sm text-gray-500">{currentUser?.email}</p>
@@ -823,7 +823,7 @@ export function LoginAuth({
 
             <Button
               onClick={handleShowProfile}
-              className="w-full h-12 rounded-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-semibold text-base"
+              className="w-full h-12 rounded-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-semibold text-base"
             >
               <Settings className="w-4 h-4 mr-2" />
               Profil anzeigen &nbsp;→
@@ -840,7 +840,7 @@ export function LoginAuth({
           </div>
 
           <p className="text-center text-sm text-gray-500 pb-6 px-4">
-            Jagd · Angeln · <span className="text-[#2C5F2E] font-semibold">Outdoor</span> · Schweiz🇨🇭
+            Jagd · Angeln · <span className="text-[#D4622A] font-semibold">Outdoor</span> · Schweiz🇨🇭
           </p>
         </DialogContent>
       </Dialog>

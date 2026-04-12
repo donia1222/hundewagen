@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
-import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, X, ZoomIn, Heart } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, X, ZoomIn, Heart, ExternalLink } from "lucide-react"
 import { ProductImage } from "@/components/product-image"
 import { fetchProductsCached } from "@/lib/product-cache"
 
@@ -19,7 +19,7 @@ function DescriptionBlock({ text }: { text: string }) {
   }, [text])
 
   return (
-    <div className="bg-[#F8F8F8] rounded-2xl p-4 border border-[#F0F0F0]">
+    <div className="rounded-2xl p-4" style={{ background: "#F3F6FF", border: "1.5px solid #e8eeff" }}>
       <p className="text-[11px] font-bold text-[#BBBBBB] uppercase tracking-widest mb-2">
         Beschreibung
       </p>
@@ -32,7 +32,7 @@ function DescriptionBlock({ text }: { text: string }) {
       {clamped && (
         <button
           onClick={() => setExpanded(e => !e)}
-          className="mt-2 text-xs font-semibold text-[#2C5F2E] hover:underline"
+          className="mt-2 text-xs font-semibold text-[#4F7CFF] hover:underline"
         >
           {expanded ? "Weniger anzeigen" : "Mehr anzeigen"}
         </button>
@@ -86,9 +86,18 @@ export default function ProductPage() {
   const [lightbox, setLightbox] = useState(false)
   const [zoom, setZoom] = useState({ x: 50, y: 50, active: false })
   const lightboxImgRef = useRef<HTMLDivElement>(null)
+  const [affiliateUrl, setAffiliateUrl] = useState<string | null>(null)
   const [paySettings, setPaySettings] = useState<{
     enable_paypal: boolean; enable_stripe: boolean; enable_twint: boolean; enable_invoice: boolean
   } | null>(null)
+
+  useEffect(() => {
+    if (!id) return
+    fetch(`/api/affiliate-links`)
+      .then(r => r.json())
+      .then(data => setAffiliateUrl(data[id] ?? null))
+      .catch(() => {})
+  }, [id])
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/get_payment_settings.php`)
@@ -225,8 +234,8 @@ export default function ProductPage() {
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-[#F7F7F8]">
-      <div className="bg-white border-b border-[#E0E0E0] h-14 animate-pulse" />
+    <div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
+      <div className="bg-white h-14 animate-pulse" style={{ borderBottom: "1px solid #e8eeff" }} />
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="bg-white rounded-3xl border border-[#EBEBEB] overflow-hidden animate-pulse">
           <div className="grid grid-cols-1 md:grid-cols-2">
@@ -250,7 +259,7 @@ export default function ProductPage() {
   if (error || !product) return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4">
       <p className="text-[#666] font-semibold">{error || "Produkt nicht gefunden"}</p>
-      <button onClick={() => backTo ? router.push(`/${backTo}`) : router.back()} className="text-sm text-[#2C5F2E] font-bold underline">
+      <button onClick={() => backTo ? router.push(`/${backTo}`) : router.back()} className="text-sm text-[#4F7CFF] font-bold underline">
         Zurück
       </button>
     </div>
@@ -260,19 +269,20 @@ export default function ProductPage() {
   const inStock = (product.stock ?? 0) > 0
 
   return (
-    <div className="min-h-screen bg-[#F7F7F8]">
+    <div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
 
       {/* Header */}
-      <div className="bg-white border-b border-[#E0E0E0] sticky top-0 z-30 shadow-sm">
+      <div className="bg-white sticky top-0 z-30 shadow-sm" style={{ borderBottom: "1px solid #e8eeff" }}>
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center gap-3">
           <button
             onClick={() => backTo ? router.push(`/${backTo}`) : router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all flex-shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-xl transition-all flex-shrink-0"
+            style={{ background: "#EEF3FF", color: "#4F7CFF" }}
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
-          <p className="truncate" style={{ fontFamily: "'Rubik Dirt', sans-serif", fontSize: '1.15rem', color: '#333333' }}>{product.name}</p>
+          <p className="truncate font-bold text-base" style={{ color: "#1A1A2E" }}>{product.name}</p>
           <button
             onClick={() => router.push("/?checkout=true")}
             className="ml-auto relative flex items-center justify-center w-10 h-10 hover:bg-[#F5F5F5] rounded-xl transition-colors flex-shrink-0"
@@ -289,11 +299,11 @@ export default function ProductPage() {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-3xl shadow-sm border border-[#EBEBEB] overflow-hidden">
+        <div className="bg-white rounded-3xl overflow-hidden" style={{ boxShadow: "0 4px 32px rgba(79,124,255,0.08)", border: "1.5px solid #e8eeff" }}>
           <div className="grid grid-cols-1 md:grid-cols-2">
 
             {/* Image side */}
-            <div className="bg-[#F8F8F8] p-6 flex flex-col items-center gap-4 border-b md:border-b-0 md:border-r border-[#F0F0F0]">
+            <div className="p-6 flex flex-col items-center gap-4 border-b md:border-b-0 md:border-r" style={{ background: "#F3F6FF", borderColor: "#e8eeff" }}>
               <div
                 className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden bg-white shadow-sm cursor-zoom-in"
                 onClick={() => setLightbox(true)}
@@ -306,7 +316,7 @@ export default function ProductPage() {
                   className="w-full h-full object-contain"
                 />
                 {product.badge && (
-                  <span className="absolute top-3 left-3 bg-[#2C5F2E] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                  <span className="absolute top-3 left-3 bg-[#4F7CFF] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
                     {product.badge}
                   </span>
                 )}
@@ -328,7 +338,7 @@ export default function ProductPage() {
                       onClick={() => setImgIdx(i)}
                       className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${
                         i === imgIdx
-                          ? "border-[#2C5F2E] shadow-md scale-105"
+                          ? "border-[#4F7CFF] shadow-md scale-105"
                           : "border-transparent opacity-50 hover:opacity-100"
                       }`}
                     >
@@ -370,23 +380,35 @@ export default function ProductPage() {
                   <span className="text-3xl font-black text-[#1A1A1A] tracking-tight">
                     {product.price.toFixed(2)}
                   </span>
-                  <span className="text-base text-[#999] font-medium">CHF</span>
+                  <span className="text-base text-[#999] font-medium">€</span>
                 </div>
                 <p className="text-xs text-[#999] mb-4">* Preise exkl. MwSt., zzgl. Versandkosten</p>
-                <button
-                  onClick={addToCart}
-                  disabled={!inStock}
-                  className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-all duration-200 ${
-                    added
-                      ? "bg-emerald-500 text-white"
-                      : inStock
-                        ? "bg-[#2C5F2E] hover:bg-[#1A4520] text-white shadow-lg shadow-[#2C5F2E]/20 hover:scale-[1.02] active:scale-[0.98]"
-                        : "bg-gray-100 text-gray-300 cursor-not-allowed"
-                  }`}
-                >
-                  {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-                  {added ? "Hinzugefügt!" : inStock ? "In den Warenkorb" : "Im Moment nicht im Lager"}
-                </button>
+                {(
+                  <a
+                    href={affiliateUrl || `https://www.amazon.es/s?k=${encodeURIComponent(product.name)}&tag=hundezonen-20`}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-[#FF9900] hover:bg-[#e88a00] text-white shadow-lg shadow-[#FF9900]/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Bei Amazon kaufen
+                  </a>
+                ) || (
+                  <button
+                    onClick={addToCart}
+                    disabled={!inStock}
+                    className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-all duration-200 ${
+                      added
+                        ? "bg-emerald-500 text-white"
+                        : inStock
+                          ? "bg-[#4F7CFF] hover:bg-[#B8501F] text-white shadow-lg shadow-[#D4622A]/20 hover:scale-[1.02] active:scale-[0.98]"
+                          : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                    }`}
+                  >
+                    {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
+                    {added ? "Hinzugefügt!" : inStock ? "In den Warenkorb" : "Im Moment nicht im Lager"}
+                  </button>
+                )}
                 {!inStock && (
                   <div className="flex justify-center mt-3">
                     <a
@@ -424,8 +446,8 @@ export default function ProductPage() {
           <div className="max-w-5xl mx-auto px-4 pb-10">
             <div className="border-t border-[#E8E8E8] pt-8">
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-1 h-6 bg-[#2C5F2E] rounded-full" />
-                <h2 className="text-base font-black text-[#1A1A1A] tracking-tight">Ähnliche Produkte</h2>
+                <div className="w-1 h-6 rounded-full" style={{ background: "linear-gradient(180deg, #4F7CFF, #FF6B9D)" }} />
+                <h2 className="text-base font-black tracking-tight" style={{ color: "#1A1A2E" }}>Ähnliche Produkte</h2>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {visible.map(p => {
@@ -434,9 +456,10 @@ export default function ProductPage() {
                     <div
                       key={p.id}
                       onClick={() => router.replace(`/product/${p.id}?back=shop`)}
-                      className="bg-white rounded-2xl border border-[#EBEBEB] overflow-hidden cursor-pointer group hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                      className="bg-white rounded-3xl overflow-hidden cursor-pointer group hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                      style={{ border: "1.5px solid #e8eeff" }}
                     >
-                      <div className="aspect-square bg-[#F8F8F8] overflow-hidden">
+                      <div className="aspect-square overflow-hidden" style={{ background: "#F3F6FF" }}>
                         <ProductImage
                           src={imgs[0] || p.image_url}
                           candidates={p.image_url_candidates}
@@ -450,8 +473,8 @@ export default function ProductPage() {
                         <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-2 leading-tight mb-1">
                           {p.name}
                         </p>
-                        <p className="text-sm font-black text-[#2C5F2E]">
-                          CHF {p.price.toFixed(2)}
+                        <p className="text-sm font-black text-[#4F7CFF]">
+                          € {p.price.toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -467,16 +490,16 @@ export default function ProductPage() {
       <div className="max-w-5xl mx-auto px-4 pb-12">
         <div className="flex flex-wrap justify-center gap-3">
           {[
-            "100% Schweizer Shop",
+            "100% sicherer Kauf",
             "Schnelle Lieferung",
-            "14 Tage Rückgaberecht",
-            "500+ Artikel im Sortiment",
+            "Einfache Rückgabe",
+            "Das Beste für deinen Hund",
           ].map((feat) => (
             <div
               key={feat}
               className="flex items-center gap-2 bg-white border border-[#E8E8E8] rounded-full px-4 py-2 shadow-sm"
             >
-              <span className="w-5 h-5 rounded-full bg-[#2C5F2E] flex items-center justify-center flex-shrink-0">
+              <span className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #4F7CFF, #FF6B9D)" }}>
                 <Check className="w-3 h-3 text-white stroke-[3]" />
               </span>
               <span className="text-xs font-semibold text-[#333]">{feat}</span>
@@ -558,7 +581,7 @@ export default function ProductPage() {
       <div className="max-w-5xl mx-auto px-4 pb-12">
         <div className="flex flex-wrap items-center justify-center gap-3">
           <div className="flex items-center gap-1.5 pr-4 border-r border-[#E0E0E0]">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#2C5F2E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#4F7CFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span className="text-[11px] font-semibold text-[#555] tracking-widest uppercase">Sichere Zahlung</span>
           </div>
           {paySettings.enable_invoice && (

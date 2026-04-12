@@ -172,7 +172,7 @@ const StripeCheckoutForm = ({ amount, currency, orderData, onSuccess, onError, d
           ) : (
             <>
               <CreditCard className="w-4 h-4 mr-2" />
-              {amount.toFixed(2)} CHF mit Karte bezahlen
+              {amount.toFixed(2)} € mit Karte bezahlen
             </>
           )}
         </Button>

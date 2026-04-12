@@ -626,7 +626,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
 
     const total = getFinalTotal()
     const paypalEmail = paySettings.paypal_email || "info@cantinatexmex.ch"
-    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(paypalEmail)}&amount=${total.toFixed(2)}&currency_code=CHF&item_name=FEUER KÖNIGREICH Order&custom=${orderId}&return=${window.location.origin}/success&cancel_return=${window.location.origin}/cancel`
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(paypalEmail)}&amount=${total.toFixed(2)}&currency_code=EUR&item_name=Hundewagen Order&custom=${orderId}&return=${window.location.origin}/success&cancel_return=${window.location.origin}/cancel`
 
     setOrderStatus("processing")
     // USAR LA MISMA PESTAÑA para que localStorage esté disponible
@@ -1184,7 +1184,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               <img src="/Security_n.png" alt="Logo" className="h-10 w-auto object-contain" />
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[#888]">
-              <Shield className="w-4 h-4 text-[#2C5F2E]" />
+              <Shield className="w-4 h-4 text-[#D4622A]" />
               <span>SSL gesichert</span>
             </div>
           </div>
@@ -1194,7 +1194,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
 
           {/* Success Icon + Title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#2C5F2E] mb-5 shadow-lg">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#D4622A] mb-5 shadow-lg">
               {isTwint
                 ? <img src="/twint-logo.svg" alt="TWINT" className="h-8 w-auto object-contain" />
                 : <CheckCircle className="w-10 h-10 text-white" />
@@ -1226,14 +1226,14 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               </div>
               <div className="flex justify-between items-center py-2 border-b border-[#F0F0F0]">
                 <span className="text-sm text-[#888]">Gesamtbetrag</span>
-                <span className="font-black text-xl text-[#1A1A1A]">{orderDetails?.total?.toFixed(2) || "0.00"} CHF</span>
+                <span className="font-black text-xl text-[#1A1A1A]">{orderDetails?.total?.toFixed(2) || "0.00"} €</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-[#F0F0F0]">
                 <span className="text-sm text-[#888]">Zahlungsstatus</span>
                 <span className={`text-sm font-bold px-3 py-1 rounded-full ${
                   isTwint ? "bg-orange-100 text-orange-700" :
                   isInvoice ? "bg-blue-100 text-blue-700" :
-                  "bg-green-100 text-[#2C5F2E]"
+                  "bg-green-100 text-[#D4622A]"
                 }`}>
                   {isTwint ? "Ausstehend" : isInvoice ? "Rechnung" : "Bezahlt"}
                 </span>
@@ -1241,7 +1241,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               {isLoggedIn && (
                 <div className="flex justify-between items-center py-2">
                   <span className="text-sm text-[#888]">Konto</span>
-                  <span className="text-sm font-semibold text-[#2C5F2E]">Gespeichert</span>
+                  <span className="text-sm font-semibold text-[#D4622A]">Gespeichert</span>
                 </div>
               )}
             </div>
@@ -1262,7 +1262,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                 <div className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-black text-white text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
                   <div className="flex-1">
-                    <p className="text-sm text-[#444] mb-2">Überweisen Sie <strong>{orderDetails?.total?.toFixed(2)} CHF</strong> an diese Nummer:</p>
+                    <p className="text-sm text-[#444] mb-2">Überweisen Sie <strong>{orderDetails?.total?.toFixed(2)} €</strong> an diese Nummer:</p>
                     <div className="bg-[#F5F5F5] rounded-xl px-5 py-3 text-center border border-[#E0E0E0]">
                       <p className="text-2xl font-black text-[#1A1A1A] tracking-wider">{orderDetails?.twintPhone}</p>
                     </div>
@@ -1287,7 +1287,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           {/* Delivery info */}
           {!isTwint && (
             <div className="bg-white rounded-2xl shadow-sm border border-[#EBEBEB] px-6 py-4 mb-5 flex items-center gap-3">
-              <Truck className="w-5 h-5 text-[#2C5F2E] flex-shrink-0" />
+              <Truck className="w-5 h-5 text-[#D4622A] flex-shrink-0" />
               <p className="text-sm text-[#555]">
                 {isInvoice
                   ? "Der Verkäufer wird Sie per E-Mail oder Telefon kontaktieren, um die Bestellung abzuschließen."
@@ -1300,7 +1300,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           {/* CTA */}
           <Button
             onClick={onBackToStore}
-            className="w-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-bold py-4 rounded-xl text-base shadow-lg transition-all"
+            className="w-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-bold py-4 rounded-xl text-base shadow-lg transition-all"
           >
             <Home className="w-4 h-4 mr-2" />
             Zurück zum Shop
@@ -1318,7 +1318,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <div className="container mx-auto max-w-4xl flex items-center justify-between">
             <img src="/Security_n.png" alt="Logo" className="h-10 w-auto object-contain" />
             <div className="flex items-center gap-1.5 text-xs text-[#888]">
-              <Shield className="w-4 h-4 text-[#2C5F2E]" />
+              <Shield className="w-4 h-4 text-[#D4622A]" />
               <span>SSL gesichert</span>
             </div>
           </div>
@@ -1332,7 +1332,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
             <p className="text-[#666] text-base">Es gab ein Problem beim Verarbeiten Ihrer Zahlung. Bitte versuchen Sie es erneut.</p>
           </div>
           <div className="space-y-3">
-            <Button onClick={() => setOrderStatus("pending")} className="w-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white font-bold py-4 rounded-xl text-base">
+            <Button onClick={() => setOrderStatus("pending")} className="w-full bg-[#D4622A] hover:bg-[#B8501F] text-white font-bold py-4 rounded-xl text-base">
               Erneut versuchen
             </Button>
             <Button onClick={onBackToStore} variant="outline" className="w-full rounded-xl py-4">
@@ -1352,7 +1352,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <div className="flex items-center gap-4">
             <button
               onClick={onBackToStore}
-              className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#2C5F2E] hover:text-white transition-all"
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-[#D4622A] hover:text-white transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
@@ -1363,7 +1363,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
             </div>
           </div>
           <div className="flex items-center gap-2 text-xs text-[#888]">
-            <Shield className="w-4 h-4 text-[#2C5F2E]" />
+            <Shield className="w-4 h-4 text-[#D4622A]" />
             <span>SSL gesichert</span>
           </div>
         </div>
@@ -1371,16 +1371,16 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
       <div className="container mx-auto px-4 max-w-7xl py-8">
 
           {isLoggedIn && currentUser && (
-            <div className="flex items-center justify-between gap-4 bg-[#F8FAF8] border border-[#2C5F2E]/20 rounded-2xl px-5 py-4 mb-8">
+            <div className="flex items-center justify-between gap-4 bg-[#F8FAF8] border border-[#D4622A]/20 rounded-2xl px-5 py-4 mb-8">
               {/* Avatar + info */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#2C5F2E] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#D4622A] flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm font-black">
                     {currentUser.firstName?.[0]?.toUpperCase()}{currentUser.lastName?.[0]?.toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <p className="text-[11px] font-semibold text-[#2C5F2E] uppercase tracking-widest">Angemeldet</p>
+                  <p className="text-[11px] font-semibold text-[#D4622A] uppercase tracking-widest">Angemeldet</p>
                   <p className="font-black text-[#1A1A1A] text-sm leading-tight">{currentUser.firstName} {currentUser.lastName}</p>
                   <p className="text-xs text-[#888]">{currentUser.email}</p>
                 </div>
@@ -1389,7 +1389,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => router.push("/profile?back=" + encodeURIComponent(window.location.pathname + window.location.search))}
-                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl border border-[#2C5F2E]/30 text-[#2C5F2E] hover:bg-[#2C5F2E] hover:text-white transition-colors"
+                  className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl border border-[#D4622A]/30 text-[#D4622A] hover:bg-[#D4622A] hover:text-white transition-colors"
                 >
                   <User className="w-4 h-4" />
                   <span className="text-[9px] font-semibold leading-none sm:hidden">Profil</span>
@@ -1411,7 +1411,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <div className="space-y-6">
             {/* Login Section — above the form */}
             {!isLoggedIn && (
-              <Card className="rounded-2xl shadow-sm border-[#2C5F2E]/20 bg-[#F8FCF8]">
+              <Card className="rounded-2xl shadow-sm border-[#D4622A]/20 bg-[#F8FCF8]">
                 <CardContent className="pt-4 pb-4">
                   <div className="flex items-center space-x-2 mb-3">
                     <Checkbox
@@ -1422,14 +1422,14 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         if (checked) setShowCreateAccount(false)
                       }}
                     />
-                    <Label htmlFor="showLogin" className="flex items-center cursor-pointer font-semibold text-[#2C5F2E]">
+                    <Label htmlFor="showLogin" className="flex items-center cursor-pointer font-semibold text-[#D4622A]">
                       <User className="w-4 h-4 mr-2" />
                       Ich habe bereits ein Konto — Anmelden
                     </Label>
                   </div>
 
                   {showLogin && (
-                    <div className="space-y-4 bg-white p-4 rounded-xl border border-[#2C5F2E]/15">
+                    <div className="space-y-4 bg-white p-4 rounded-xl border border-[#D4622A]/15">
                       <div>
                         <Label htmlFor="loginEmail">E-Mail *</Label>
                         <Input
@@ -1451,7 +1451,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                             variant="link"
                             size="sm"
                             onClick={openPasswordReset}
-                            className="text-xs text-[#2C5F2E] hover:text-[#1A4520] p-0 h-auto"
+                            className="text-xs text-[#D4622A] hover:text-[#B8501F] p-0 h-auto"
                           >
                             Passwort vergessen?
                           </Button>
@@ -1482,7 +1482,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         <Button
                           onClick={handleLogin}
                           disabled={isLoggingIn || !loginData.email || !loginData.password}
-                          className="w-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white"
+                          className="w-full bg-[#D4622A] hover:bg-[#B8501F] text-white"
                         >
                           {isLoggingIn ? (
                             <>
@@ -1510,9 +1510,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         </div>
                       )}
 
-                      <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#2C5F2E]/15">
-                        <p className="text-sm text-[#2C5F2E] font-semibold">Nach der Anmeldung:</p>
-                        <ul className="text-sm text-[#2C5F2E]/80 mt-1 space-y-1">
+                      <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#D4622A]/15">
+                        <p className="text-sm text-[#D4622A] font-semibold">Nach der Anmeldung:</p>
+                        <ul className="text-sm text-[#D4622A]/80 mt-1 space-y-1">
                           <li>• Ihre Daten werden automatisch ausgefüllt</li>
                           <li>• Schnellerer Checkout-Prozess</li>
                           <li>• Zugriff auf Ihr Profil und Bestellhistorie</li>
@@ -1528,7 +1528,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               <CardHeader>
                 <CardTitle className="flex items-center justify-between text-xl">
                   <div className="flex items-center">
-                    <User className="w-5 h-5 mr-2 text-[#2C5F2E]" />
+                    <User className="w-5 h-5 mr-2 text-[#D4622A]" />
                     Persönliche Daten
                   </div>
                   {!isLoggedIn && (
@@ -1624,13 +1624,13 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         }}
                       />
                       <Label htmlFor="showLogin" className="flex items-center cursor-pointer">
-                        <User className="w-4 h-4 mr-2 text-[#2C5F2E]" />
+                        <User className="w-4 h-4 mr-2 text-[#D4622A]" />
                         Ich habe bereits ein Konto - Anmelden
                       </Label>
                     </div>
 
                     {showLogin && (
-                      <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#2C5F2E]/15">
+                      <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#D4622A]/15">
                         <div>
                           <Label htmlFor="loginEmail">E-Mail *</Label>
                           <Input
@@ -1652,7 +1652,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                               variant="link"
                               size="sm"
                               onClick={openPasswordReset}
-                              className="text-xs text-[#2C5F2E] hover:text-[#1A4520] p-0 h-auto"
+                              className="text-xs text-[#D4622A] hover:text-[#B8501F] p-0 h-auto"
                             >
                               Passwort vergessen?
                             </Button>
@@ -1684,7 +1684,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                           <Button
                             onClick={handleLogin}
                             disabled={isLoggingIn || !loginData.email || !loginData.password}
-                            className="w-full bg-[#2C5F2E] hover:bg-[#1A4520] text-white"
+                            className="w-full bg-[#D4622A] hover:bg-[#B8501F] text-white"
                           >
                             {isLoggingIn ? (
                               <>
@@ -1713,11 +1713,11 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                           </div>
                         )}
 
-                        <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#2C5F2E]/15">
-                          <p className="text-sm text-[#2C5F2E] font-semibold">
+                        <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#D4622A]/15">
+                          <p className="text-sm text-[#D4622A] font-semibold">
                             Nach der Anmeldung:
                           </p>
-                          <ul className="text-sm text-[#2C5F2E]/80 mt-1 space-y-1">
+                          <ul className="text-sm text-[#D4622A]/80 mt-1 space-y-1">
                             <li>• Ihre Daten werden automatisch ausgefüllt</li>
                             <li>• Schnellerer Checkout-Prozess</li>
                             <li>• Zugriff auf Ihr Profil und Bestellhistorie</li>
@@ -1733,7 +1733,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
             <Card className="rounded-2xl shadow-sm border-[#EBEBEB]">
               <CardHeader>
                 <CardTitle className="flex items-center text-xl">
-                  <MapPin className="w-5 h-5 mr-2 text-[#2C5F2E]" />
+                  <MapPin className="w-5 h-5 mr-2 text-[#D4622A]" />
                   Lieferadresse
                 </CardTitle>
               </CardHeader>
@@ -1767,7 +1767,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                     Für Lieferungen in andere Länder{" "}
                     <a
                       href="mailto:info@usfh.ch?subject=Anfrage%20internationale%20Lieferung"
-                      className="text-[#2C5F2E] font-semibold underline hover:text-[#1A4520]"
+                      className="text-[#D4622A] font-semibold underline hover:text-[#B8501F]"
                     >
                       kontaktieren Sie uns bitte direkt
                     </a>
@@ -1860,14 +1860,14 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                     }}
                   />
                   <Label htmlFor="differentBillingAddress" className="flex items-center cursor-pointer">
-                    <CreditCard className="w-4 h-4 mr-2 text-[#2C5F2E]" />
+                    <CreditCard className="w-4 h-4 mr-2 text-[#D4622A]" />
                     Rechnungsadresse anders als Lieferadresse
                   </Label>
                 </div>
 
                 {useDifferentBillingAddress && (
-                  <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#2C5F2E]/20">
-                    <h4 className="font-semibold text-[#2C5F2E] mb-3">Rechnungsadresse</h4>
+                  <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#D4622A]/20">
+                    <h4 className="font-semibold text-[#D4622A] mb-3">Rechnungsadresse</h4>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -1939,8 +1939,8 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                       {billingErrors.canton && <p className="text-red-500 text-sm mt-1">{billingErrors.canton}</p>}
                     </div>
 
-                    <div className="bg-[#E8F5E9] p-3 rounded-xl border border-[#2C5F2E]/15">
-                      <p className="text-sm text-[#2C5F2E]">
+                    <div className="bg-[#E8F5E9] p-3 rounded-xl border border-[#D4622A]/15">
+                      <p className="text-sm text-[#D4622A]">
                         <strong>Hinweis:</strong> Die Rechnungsadresse wird nur für die Rechnungsstellung verwendet und nicht in der Datenbank gespeichert.
                       </p>
                     </div>
@@ -1965,13 +1965,13 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                       }}
                     />
                     <Label htmlFor="createAccount" className="flex items-center cursor-pointer">
-                      <UserPlus className="w-4 h-4 mr-2 text-[#2C5F2E]" />
+                      <UserPlus className="w-4 h-4 mr-2 text-[#D4622A]" />
                       Konto erstellen und Daten für zukünftige Bestellungen speichern
                     </Label>
                   </div>
 
                   {showCreateAccount && (
-                    <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#2C5F2E]/15">
+                    <div className="space-y-4 bg-[#F0F9F0] p-4 rounded-xl border border-[#D4622A]/15">
                       <div>
                         <Label htmlFor="password">Passwort *</Label>
                         <div className="relative">
@@ -2080,11 +2080,11 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                         </div>
                       )}
 
-                      <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#2C5F2E]/15">
-                        <p className="text-sm text-[#2C5F2E] font-semibold">
+                      <div className="bg-[#F0F9F0] p-3 rounded-xl border border-[#D4622A]/15">
+                        <p className="text-sm text-[#D4622A] font-semibold">
                           Vorteile eines Kontos:
                         </p>
-                        <ul className="text-sm text-[#2C5F2E]/80 mt-1 space-y-1">
+                        <ul className="text-sm text-[#D4622A]/80 mt-1 space-y-1">
                           <li>• Automatisches Ausfüllen bei zukünftigen Bestellungen</li>
                           <li>• Bestellhistorie einsehen</li>
                           <li>• Adressdaten verwalten</li>
@@ -2103,7 +2103,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
             <Card className="rounded-2xl shadow-sm border-[#EBEBEB]">
               <CardHeader>
                 <CardTitle className="flex items-center text-xl">
-                  <Package className="w-5 h-5 mr-2 text-[#2C5F2E]" />
+                  <Package className="w-5 h-5 mr-2 text-[#D4622A]" />
                   Ihre Bestellung
                 </CardTitle>
               </CardHeader>
@@ -2164,18 +2164,18 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Zwischensumme:</span>
-                    <span>{getTotalPrice().toFixed(2)} CHF</span>
+                    <span>{getTotalPrice().toFixed(2)} €</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>MwSt. 8.1%:</span>
-                    <span>{getMwst().toFixed(2)} CHF</span>
+                    <span>{getMwst().toFixed(2)} €</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Versand:</span>
                     <span>
                       {shippingCost === 0
                         ? <Badge className="bg-green-100 text-green-700">Kostenlos</Badge>
-                        : <span className="font-semibold">{shippingCost.toFixed(2)} CHF</span>
+                        : <span className="font-semibold">{shippingCost.toFixed(2)} €</span>
                       }
                     </span>
                   </div>
@@ -2187,17 +2187,17 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   <Separator />
                   <div className="flex justify-between text-xl font-black">
                     <span>Gesamt:</span>
-                    <span className="text-[#2C5F2E]">{getFinalTotal().toFixed(2)} CHF</span>
+                    <span className="text-[#D4622A]">{getFinalTotal().toFixed(2)} €</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Shipping information */}
-            <Card className="bg-[#F0F9F0] border-[#2C5F2E]/25 rounded-2xl">
+            <Card className="bg-[#F0F9F0] border-[#D4622A]/25 rounded-2xl">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-[#2C5F2E] mb-2">📦 Versandinformationen</h3>
-                <ul className="text-sm text-[#2C5F2E]/80 space-y-1">
+                <h3 className="font-semibold text-[#D4622A] mb-2">📦 Versandinformationen</h3>
+                <ul className="text-sm text-[#D4622A]/80 space-y-1">
                   <li>• Lieferzeit: 2-3 Werktage</li>
                   <li>• Versand aus 9745 Sevelen</li>
                   {shippingInfo.zone && <li>• Zone: {shippingInfo.zone} · {shippingInfo.range}</li>}
@@ -2209,7 +2209,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
             <Card className="rounded-2xl shadow-sm border-[#EBEBEB]">
               <CardHeader>
                 <CardTitle className="flex items-center text-xl">
-                  <CreditCard className="w-5 h-5 mr-2 text-[#2C5F2E]" />
+                  <CreditCard className="w-5 h-5 mr-2 text-[#D4622A]" />
                   Zahlungsart wählen
                 </CardTitle>
               </CardHeader>
@@ -2220,9 +2220,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   {paySettings.enable_paypal && (
                     <div
                       onClick={() => setPaymentMethod("paypal")}
-                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "paypal" ? "border-[#2C5F2E] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "paypal" ? "border-[#D4622A] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "paypal" ? "border-[#2C5F2E] bg-[#2C5F2E]" : "border-gray-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "paypal" ? "border-[#D4622A] bg-[#D4622A]" : "border-gray-300"}`}>
                         {paymentMethod === "paypal" && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2237,9 +2237,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   {paySettings.enable_stripe && (
                     <div
                       onClick={() => setPaymentMethod("stripe")}
-                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "stripe" ? "border-[#2C5F2E] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "stripe" ? "border-[#D4622A] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "stripe" ? "border-[#2C5F2E] bg-[#2C5F2E]" : "border-gray-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "stripe" ? "border-[#D4622A] bg-[#D4622A]" : "border-gray-300"}`}>
                         {paymentMethod === "stripe" && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2269,9 +2269,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   {paySettings.enable_stripe && paySettings.stripe_publishable_key && (
                     <div
                       onClick={() => setPaymentMethod("twint_stripe")}
-                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "twint_stripe" ? "border-[#2C5F2E] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "twint_stripe" ? "border-[#D4622A] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "twint_stripe" ? "border-[#2C5F2E] bg-[#2C5F2E]" : "border-gray-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "twint_stripe" ? "border-[#D4622A] bg-[#D4622A]" : "border-gray-300"}`}>
                         {paymentMethod === "twint_stripe" && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2286,9 +2286,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   {paySettings.enable_twint && (
                     <div
                       onClick={() => setPaymentMethod("twint")}
-                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "twint" ? "border-[#2C5F2E] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "twint" ? "border-[#D4622A] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "twint" ? "border-[#2C5F2E] bg-[#2C5F2E]" : "border-gray-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "twint" ? "border-[#D4622A] bg-[#D4622A]" : "border-gray-300"}`}>
                         {paymentMethod === "twint" && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2303,9 +2303,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                   {paySettings.enable_invoice && (
                     <div
                       onClick={() => setPaymentMethod("invoice")}
-                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "invoice" ? "border-[#2C5F2E] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+                      className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${paymentMethod === "invoice" ? "border-[#D4622A] bg-[#F0F9F0]" : "border-gray-200 hover:border-gray-300 bg-white"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "invoice" ? "border-[#2C5F2E] bg-[#2C5F2E]" : "border-gray-300"}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${paymentMethod === "invoice" ? "border-[#D4622A] bg-[#D4622A]" : "border-gray-300"}`}>
                         {paymentMethod === "invoice" && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2356,7 +2356,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                       disabled={isSubmitting || STORE_UNDER_MAINTENANCE}
                       className="w-full min-h-14 h-auto py-3 text-base font-bold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {STORE_UNDER_MAINTENANCE ? "Shop wird gerade überarbeitet" : isSubmitting ? <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Verarbeitung...</> : `Bestellung abschließen · ${getFinalTotal().toFixed(2)} CHF`}
+                      {STORE_UNDER_MAINTENANCE ? "Shop wird gerade überarbeitet" : isSubmitting ? <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Verarbeitung...</> : `Bestellung abschließen · ${getFinalTotal().toFixed(2)} €`}
                     </Button>
                   </>
                 )}
@@ -2374,7 +2374,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                       disabled={isSubmitting || STORE_UNDER_MAINTENANCE}
                       className="w-full min-h-14 h-auto py-3 text-base font-bold bg-[#0070BA] hover:bg-[#005ea6] text-white shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {STORE_UNDER_MAINTENANCE ? "Shop wird gerade überarbeitet" : isSubmitting ? <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Weiterleitung...</> : `Mit PayPal bezahlen · ${getFinalTotal().toFixed(2)} CHF`}
+                      {STORE_UNDER_MAINTENANCE ? "Shop wird gerade überarbeitet" : isSubmitting ? <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Weiterleitung...</> : `Mit PayPal bezahlen · ${getFinalTotal().toFixed(2)} €`}
                     </Button>
                   </>
                 )}
@@ -2385,7 +2385,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                     <div className="mb-4">
                       <StripePayment
                         amount={getFinalTotal()}
-                        currency="CHF"
+                        currency="€"
                         orderData={{ orderId: `ORDER-${Date.now()}`, customerInfo: customerInfo, cart: cart }}
                         onSuccess={handleStripeSuccess}
                         onError={handleStripeError}
@@ -2419,7 +2419,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                     >
                       {STORE_UNDER_MAINTENANCE ? "Shop wird gerade überarbeitet" : isSubmitting
                         ? <><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>Verarbeitung...</>
-                        : <span className="flex flex-col items-center leading-tight"><span>Bestellen &amp; via TWINT bezahlen</span><span className="text-sm font-semibold opacity-90">{getFinalTotal().toFixed(2)} CHF</span></span>
+                        : <span className="flex flex-col items-center leading-tight"><span>Bestellen &amp; via TWINT bezahlen</span><span className="text-sm font-semibold opacity-90">{getFinalTotal().toFixed(2)} €</span></span>
                       }
                     </Button>
                   </>
@@ -2461,7 +2461,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center">
-                <KeyRound className="w-5 h-5 mr-2 text-[#2C5F2E]" />
+                <KeyRound className="w-5 h-5 mr-2 text-[#D4622A]" />
                 Passwort zurücksetzen
               </DialogTitle>
               <DialogDescription>
@@ -2513,9 +2513,9 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
               )}
 
               {/* Info Box */}
-              <div className="bg-[#F0F9F0] border border-[#2C5F2E]/20 rounded-xl p-4">
-                <h4 className="text-[#2C5F2E] font-medium mb-2">ℹ️ Wichtige Hinweise:</h4>
-                <ul className="text-[#2C5F2E]/80 text-sm space-y-1">
+              <div className="bg-[#F0F9F0] border border-[#D4622A]/20 rounded-xl p-4">
+                <h4 className="text-[#D4622A] font-medium mb-2">ℹ️ Wichtige Hinweise:</h4>
+                <ul className="text-[#D4622A]/80 text-sm space-y-1">
                   <li>• Sie erhalten ein neues 8-stelliges Passwort per E-Mail</li>
                   <li>• Melden Sie sich sofort mit dem neuen Passwort an</li>
                   <li>• Ändern Sie das Passwort nach der Anmeldung in Ihrem Profil</li>
@@ -2528,7 +2528,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
                 <Button
                   onClick={handlePasswordReset}
                   disabled={isResettingPassword || !resetEmail.trim() || resetStatus === "success"}
-                  className="flex-1 bg-[#2C5F2E] hover:bg-[#1A4520] text-white rounded-xl"
+                  className="flex-1 bg-[#D4622A] hover:bg-[#B8501F] text-white rounded-xl"
                 >
                   {isResettingPassword ? (
                     <>
@@ -2576,7 +2576,7 @@ export function CheckoutPage({ cart, onBackToStore, onClearCart, onAddToCart, on
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="flex flex-wrap items-center justify-center gap-3">
               <div className="flex items-center gap-1.5 pr-4 border-r border-[#E0E0E0]">
-                <Shield className="w-4 h-4 text-[#2C5F2E]" />
+                <Shield className="w-4 h-4 text-[#D4622A]" />
                 <span className="text-[11px] font-semibold text-[#555] tracking-widest uppercase">Sichere Zahlung</span>
               </div>
               {paySettings.enable_invoice && (
