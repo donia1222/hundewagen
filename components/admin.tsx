@@ -252,6 +252,64 @@ export function Admin({ onClose }: AdminProps) {
     errors?: string[]
     error?: string
   } | null>(null)
+  // Amazon Link Categories
+  type AmazonLinkCat = { id: string; name: string; amazonUrl: string }
+  const [amazonLinkCats, setAmazonLinkCats] = useState<AmazonLinkCat[]>(() => {
+    if (typeof window === "undefined") return []
+    try { return JSON.parse(localStorage.getItem("amazon-link-cats") || "[]") } catch { return [] }
+  })
+  const [showAmazonLinkPanel, setShowAmazonLinkPanel] = useState(false)
+  const [amazonLinkForm, setAmazonLinkForm] = useState({ name: "", amazonUrl: "" })
+
+  const saveAmazonLinkCat = () => {
+    if (!amazonLinkForm.name.trim() || !amazonLinkForm.amazonUrl.trim()) return
+    const newCat: AmazonLinkCat = { id: Date.now().toString(), name: amazonLinkForm.name.trim(), amazonUrl: amazonLinkForm.amazonUrl.trim() }
+    const updated = [...amazonLinkCats, newCat]
+    setAmazonLinkCats(updated)
+    localStorage.setItem("amazon-link-cats", JSON.stringify(updated))
+    setAmazonLinkForm({ name: "", amazonUrl: "" })
+    toast({ title: "✓ Amazon-Link gespeichert", description: newCat.name })
+  }
+
+  const deleteAmazonLinkCat = (id: string) => {
+    const updated = amazonLinkCats.filter(c => c.id !== id)
+    setAmazonLinkCats(updated)
+    localStorage.setItem("amazon-link-cats", JSON.stringify(updated))
+  }
+
+  const [amazonImporting, setAmazonImporting] = useState<string | null>(null)
+  const [amazonImportResult, setAmazonImportResult] = useState<Record<string, { saved: number; failed: number; total: number; error?: string }>>({})
+
+  const importFromAmazonSearch = async (cat: { id: string; name: string; amazonUrl: string }) => {
+    setAmazonImporting(cat.id)
+    setAmazonImportResult(prev => ({ ...prev, [cat.id]: { saved: 0, failed: 0, total: 0 } }))
+    try {
+      // Find matching backend category
+      const matchedCat = categories.find(c => c.name.toLowerCase() === cat.name.toLowerCase())
+      const res = await fetch("/api/import-amazon-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          searchUrl: cat.amazonUrl,
+          categoryId: matchedCat?.id ?? null,
+          categoryName: cat.name,
+        }),
+      })
+      const data = await res.json()
+      setAmazonImportResult(prev => ({ ...prev, [cat.id]: data }))
+      if (data.saved > 0) {
+        toast({ title: `✓ ${data.saved} Produkte importiert`, description: `aus "${cat.name}"` })
+        loadProducts()
+      } else {
+        toast({ title: "Hinweis", description: data.error || "Keine Produkte importiert." })
+      }
+    } catch (e) {
+      setAmazonImportResult(prev => ({ ...prev, [cat.id]: { saved: 0, failed: 0, total: 0, error: String(e) } }))
+    } finally {
+      setAmazonImporting(null)
+    }
+  }
+
   type ImportBatch = { filename: string; date: string; ids: number[]; count: number }
   const [importHistory, setImportHistory] = useState<ImportBatch[]>(() => {
     if (typeof window === "undefined") return []
@@ -1025,6 +1083,13 @@ export function Admin({ onClose }: AdminProps) {
 
   const fetchAmazonPreview = async (url: string) => {
     if (!url.trim()) { setAmazonPreview(null); return }
+    // If search URL, warn but still try (API will extract first ASIN)
+    if (/amazon\.[a-z.]+\/s[?/]/.test(url) || url.includes("/s?k=")) {
+      toast({
+        title: "🔍 Suchergebnis-URL erkannt",
+        description: "Es wird versucht, das erste Produkt automatisch zu laden...",
+      })
+    }
     setAmazonFetching(true)
     setAmazonPreview(null)
     try {
@@ -1056,9 +1121,11 @@ export function Admin({ onClose }: AdminProps) {
     if (amazonPreview.description) setVal("description", amazonPreview.description)
     if (amazonPreview.price) setVal("price", String(amazonPreview.price))
 
-    // Set clean Amazon.de product URL using ASIN
+    // Set clean product URL using ASIN — detect domain from finalUrl
     if (amazonPreview.asin) {
-      const cleanUrl = `https://www.amazon.de/dp/${amazonPreview.asin}?tag=hundezonen-20`
+      const domain = amazonPreview.finalUrl?.match(/https?:\/\/(www\.)?amazon\.([a-z.]+)/)?.[2]
+      const amazonDomain = domain ? `amazon.${domain}` : "amazon.de"
+      const cleanUrl = `https://www.${amazonDomain}/dp/${amazonPreview.asin}?tag=hundezonen-20`
       setCurrentAffiliateUrl(cleanUrl)
       setVal("affiliate_url", cleanUrl)
     }
@@ -2426,7 +2493,7 @@ export function Admin({ onClose }: AdminProps) {
             <div className="mb-4">
               <h2 className="text-xl font-black text-gray-900 tracking-tight">Produkte hinzufügen</h2>
               <p className="text-xs text-gray-400 mt-0.5 mb-4">Produkte verwalten</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* Banner: Neues Produkt */}
                 <button
                   onClick={showAddProductModal}
@@ -2458,8 +2525,101 @@ export function Admin({ onClose }: AdminProps) {
                     <p className="text-emerald-100 text-xs mt-1">{showExcelImport ? "Formular schließen" : "Produkte per Excel synchronisieren"}</p>
                   </div>
                 </button>
+
+                {/* Banner: Amazon-Link */}
+                <button
+                  onClick={() => setShowAmazonLinkPanel(v => !v)}
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#FF9900] to-[#e47911] hover:from-[#e88a00] hover:to-[#cc6d00] p-5 text-left shadow-md shadow-orange-500/20 hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8" />
+                  <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-6 -translate-x-4" />
+                  <div className="relative">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                      <span className="text-white font-black text-sm">A</span>
+                    </div>
+                    <p className="text-white font-bold text-base leading-tight">Amazon-Link</p>
+                    <p className="text-orange-100 text-xs mt-1">{showAmazonLinkPanel ? "Panel schließen" : "Amazon-Seite als Kategorie"}</p>
+                  </div>
+                </button>
               </div>
             </div>
+
+            {/* Amazon Link Panel */}
+            {showAmazonLinkPanel && (
+              <Card className="mb-6 border border-[#FF9900]/30 bg-[#FFF8F0] rounded-2xl shadow-sm">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-black text-[#CC7700] flex items-center gap-2">
+                    🛒 Amazon-Link als Kategorie
+                  </CardTitle>
+                  <p className="text-xs text-gray-500 mt-1">Füge eine Amazon-Suchseite oder Produktseite als Navigationskategorie hinzu. Besucher werden direkt zu Amazon weitergeleitet.</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-xs font-semibold text-[#444] mb-1 block">Kategoriename (wird im Menü angezeigt)</Label>
+                      <Input
+                        placeholder="z.B. Hundewagen bis 20kg"
+                        value={amazonLinkForm.name}
+                        onChange={e => setAmazonLinkForm(f => ({ ...f, name: e.target.value }))}
+                        className="bg-white"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs font-semibold text-[#444] mb-1 block">Amazon-URL (Affiliate-Link)</Label>
+                      <Input
+                        placeholder="https://amzn.to/... oder https://www.amazon.de/s?k=..."
+                        value={amazonLinkForm.amazonUrl}
+                        onChange={e => setAmazonLinkForm(f => ({ ...f, amazonUrl: e.target.value }))}
+                        className="bg-white"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    onClick={saveAmazonLinkCat}
+                    disabled={!amazonLinkForm.name.trim() || !amazonLinkForm.amazonUrl.trim()}
+                    className="bg-[#FF9900] hover:bg-[#e88a00] text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-1" /> Kategorie speichern
+                  </Button>
+
+                  {amazonLinkCats.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-xs font-black uppercase tracking-widest text-[#999]">Gespeicherte Amazon-Kategorien</p>
+                      {amazonLinkCats.map(cat => (
+                        <div key={cat.id} className="bg-white rounded-xl p-3 border border-[#FF9900]/20 space-y-2">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="font-bold text-sm text-[#1A1A1A] truncate">{cat.name}</p>
+                              <p className="text-[11px] text-[#999] truncate">{cat.amazonUrl}</p>
+                            </div>
+                            <div className="flex gap-2 shrink-0">
+                              <a href={cat.amazonUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[#4F7CFF] hover:underline">↗</a>
+                              <button onClick={() => deleteAmazonLinkCat(cat.id)} className="text-xs text-red-400 hover:text-red-600">Löschen</button>
+                            </div>
+                          </div>
+                          <Button
+                            size="sm"
+                            disabled={amazonImporting === cat.id}
+                            onClick={() => importFromAmazonSearch(cat)}
+                            className="w-full bg-[#FF9900] hover:bg-[#e88a00] text-white text-xs h-8"
+                          >
+                            {amazonImporting === cat.id ? "Importiere Produkte..." : "🛒 Produkte von Amazon importieren"}
+                          </Button>
+                          {amazonImportResult[cat.id] && (
+                            <p className="text-xs text-center">
+                              {amazonImportResult[cat.id].error
+                                ? <span className="text-red-500">{amazonImportResult[cat.id].error}</span>
+                                : <span className="text-green-600 font-semibold">✓ {amazonImportResult[cat.id].saved} gespeichert · {amazonImportResult[cat.id].failed} fehlgeschlagen von {amazonImportResult[cat.id].total}</span>
+                              }
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Excel Import */}
             {false && showExcelImport && <Card className="mb-6 border border-emerald-200 bg-gradient-to-r from-emerald-50/50 to-white rounded-2xl shadow-sm">
@@ -3839,6 +3999,12 @@ export function Admin({ onClose }: AdminProps) {
                 <p className="text-xs text-[#999]">
                   Pega el link de Amazon — se intentará importar nombre, imagen y descripción automáticamente.
                 </p>
+                {currentAffiliateUrl && (/amazon\.[a-z.]+\/s[?/]/.test(currentAffiliateUrl) || currentAffiliateUrl.includes("/s?k=")) && (
+                  <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-xs text-red-700">
+                    <span className="text-base leading-none mt-0.5">⚠️</span>
+                    <span><strong>Suchergebnis-URL erkannt.</strong> Diese URL zeigt eine Suchliste, kein einzelnes Produkt. Bitte öffne das gewünschte Produkt auf Amazon und kopiere die URL der <strong>Produktseite</strong> (enthält <code>/dp/</code>).</span>
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <Input
                     id="affiliate_url"

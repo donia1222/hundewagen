@@ -57,20 +57,58 @@ function extractImage(html: string): string {
   return ""
 }
 
+function extractFirstAsinFromSearch(html: string): string | null {
+  // data-asin attribute (most reliable in search pages)
+  const m1 = html.match(/data-asin="([A-Z0-9]{10})"/)
+  if (m1) return m1[1]
+  // /dp/ASIN in href
+  const m2 = html.match(/\/dp\/([A-Z0-9]{10})[/"?]/)
+  if (m2) return m2[1]
+  return null
+}
+
+function getAmazonDomain(url: string): string {
+  const m = url.match(/https?:\/\/(www\.)?amazon\.([a-z.]+)/)
+  return m ? `amazon.${m[2]}` : "amazon.de"
+}
+
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url")
   if (!url) return NextResponse.json({ error: "url required" }, { status: 400 })
 
   try {
-    // Step 1: Follow the short link to get the ASIN
+    // Step 1: Follow the link
     const res = await fetch(url, { redirect: "follow", headers: HEADERS })
     const html = await res.text()
 
-    // Extract ASIN from final URL
-    const asinMatch = res.url.match(/\/dp\/([A-Z0-9]{10})/) || res.url.match(/\/gp\/product\/([A-Z0-9]{10})/)
-    const asin = asinMatch ? asinMatch[1] : null
+    // Detect Amazon domain from original URL (amazon.de, amazon.es, amazon.com...)
+    const amazonDomain = getAmazonDomain(url) || getAmazonDomain(res.url)
 
-    // Step 2: If we have ASIN, fetch Amazon.de for EUR price
+    // Detect if it's a search results page
+    const isSearchPage = res.url.includes("/s?") || res.url.includes("/s?k=") || !!res.url.match(/\/s[?&]/)
+    let workingHtml = html
+    let workingUrl = res.url
+
+    let asinFromUrl = res.url.match(/\/dp\/([A-Z0-9]{10})/)?.[1] || res.url.match(/\/gp\/product\/([A-Z0-9]{10})/)?.[1] || null
+
+    if (!asinFromUrl && isSearchPage) {
+      const firstAsin = extractFirstAsinFromSearch(html)
+      if (firstAsin) {
+        try {
+          // Use same domain as original URL
+          const prodRes = await fetch(`https://www.${amazonDomain}/dp/${firstAsin}`, { redirect: "follow", headers: HEADERS })
+          workingHtml = await prodRes.text()
+          workingUrl = prodRes.url
+          asinFromUrl = firstAsin
+        } catch {}
+      }
+    }
+
+    // Extract ASIN from final URL
+    const asinMatch = workingUrl.match(/\/dp\/([A-Z0-9]{10})/) || workingUrl.match(/\/gp\/product\/([A-Z0-9]{10})/)
+    const asin = asinMatch ? asinMatch[1] : asinFromUrl
+
+    // Step 2: Try Amazon.de for EUR price (preferred), fall back to original domain
     let priceEur: number | null = null
     let deHtml = ""
     if (asin) {
@@ -79,22 +117,25 @@ export async function GET(req: NextRequest) {
           redirect: "follow",
           headers: { ...HEADERS, "Accept-Language": "de-DE,de;q=0.9" },
         })
-        deHtml = await deRes.text()
-        priceEur = extractPrice(deHtml)
+        // Only use if amazon.de actually has the product (not redirected to search)
+        if (!deRes.url.includes("/s?")) {
+          deHtml = await deRes.text()
+          priceEur = extractPrice(deHtml)
+        }
       } catch {}
     }
 
-    // Step 3: Try price from original page if DE failed
-    if (!priceEur) priceEur = extractPrice(html)
+    // Step 3: Try price from working page if DE failed
+    if (!priceEur) priceEur = extractPrice(workingHtml)
 
-    // Extract image (try DE page first, then original)
-    let image = extractImage(deHtml) || extractImage(html)
+    // Extract image (try DE page first, then working page)
+    let image = extractImage(deHtml) || extractImage(workingHtml)
     if (!image && asin) {
       image = `https://m.media-amazon.com/images/I/${asin}._SL500_.jpg`
     }
 
-    // Title & description from original
-    const rawTitle = getMeta(html, "og:title") || getMetaName(html, "title") || ""
+    // Title & description from working page
+    const rawTitle = getMeta(workingHtml, "og:title") || getMetaName(workingHtml, "title") || ""
     const cleanTitle = rawTitle
       .replace(/^Amazon\.[a-z.]+[:\s]+/i, "")
       .replace(/\s*[:|]\s*Amazon\.[a-z.]+$/i, "")
@@ -103,7 +144,7 @@ export async function GET(req: NextRequest) {
       .replace(/\s*:\s*Amazon\.(es|com|de)\s*$/i, "")
       .trim()
 
-    const rawDesc = getMeta(html, "og:description") || getMetaName(html, "description") || ""
+    const rawDesc = getMeta(workingHtml, "og:description") || getMetaName(workingHtml, "description") || ""
     const cleanDesc = rawDesc
       .replace(/^Amazon\.[a-z.]+[:\s]+/i, "")
       .replace(/\s*[:|]\s*Amazon\.[a-z.]+$/i, "")

@@ -287,13 +287,30 @@ export default function ShopGrid() {
   const [error, setError]           = useState("")
   const [affiliateLinks, setAffiliateLinks] = useState<Record<string, string>>({})
   const affiliateLinksRef = useRef<Record<string, string>>({})
+  const [amazonLinkCats, setAmazonLinkCats] = useState<{ id: string; name: string; amazonUrl: string }[]>([])
 
   useEffect(() => {
     fetch("/api/affiliate-links").then(r => r.json()).then(data => {
       setAffiliateLinks(data)
       affiliateLinksRef.current = data
     }).catch(() => {})
+    try {
+      const saved = JSON.parse(localStorage.getItem("amazon-link-cats") || "[]")
+      setAmazonLinkCats(saved)
+    } catch {}
   }, [])
+
+  const handleCategoryClick = (slug: string) => {
+    const amazonCat = amazonLinkCats.find(c =>
+      c.name.toLowerCase() === slug.toLowerCase() ||
+      c.name.toLowerCase().replace(/\s+/g, "-") === slug.toLowerCase()
+    )
+    if (amazonCat) {
+      window.open(amazonCat.amazonUrl, "_blank", "noopener,noreferrer")
+      return
+    }
+    setActiveCategory(slug)
+  }
 
   const [search, setSearch]                 = useState("")
   const [activeCategory, setActiveCategory] = useState("all")
@@ -670,7 +687,7 @@ export default function ShopGrid() {
                   {categories.map((cat) => (
                     <button
                       key={cat.slug}
-                      onClick={() => { setActiveCategory(cat.slug); setNavMenuOpen(false) }}
+                      onClick={() => { handleCategoryClick(cat.slug); setNavMenuOpen(false) }}
                       className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] font-bold text-[#222222]"
                     >
                       {cat.name.replace(/\s*\d{4}$/, "")}
@@ -962,7 +979,6 @@ export default function ShopGrid() {
                 const catProds = products.filter(p =>
                   p.category === cat.slug || p.category === cat.name
                 )
-                // collect all image sources with fallbacks
                 const srcs: string[] = []
                 for (const p of catProds) {
                   const fromUrls = (p.image_urls ?? []).filter((u): u is string => !!u)
@@ -979,10 +995,27 @@ export default function ShopGrid() {
                     srcs={uniqueSrcs}
                     displayName={displayName}
                     isActive={isActive}
-                    onClick={() => setActiveCategory(prev => prev === cat.slug ? "all" : cat.slug)}
+                    onClick={() => handleCategoryClick(activeCategory === cat.slug ? "all" : cat.slug)}
                   />
                 )
               })}
+              {amazonLinkCats.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => window.open(cat.amazonUrl, "_blank", "noopener,noreferrer")}
+                  className="relative overflow-hidden rounded-2xl flex flex-col justify-between p-4 transition-all duration-200 text-left group"
+                  style={{ width: "160px", height: "160px", background: "#FFF8F0", border: "2px solid #FF9900", flexShrink: 0 }}
+                >
+                  <div className="absolute top-2 right-2 bg-[#FF9900] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">Amazon</div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#FF9900]/20 mt-1">
+                    <span className="text-[#CC7700] font-black text-lg">🛒</span>
+                  </div>
+                  <div>
+                    <p className="font-black text-sm leading-tight text-[#1A1A1A] line-clamp-2">{cat.name}</p>
+                    <p className="text-[11px] text-[#CC7700] mt-0.5 font-semibold group-hover:underline">Auf Amazon ansehen ↗</p>
+                  </div>
+                </button>
+              ))}
               </div>
               </div>
             </div>
@@ -1032,10 +1065,26 @@ export default function ShopGrid() {
                       srcs={uniqueSrcs}
                       displayName={displayName}
                       isActive={isActive}
-                      onClick={() => setActiveCategory(prev => prev === cat.slug ? "all" : cat.slug)}
+                      onClick={() => handleCategoryClick(activeCategory === cat.slug ? "all" : cat.slug)}
                     />
                   )
                 })}
+                {amazonLinkCats.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => window.open(cat.amazonUrl, "_blank", "noopener,noreferrer")}
+                    className="relative overflow-hidden rounded-xl flex-shrink-0 flex flex-col justify-between p-3 text-left group"
+                    style={{ width: "110px", height: "120px", background: "#FFF8F0", border: "2px solid #FF9900" }}
+                  >
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#FF9900]/20">
+                      <span className="text-[#CC7700] text-base">🛒</span>
+                    </div>
+                    <div>
+                      <p className="font-black text-[13px] leading-tight text-[#1A1A1A] line-clamp-2">{cat.name}</p>
+                      <p className="text-[10px] text-[#CC7700] mt-0.5 font-semibold">Amazon ↗</p>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
 

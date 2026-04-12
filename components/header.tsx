@@ -19,6 +19,7 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
   const [headerVisible, setHeaderVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [backendCategories, setBackendCategories] = useState<{ slug: string; name: string }[]>([])
+  const [amazonLinkCats, setAmazonLinkCats] = useState<{ id: string; name: string; amazonUrl: string }[]>([])
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,6 +43,10 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
       .then(r => r.json())
       .then(data => { if (data.success) setBackendCategories(data.categories) })
       .catch(() => {})
+    try {
+      const saved = JSON.parse(localStorage.getItem("amazon-link-cats") || "[]")
+      setAmazonLinkCats(saved)
+    } catch {}
   }, [])
 
   const categories: { label: string; href: string; highlight?: boolean }[] = [
@@ -118,6 +123,19 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
                       {cat.label === "Gutscheine" && <Gift className="w-4 h-4 shrink-0 text-[#4F7CFF]" />}
                       <span className={cat.label === "Gutscheine" ? "text-[#4F7CFF]" : ""}>{cat.label}</span>
                     </button>
+                  ))}
+                  {amazonLinkCats.map(cat => (
+                    <a
+                      key={cat.id}
+                      href={cat.amazonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#FFF8F0] flex items-center gap-2 text-[#CC7700] font-bold"
+                    >
+                      <span className="text-xs bg-[#FF9900] text-white px-1 rounded font-black">A</span>
+                      {cat.name}
+                    </a>
                   ))}
                   <button
                     onClick={() => { router.push("/blog"); setIsMenuOpen(false) }}
@@ -229,8 +247,19 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
                 `}
               >
                 {cat.label}
-
               </button>
+            ))}
+            {amazonLinkCats.map(cat => (
+              <a
+                key={cat.id}
+                href={cat.amazonUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-4 py-3.5 text-[15px] font-medium whitespace-nowrap border-b-2 border-transparent flex-shrink-0 hover:border-[#FF9900] hover:text-[#CC7700] transition-colors text-[#4B5563]"
+              >
+                <span className="text-[10px] bg-[#FF9900] text-white px-1 rounded font-black">A</span>
+                {cat.name}
+              </a>
             ))}
             </div>
           </nav>
