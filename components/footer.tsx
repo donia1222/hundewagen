@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AdminLoginButton } from "@/components/admin-auth"
-import { Facebook, Twitter, Instagram, Newspaper, ArrowRight, Download, ShieldCheck } from "lucide-react"
+import { Newspaper, ArrowRight, ShieldCheck } from "lucide-react"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -36,7 +36,7 @@ export function Footer() {
   }, [])
 
   const handleDownloadVCard = () => {
-    const vCardContent = `BEGIN:VCARD\nVERSION:3.0\nFN:Hundewagen\nORG:Hundewagen\nTITLE:Hundeprodukte · Outdoor · Schweiz\nADR:;;Bahnhofstrasse 2;Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@hundewagen.shop\nURL:https://hundewagen.shop\nEND:VCARD`
+    const vCardContent = `BEGIN:VCARD\nVERSION:3.0\nFN:Hundewagen\nORG:Hundewagen\nTITLE:Hundeprodukte · Outdoor · Schweiz\nADR:;;9475 Sevelen;;9475;Switzerland\nTEL:+41786066105\nEMAIL:info@hundewagen.shop\nURL:https://hundewagen.shop\nEND:VCARD`
     const blob2 = new Blob([vCardContent], { type: "text/vcard;charset=utf-8" })
     const link = document.createElement("a")
     link.href = URL.createObjectURL(blob2)
@@ -83,27 +83,27 @@ Sollten einzelne Bestimmungen dieser AGB unwirksam sein, bleibt die Wirksamkeit 
     },
     datenschutz: {
       title: "Datenschutzerklärung",
-      content: `Hundewagen | Bahnhofstrasse 2, 9475 Sevelen | info@usfh.ch
+      content: `Hundewagen | hundewagen.shop | info@hundewagen.shop
 
 Diese Datenschutzerklärung informiert Sie gemäss dem Schweizer Datenschutzgesetz (DSG) sowie der EU-Datenschutz-Grundverordnung (DSGVO) über die Verarbeitung Ihrer personenbezogenen Daten.
 
 1. VERANTWORTLICHE STELLE
 Hundewagen
-Bahnhofstrasse 2, 9475 Sevelen, Schweiz
+9475 Sevelen, Schweiz
 Telefon: 078 606 61 05
-E-Mail: info@usfh.ch
+E-Mail: info@hundewagen.shop
 
 2. WELCHE DATEN WIR ERHEBEN
 Im Rahmen der Bestellabwicklung erheben wir folgende Daten: Vor- und Nachname, Lieferadresse, E-Mail-Adresse, Telefonnummer sowie Zahlungsinformationen. Beim Besuch unserer Website werden technische Daten wie IP-Adresse, Browsertyp, Besuchsdauer und aufgerufene Seiten automatisch erfasst.
 
 3. ZWECK DER DATENVERARBEITUNG
-Wir verwenden Ihre Daten ausschliesslich für folgende Zwecke: Abwicklung und Bestätigung Ihrer Bestellungen, Versand und Lieferung der gekauften Produkte (Hundeprodukte, Outdoor-Zubehör etc.), Kundenkommunikation und Support, Erfüllung gesetzlicher Pflichten sowie zur Verbesserung unseres Angebots.
+Wir verwenden Ihre Daten ausschliesslich für folgende Zwecke: Abwicklung und Bestätigung Ihrer Bestellungen, Versand und Lieferung der gekauften Produkte (Hundewagen, Zubehör und weitere Hundeprodukte), Kundenkommunikation und Support, Erfüllung gesetzlicher Pflichten sowie zur Verbesserung unseres Angebots.
 
 4. RECHTSGRUNDLAGE
 Die Verarbeitung Ihrer Daten erfolgt zur Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO), zur Erfüllung rechtlicher Verpflichtungen (Art. 6 Abs. 1 lit. c DSGVO) sowie auf Basis unseres berechtigten Interesses an einem sicheren und effizienten Shopbetrieb (Art. 6 Abs. 1 lit. f DSGVO).
 
 5. WEITERGABE VON DATEN
-Ihre Daten werden nur an Dritte weitergegeben, soweit dies für die Vertragsabwicklung notwendig ist (z. B. Paketdienstleister für die Lieferung, Zahlungsanbieter wie PayPal, TWINT oder PostFinance). Eine Weitergabe zu Werbezwecken an Dritte findet nicht statt.
+Ihre Daten werden nur an Dritte weitergegeben, soweit dies für die Vertragsabwicklung notwendig ist (z. B. Paketdienstleister für die Lieferung, Zahlungsanbieter wie PayPal oder TWINT). Eine Weitergabe zu Werbezwecken an Dritte findet nicht statt.
 
 6. DATENSICHERHEIT
 Wir setzen technische und organisatorische Sicherheitsmassnahmen ein, um Ihre Daten vor Verlust, Manipulation und unberechtigtem Zugriff zu schützen. Unser Online-Shop ist durch SSL/TLS-Verschlüsselung gesichert.
@@ -112,7 +112,7 @@ Wir setzen technische und organisatorische Sicherheitsmassnahmen ein, um Ihre Da
 Ihre Daten werden nur so lange gespeichert, wie es für den jeweiligen Zweck notwendig ist oder gesetzliche Aufbewahrungsfristen (in der Regel 10 Jahre für Buchhaltungsunterlagen) es erfordern.
 
 8. IHRE RECHTE
-Sie haben jederzeit das Recht auf: Auskunft über Ihre gespeicherten Daten, Berichtigung unrichtiger Daten, Löschung Ihrer Daten (sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen), Einschränkung der Verarbeitung sowie Datenübertragbarkeit. Zur Ausübung Ihrer Rechte wenden Sie sich an: info@usfh.ch
+Sie haben jederzeit das Recht auf: Auskunft über Ihre gespeicherten Daten, Berichtigung unrichtiger Daten, Löschung Ihrer Daten (sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen), Einschränkung der Verarbeitung sowie Datenübertragbarkeit. Zur Ausübung Ihrer Rechte wenden Sie sich an: info@hundewagen.shop
 
 9. COOKIES
 Unsere Website verwendet technisch notwendige Cookies, die für den Betrieb des Shops erforderlich sind. Analytische oder Marketing-Cookies werden nur mit Ihrer ausdrücklichen Einwilligung gesetzt.
@@ -188,7 +188,7 @@ Unsere Werte
 Wir legen grössten Wert auf Schweizer Qualitätsstandards, seriöse Beratung und Tierwohl. Alle unsere Produkte werden sorgfältig ausgewählt, um das Wohlbefinden und die Freude Ihres Hundes zu fördern.
 
 Besuchen Sie uns
-Bahnhofstrasse 2, 9475 Sevelen
+9475 Sevelen, Schweiz
 Mo – Fr: 13:30 – 18:30 | Sa: 10:00 – 16:00
 📞 078 606 61 05 | info@usfh.ch`,
     },
@@ -198,16 +198,15 @@ Mo – Fr: 13:30 – 18:30 | Sa: 10:00 – 16:00
 
 BETREIBER DES ONLINE-SHOPS
 Hundewagen
-Bahnhofstrasse 2
-9475 Sevelen
-Kanton St. Gallen, Schweiz
+9475 Sevelen, Kanton St. Gallen, Schweiz
+lweb.ch
 
 INHABER
 Urs Schwendener
 
 KONTAKT
 Telefon: 078 606 61 05
-E-Mail: info@usfh.ch
+E-Mail: info@hundewagen.shop
 Website: www.hundewagen.shop
 
 ÖFFNUNGSZEITEN
@@ -223,7 +222,7 @@ MEHRWERTSTEUER
 Alle Preise verstehen sich in € inklusive der gesetzlichen Schweizer Mehrwertsteuer (MwSt.).
 
 VERANTWORTLICH FÜR DEN INHALT
-Hundewagen, Bahnhofstrasse 2, 9475 Sevelen
+Hundewagen, 9475 Sevelen, Schweiz
 
 WEBDESIGN & UMSETZUNG
 lweb.ch – Webdesign & Digitalagentur
@@ -239,30 +238,32 @@ Stand: April 2026`,
     },
     rueckgabe: {
       title: "Versand & Rückgabe",
-      content: `Hundewagen | Bahnhofstrasse 2, 9475 Sevelen | info@usfh.ch
+      content: `Hundewagen | hundewagen.shop | info@hundewagen.shop
+
+HINWEIS
+Hundewagen.shop ist ein Affiliate-Shop. Die auf dieser Website vorgestellten Produkte sind sorgfältig ausgewählte Amazon-Empfehlungen. Beim Kauf werden Sie direkt zu Amazon weitergeleitet – Versand, Lieferung und Rückgabe erfolgen über Amazon gemäss deren Bedingungen.
 
 1. VERSAND
-Wir liefern ausschliesslich innerhalb der Schweiz. Bestellungen werden in der Regel innerhalb von 1–3 Werktagen nach Zahlungseingang versandt. Der Versand erfolgt mit einem zuverlässigen Schweizer Paketdienstleister. Sie erhalten nach dem Versand eine E-Mail mit Ihrer Sendungsverfolgungsnummer. Versandkosten werden transparent im Bestellprozess ausgewiesen.
+Die Bestellungen werden direkt über Amazon abgewickelt. Der Versand erfolgt nach Deutschland und in die Schweiz gemäss den Amazon-Versandbedingungen, in der Regel innerhalb von 1–3 Werktagen. Sie erhalten von Amazon eine Bestätigungs-E-Mail mit Ihrer Sendungsverfolgungsnummer.
 
 2. RÜCKGABERECHT
-Sie können bestellte Artikel innerhalb von 14 Tagen ab Erhalt ohne Angabe von Gründen zurückgeben. Bitte kontaktieren Sie uns vor der Rücksendung per E-Mail an info@usfh.ch oder telefonisch unter 078 606 61 05.
+Sie können bestellte Artikel innerhalb von 14 Tagen ab Erhalt ohne Angabe von Gründen zurückgeben. Bitte kontaktieren Sie uns vor der Rücksendung per E-Mail an info@hundewagen.shop oder telefonisch unter 078 606 61 05.
 
 3. ZUSTAND DER WARE
-Die Ware muss sich in originalem, unbenutztem Zustand befinden und in der Originalverpackung zurückgesendet werden. Hundeprodukte wie Spielzeug, Leinen oder Pflegeprodukte dürfen keine Gebrauchsspuren aufweisen.
+Die Ware muss sich in originalem, unbenutztem Zustand befinden und in der Originalverpackung zurückgesendet werden. Hundewagen, Zubehör und weitere Produkte dürfen keine Gebrauchsspuren aufweisen.
 
 4. AUSNAHMEN VOM RÜCKGABERECHT
-Vom Rückgaberecht ausgenommen sind: auf Kundenwunsch angefertigte oder gravierte Artikel sowie entsiegelte Hygiene- und Nahrungsartikel.
+Vom Rückgaberecht ausgenommen sind: auf Kundenwunsch angefertigte oder personalisierte Artikel sowie entsiegelte Hygiene- und Pflegeprodukte für Hunde.
 
 5. RÜCKSENDEPROZESS
 Bitte senden Sie die Ware gut verpackt an folgende Adresse zurück:
 Hundewagen
-Bahnhofstrasse 2
-9475 Sevelen
+9475 Sevelen, Schweiz
 
 Die Rücksendekosten trägt der Käufer. Wir empfehlen, die Sendung versichert zu verschicken.
 
 6. ERSTATTUNG
-Nach Erhalt und Prüfung der zurückgesandten Ware erstatten wir den Kaufpreis innerhalb von 14 Tagen auf dem ursprünglichen Zahlungsweg. Bei TWINT, PayPal, PostFinance sowie Kredit- und Debitkarten erfolgt die Gutschrift direkt auf das verwendete Konto.
+Nach Erhalt und Prüfung der zurückgesandten Ware erstatten wir den Kaufpreis innerhalb von 14 Tagen auf dem ursprünglichen Zahlungsweg. Bei TWINT, PayPal sowie Kredit- und Debitkarten erfolgt die Gutschrift direkt auf das verwendete Konto.
 
 7. BESCHÄDIGTE ODER FALSCHE LIEFERUNG
 Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bitte umgehend an uns. Wir übernehmen in diesem Fall die Rücksendekosten und liefern Ihnen die korrekte Ware auf dem schnellsten Weg zu.`,
@@ -319,26 +320,6 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
         </div>
       )}
 
-      {/* ── Social icons ── */}
-      <div className="border-b border-[#E0E0E0] py-4 bg-white">
-        <div className="container mx-auto px-4 flex justify-center gap-6">
-          {[
-            { Icon: Facebook, href: "https://www.facebook.com/usfh.ch" },
-            { Icon: Twitter, href: null },
-            { Icon: Instagram, href: null },
-          ].map(({ Icon, href }, i) =>
-            href ? (
-              <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center text-[#666] hover:text-[#4F7CFF] transition-colors">
-                <Icon className="w-5 h-5" />
-              </a>
-            ) : (
-              <button key={i} className="w-9 h-9 flex items-center justify-center text-[#666] hover:text-[#4F7CFF] transition-colors">
-                <Icon className="w-5 h-5" />
-              </button>
-            )
-          )}
-        </div>
-      </div>
 
       {/* ── Footer columns ── */}
       <div className="bg-white border-t border-[#E8E8E8] py-14">
@@ -348,70 +329,18 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
             {/* LEFT: Logo + Contact + Hours */}
             <div>
               {/* Logo + name */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <img src="/pawlogo.png" alt="Hundewagen" className="w-20 h-20 rounded-2xl object-contain flex-shrink-0 shadow-lg" />
                 <div>
+                  <div className="font-black text-xl leading-tight tracking-tight text-[#1A1A1A]">Hundewagen</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-widest text-[#4F7CFF] mt-0.5">HUNDEWAGEN.SHOP · ZUBEHÖR & MEHR 🐾</div>
                 </div>
               </div>
+              <p className="text-sm text-[#666] leading-relaxed max-w-xs mb-6">
+                Wir kuratieren die besten Hundewagen und Zubehör direkt von Amazon — sorgfältig ausgewählt, einfach bestellt, schnell geliefert. 🐾
+              </p>
 
-              {/* Contact pills */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                <a href="https://maps.google.com/?q=Bahnhofstrasse+2+9475+Sevelen" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#F5F5F5] hover:bg-[#EBEBEB] text-[#444] text-sm px-3 py-1.5 rounded-full transition-colors">
-                  <span className="text-base">📍</span> Bahnhofstrasse 2, 9475 Sevelen
-                </a>
-                <a href="tel:0786066105"
-                  className="inline-flex items-center gap-2 bg-[#F5F5F5] hover:bg-[#4F7CFF] hover:text-white text-[#4F7CFF] font-semibold text-sm px-3 py-1.5 rounded-full transition-colors">
-                  <span className="text-base">📞</span> 078 606 61 05
-                </a>
-                <a href="mailto:info@usfh.ch"
-                  className="inline-flex items-center gap-2 bg-[#F5F5F5] hover:bg-[#4F7CFF] hover:text-white text-[#4F7CFF] font-semibold text-sm px-3 py-1.5 rounded-full transition-colors">
-                  <span className="text-base">✉️</span> info@usfh.ch
-                </a>
-              </div>
 
-              {/* Map + Opening hours */}
-              <div className="flex flex-wrap gap-3">
-                {/* Map */}
-                <a
-                  href="https://maps.google.com/?q=Bahnhofstrasse+2,+9475+Sevelen"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-2xl overflow-hidden border border-[#EDE4DC] block relative group"
-                  style={{ width: "290px", minHeight: "100px", flexShrink: 0 }}
-                >
-                  <iframe
-                    title="Standort"
-                    src="https://maps.google.com/maps?q=Bahnhofstrasse+2,+9475+Sevelen&output=embed&z=15"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, minHeight: "100px", pointerEvents: "none" }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                  <div className="absolute inset-0 bg-[#D4622A]/0 group-hover:bg-[#4F7CFF]/10 transition-colors flex items-end p-2">
-                    <span className="bg-white/90 text-[#4F7CFF] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                      Auf Karte öffnen ↗
-                    </span>
-                  </div>
-                </a>
-
-                <div className="rounded-2xl p-4" style={{ width: "260px", flexShrink: 0, background: "var(--ap-blue-pale)", border: "1.5px solid #c3d4ff" }}>
-                  <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--ap-blue)" }}>Öffnungszeiten</p>
-                  <div className="space-y-1.5">
-                    {[
-                      { day: "Mo – Fr", hours: "13:30 – 18:30", open: true },
-                      { day: "Sa", hours: "10:00 – 16:00", open: true },
-                      { day: "So", hours: "Geschlossen", open: false },
-                    ].map(({ day, hours, open }) => (
-                      <div key={day} className="flex items-center justify-between gap-6">
-                        <span className={`text-sm font-medium ${open ? "text-[#333]" : "text-[#AAA]"}`}>{day}</span>
-                        <span className={`text-sm ${open ? "text-[#1A1A1A] font-semibold" : "text-[#AAA]"}`}>{hours}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Service */}
@@ -419,7 +348,7 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
               <h3 className="font-black text-[#1A1A1A] text-base mb-5 uppercase tracking-widest">Service</h3>
               <ul className="space-y-3">
                 <li>
-                  <a href="mailto:info@usfh.ch" className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors">Kontakt</a>
+                  <a href="mailto:info@hundewagen.shop" className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors">Kontakt</a>
                 </li>
                 <li>
                   <Dialog open={openModal === "rueckgabe"} onOpenChange={(open) => setOpenModal(open ? "rueckgabe" : null)}>
@@ -434,41 +363,6 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
                     </DialogContent>
                   </Dialog>
                 </li>
-                <li>
-                  <Dialog open={openModal === "zahlungsarten"} onOpenChange={(open) => setOpenModal(open ? "zahlungsarten" : null)}>
-                    <DialogTrigger asChild>
-                      <button className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors text-left">Zahlungsarten</button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{legalContent.zahlungsarten.title}</DialogTitle>
-                      </DialogHeader>
-                      <div className="whitespace-pre-line text-sm text-[#555]">{legalContent.zahlungsarten.content}</div>
-                    </DialogContent>
-                  </Dialog>
-                </li>
-                <li>
-                  <Dialog open={openModal === "cookies"} onOpenChange={(open) => setOpenModal(open ? "cookies" : null)}>
-                    <DialogTrigger asChild>
-                      <button className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors text-left">Cookie Manager</button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{legalContent.cookies.title}</DialogTitle>
-                      </DialogHeader>
-                      <div className="whitespace-pre-line text-sm text-[#555]">{legalContent.cookies.content}</div>
-                    </DialogContent>
-                  </Dialog>
-                </li>
-                <li>
-                  <button
-                    onClick={handleDownloadVCard}
-                    className="flex items-center gap-1.5 text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors text-left"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Digitale Visitenkarte
-                  </button>
-                </li>
               </ul>
             </div>
 
@@ -476,19 +370,6 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
             <div>
               <h3 className="font-black text-[#1A1A1A] text-base mb-5 uppercase tracking-widest">Firma</h3>
               <ul className="space-y-3">
-                <li>
-                  <Dialog open={openModal === "ueberuns"} onOpenChange={(open) => setOpenModal(open ? "ueberuns" : null)}>
-                    <DialogTrigger asChild>
-                      <button className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors text-left">Über uns</button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{legalContent.ueberuns.title}</DialogTitle>
-                      </DialogHeader>
-                      <div className="whitespace-pre-line text-sm text-[#555]">{legalContent.ueberuns.content}</div>
-                    </DialogContent>
-                  </Dialog>
-                </li>
                 <li>
                   <Dialog open={openModal === "impressum"} onOpenChange={(open) => setOpenModal(open ? "impressum" : null)}>
                     <DialogTrigger asChild>
@@ -515,34 +396,8 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
                     </DialogContent>
                   </Dialog>
                 </li>
-                <li>
-                  <Dialog open={openModal === "agb"} onOpenChange={(open) => setOpenModal(open ? "agb" : null)}>
-                    <DialogTrigger asChild>
-                      <button className="text-sm font-medium text-[#444] hover:text-[#4F7CFF] transition-colors text-left">AGB</button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{legalContent.agb.title}</DialogTitle>
-                      </DialogHeader>
-                      <div className="whitespace-pre-line text-sm text-[#555]">{legalContent.agb.content}</div>
-                    </DialogContent>
-                  </Dialog>
-                </li>
               </ul>
 
-              {/* INOTEC-ENGINEERING */}
-              <div className="mt-6 pt-5 border-t border-[#E8E8E8]">
-                <p className="text-xs text-[#999] mb-1 uppercase tracking-wider font-semibold">Schwesterunternehmen</p>
-                <a
-                  href="https://inotecengineering.ch"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-col gap-0.5 group"
-                >
-                  <span className="text-sm font-black tracking-tight"><span className="text-red-600">INOTEC-</span><span className="text-gray-400">ENGINEERING</span></span>
-                  <span className="text-xs text-[#888] group-hover:text-[#4F7CFF] transition-colors italic">Von der Idee zum Produkt.</span>
-                </a>
-              </div>
             </div>
 
           </div>

@@ -211,7 +211,7 @@ export function Admin({ onClose }: AdminProps) {
   const productsGridRef = useRef<HTMLDivElement>(null)
   const productFormRef = useRef<HTMLFormElement>(null)
   const [amazonPreview, setAmazonPreview] = useState<{
-    title: string; image: string; description: string; price: number | null
+    title: string; image: string; description: string; price: number | null; asin: string | null; finalUrl: string | null
   } | null>(null)
   const [amazonFetching, setAmazonFetching] = useState(false)
   const [bulkLoading, setBulkLoading] = useState(false)
@@ -1031,7 +1031,7 @@ export function Admin({ onClose }: AdminProps) {
       const res = await fetch(`/api/fetch-product-preview?url=${encodeURIComponent(url)}`)
       const data = await res.json()
       if (data.title || data.image) {
-        setAmazonPreview({ title: data.title, image: data.image, description: data.description, price: data.price })
+        setAmazonPreview({ title: data.title, image: data.image, description: data.description, price: data.price, asin: data.asin ?? null, finalUrl: data.finalUrl ?? null })
       }
     } catch {}
     finally { setAmazonFetching(false) }
@@ -1055,6 +1055,13 @@ export function Admin({ onClose }: AdminProps) {
     if (amazonPreview.title) setVal("name", amazonPreview.title)
     if (amazonPreview.description) setVal("description", amazonPreview.description)
     if (amazonPreview.price) setVal("price", String(amazonPreview.price))
+
+    // Set clean Amazon.de product URL using ASIN
+    if (amazonPreview.asin) {
+      const cleanUrl = `https://www.amazon.de/dp/${amazonPreview.asin}?tag=hundezonen-20`
+      setCurrentAffiliateUrl(cleanUrl)
+      setVal("affiliate_url", cleanUrl)
+    }
 
     // Import Amazon image into the file input
     if (amazonPreview.image) {
