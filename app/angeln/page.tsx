@@ -115,14 +115,6 @@ export default function AngelnPage() {
                     <span style={{ fontFamily: "'Rubik Dirt', sans-serif", color: '#1A1A1A', fontSize: '0.8rem' }}> FISHING &amp;<br />HUNTINGSHOP</span>
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <div className="[&_span]:hidden flex items-center">
-                    <LoginAuth onLoginSuccess={() => {}} onLogout={() => {}} onShowProfile={() => router.push("/profile")} isLightSection={true} variant="button" />
-                  </div>
-                  <button onClick={() => router.push("/shop")} className="relative p-2 rounded-xl hover:bg-[#F5F5F5] text-[#555]">
-                    <ShoppingCart className="w-5 h-5" />
-                  </button>
-                </div>
               </div>
               <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
                 <button onClick={() => router.push("/")} className="w-full text-left px-3 py-2.5 text-sm rounded hover:bg-[#F5F5F5] text-[#333] font-medium">Home</button>

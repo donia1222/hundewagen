@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Sparkles, ArrowRight, ShieldCheck, Truck, Star } from "lucide-react"
+import { ArrowRight, ShieldCheck, Truck, Star, Heart, ShoppingBag } from "lucide-react"
 
 interface Category {
   id: number
@@ -10,50 +10,22 @@ interface Category {
   name: string
 }
 
-const SLIDES = [
-  {
-    img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=900&q=90&fit=crop",
-    badge: "Top Amazon-Auswahl",
-    title: "Der perfekte Hundewagen",
-    highlight: "für jeden Ausflug",
-    sub: "Handverlesene Hundewagen von Amazon – komfortabel, sicher und ideal für Hunde jeder Grösse.",
-    cta: "Jetzt entdecken",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900&q=90&fit=crop",
-    badge: "Bestseller auf Amazon",
-    title: "Mehr Freiheit",
-    highlight: "für deinen Hund",
-    sub: "Faltbare Hundewagen, Tragetaschen und Zubehör – alles sorgfältig ausgewählt und auf Amazon erhältlich.",
-    cta: "Alle Produkte ansehen",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?w=900&q=90&fit=crop",
-    badge: "Von Amazon empfohlen",
-    title: "Geprüfte Qualität,",
-    highlight: "sicher geliefert",
-    sub: "Nur die besten bewerteten Hundewagen und Zubehör – direkt über Amazon bestellen, schnell und zuverlässig.",
-    cta: "Zum Shop",
-  },
-]
+const HERO_IMG = "/wagen.png"
 
 const FEATURES = [
   { icon: <ShieldCheck className="w-4 h-4" />, label: "Sicherer Kauf" },
   { icon: <Truck className="w-4 h-4" />, label: "Schnelle Lieferung" },
   { icon: <Star className="w-4 h-4" />, label: "4.8★ Google" },
-  { icon: <Sparkles className="w-4 h-4" />, label: "Kuratierte Auswahl" },
+  { icon: <Star className="w-4 h-4" />, label: "Kuratierte Auswahl" },
 ]
 
 export function HeroSection() {
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
-  const [slide, setSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     setLoaded(true)
-    const t = setInterval(() => setSlide(i => (i + 1) % SLIDES.length), 5500)
-    return () => clearInterval(t)
   }, [])
 
   useEffect(() => {
@@ -62,8 +34,6 @@ export function HeroSection() {
       .then(d => { if (d.success) setCategories(d.categories) })
       .catch(() => {})
   }, [])
-
-  const cur = SLIDES[slide]
 
   return (
     <div style={{ background: "var(--ap-cream)" }}>
@@ -110,9 +80,7 @@ export function HeroSection() {
             {/* Mobile image — shown above text on small screens */}
             <div className={`md:hidden relative transition-all duration-700 delay-150 ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
               <div className="relative rounded-3xl overflow-hidden shadow-xl mx-auto" style={{ height: "240px", border: "3px solid white" }}>
-                {SLIDES.map((s, i) => (
-                  <img key={i} src={s.img} alt="" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" style={{ opacity: i === slide ? 1 : 0 }} />
-                ))}
+                <img src={HERO_IMG} alt="" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 50%, rgba(26,26,46,0.18) 100%)" }} />
               </div>
             </div>
@@ -121,19 +89,6 @@ export function HeroSection() {
             <div
               className={`flex flex-col items-start transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
             >
-              {/* Badge */}
-              <span
-                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full mb-6 tracking-wide border"
-                style={{
-                  background: "var(--ap-blue-pale)",
-                  color: "var(--ap-blue-dark)",
-                  borderColor: "#c3d4ff",
-                }}
-              >
-                <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--ap-pink)" }} />
-                {cur.badge}
-              </span>
-
               {/* Headline */}
               <h1
                 className="font-black leading-[1.1] mb-4"
@@ -143,7 +98,7 @@ export function HeroSection() {
                   letterSpacing: "-0.03em",
                 }}
               >
-                {cur.title}<br />
+                Der perfekte Hundewagen<br />
                 <span
                   style={{
                     background: "linear-gradient(135deg, var(--ap-blue) 0%, var(--ap-pink) 100%)",
@@ -151,55 +106,14 @@ export function HeroSection() {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  {cur.highlight}
+                  für jeden Ausflug
                 </span>
               </h1>
 
               {/* Subtitle */}
-              <p className="text-base md:text-lg leading-relaxed mb-8 max-w-md" style={{ color: "var(--ap-muted)" }}>
-                {cur.sub}
+              <p className="text-base md:text-lg leading-relaxed max-w-md" style={{ color: "var(--ap-muted)" }}>
+                Handverlesene Hundewagen von Amazon – komfortabel, sicher und ideal für Hunde jeder Grösse.
               </p>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap gap-3 mb-10">
-                <button
-                  onClick={() => router.push("/shop")}
-                  className="inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-2xl text-sm transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
-                  style={{
-                    background: "linear-gradient(135deg, var(--ap-blue) 0%, var(--ap-blue-dark) 100%)",
-                    color: "white",
-                    boxShadow: "0 8px 24px rgba(79,124,255,0.35)",
-                  }}
-                >
-                  {cur.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => router.push("/shop")}
-                  className="inline-flex items-center gap-2 font-semibold px-7 py-3.5 rounded-2xl text-sm transition-all duration-200 hover:scale-105 active:scale-95 border-2"
-                  style={{
-                    borderColor: "var(--ap-pink)",
-                    color: "var(--ap-pink)",
-                    background: "white",
-                  }}
-                >
-                  Unsere Kategorien
-                </button>
-              </div>
-
-              {/* Stats row */}
-              <div className="flex items-center gap-6 flex-wrap">
-                {[
-                  { val: "500+", label: "Produkte" },
-                  { val: "4.8★", label: "Bewertung" },
-                  { val: "🐾", label: "Für alle" },
-                ].map(({ val, label }) => (
-                  <div key={label} className="text-center">
-                    <div className="font-black text-lg leading-none" style={{ color: "var(--ap-dark)" }}>{val}</div>
-                    <div className="text-xs mt-0.5" style={{ color: "var(--ap-muted)" }}>{label}</div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* RIGHT: Dog image with floating cards */}
@@ -209,15 +123,7 @@ export function HeroSection() {
                 className="relative rounded-3xl overflow-hidden shadow-2xl"
                 style={{ width: "420px", height: "480px", border: "4px solid white" }}
               >
-                {SLIDES.map((s, i) => (
-                  <img
-                    key={i}
-                    src={s.img}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-                    style={{ opacity: i === slide ? 1 : 0 }}
-                  />
-                ))}
+                <img src={HERO_IMG} alt="" className="absolute inset-0 w-full h-full object-cover" />
                 {/* Soft overlay */}
                 <div
                   className="absolute inset-0"
@@ -265,21 +171,6 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Slide dots */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setSlide(i)}
-              className="transition-all duration-300 rounded-full"
-              style={{
-                width: i === slide ? "24px" : "8px",
-                height: "8px",
-                background: i === slide ? "var(--ap-blue)" : "rgba(79,124,255,0.25)",
-              }}
-            />
-          ))}
-        </div>
       </div>
 
       {/* ── Feature strip ── */}
@@ -287,17 +178,17 @@ export function HeroSection() {
         <div className="container mx-auto px-4 py-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { icon: "🛒", title: "Sichere Hundewagen", desc: "Für Spaziergänge & Reisen", color: "#EEF3FF", accent: "#4F7CFF" },
-              { icon: "⭐", title: "Beste Auswahl", desc: "Premium-Qualität", color: "#FFF0F6", accent: "#FF6B9D" },
-              { icon: "🚚", title: "Schnelle Lieferung", desc: "Direkt nach Hause", color: "#F0FFF8", accent: "#22C55E" },
-              { icon: "💛", title: "Für jeden Hund", desc: "Klein oder gross", color: "#FFFBEE", accent: "#F59E0B" },
+              { icon: <ShoppingBag className="w-5 h-5" />, title: "Sichere Hundewagen", desc: "Für Spaziergänge & Reisen", color: "#EEF3FF", accent: "#4F7CFF" },
+              { icon: <Star className="w-5 h-5" />, title: "Beste Auswahl", desc: "Premium-Qualität", color: "#FFF0F6", accent: "#FF6B9D" },
+              { icon: <Truck className="w-5 h-5" />, title: "Schnelle Lieferung", desc: "Direkt nach Hause", color: "#F0FFF8", accent: "#22C55E" },
+              { icon: <Heart className="w-5 h-5" />, title: "Für jeden Hund", desc: "Klein oder gross", color: "#FFFBEE", accent: "#F59E0B" },
             ].map(({ icon, title, desc, color, accent }) => (
               <div
                 key={title}
                 className="flex items-center gap-3 p-3.5 rounded-2xl"
                 style={{ background: color, border: `1px solid ${accent}20` }}
               >
-                <span className="text-2xl shrink-0">{icon}</span>
+                <span className="shrink-0" style={{ color: accent }}>{icon}</span>
                 <div>
                   <p className="font-bold text-sm" style={{ color: "var(--ap-dark)" }}>{title}</p>
                   <p className="text-xs" style={{ color: "var(--ap-muted)" }}>{desc}</p>

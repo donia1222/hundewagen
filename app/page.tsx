@@ -7,7 +7,6 @@ import { HeroSection } from "@/components/hero-section"
 import { CategoryPreviewSection } from "@/components/category-preview-section"
 import { RecommendedProducts } from "@/components/recommended-products"
 import ProductsGridCombined from "@/components/products-grid"
-import { ReviewsSection } from "@/components/reviews-section"
 import { BlogBanner } from "@/components/blog-banner"
 import { GalleryBanner } from "@/components/gallery-banner"
 import { FischenBanner } from "@/components/fischen-banner"
@@ -406,9 +405,7 @@ function PremiumHotSauceStoreInner() {
       <FadeSection>
         <CategoryPreviewSection />
       </FadeSection>
-      <FadeSection>
-        <ReviewsSection />
-      </FadeSection>
+
             <FadeSection>
         <section className="py-12" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
           <div className="container mx-auto px-4">

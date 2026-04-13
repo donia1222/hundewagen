@@ -648,28 +648,6 @@ export default function ShopGrid() {
                     <img src="/pawlogo.png" alt="Hundewagen" className="h-14 w-auto object-contain" />
                     <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#4F7CFF" }}>hundewagen.shop · Zubehör & Mehr 🐾</div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="[&_span]:hidden flex items-center">
-                      <LoginAuth
-                        onLoginSuccess={() => {}}
-                        onLogout={() => {}}
-                        onShowProfile={() => { setShowUserProfile(true); setNavMenuOpen(false) }}
-                        isLightSection={true}
-                        variant="button"
-                      />
-                    </div>
-                    <button
-                      onClick={() => { setCartOpen(true); setNavMenuOpen(false) }}
-                      className="relative p-2 rounded-xl hover:bg-[#F5F5F5] text-[#555]"
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      {cart.reduce((s, i) => s + i.quantity, 0) > 0 && (
-                        <span className="absolute top-0 right-0 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                          {cart.reduce((s, i) => s + i.quantity, 0) > 9 ? "9+" : cart.reduce((s, i) => s + i.quantity, 0)}
-                        </span>
-                      )}
-                    </button>
-                  </div>
                 </div>
                 <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
                   <button
@@ -779,30 +757,6 @@ export default function ShopGrid() {
               )}
             </button>
 
-            {/* Login — hide text label on mobile */}
-            <div className="[&_span]:hidden sm:[&_span]:inline-block flex items-center justify-center">
-              <LoginAuth
-                onLoginSuccess={() => {}}
-                onLogout={() => {}}
-                onShowProfile={() => setShowUserProfile(true)}
-                isLightSection={true}
-                variant="button"
-              />
-            </div>
-
-            {/* Cart icon */}
-            <button
-              onClick={() => setCartOpen(true)}
-              className="relative flex flex-col items-center p-2 hover:bg-[#F5F5F5] rounded-xl transition-colors"
-            >
-              <ShoppingCart className="w-6 h-6 text-[#555]" />
-              <span className="text-[10px] text-[#555] mt-0.5 leading-none hidden sm:block">Warenkorb</span>
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                  {cartCount > 9 ? "9+" : cartCount}
-                </span>
-              )}
-            </button>
 
             </div>{/* end right group */}
           </div>

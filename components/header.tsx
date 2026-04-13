@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ShoppingCart, ChevronDown, Menu, ArrowUp, Newspaper, Download, Images, Mail, Gift } from "lucide-react"
+import { Menu, ArrowUp, Newspaper, Images, Mail, Gift } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { LoginAuth } from "./login-auth"
 
 interface HeaderProps {
   onCartOpen?: () => void
@@ -14,7 +13,6 @@ interface HeaderProps {
 export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLightSection] = useState(true)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [headerVisible, setHeaderVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -59,12 +57,6 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
     { label: "Gutscheine", href: "/gutscheine" },
   ]
 
-  const handleLoginSuccess = (_user: any) => {}
-  const handleLogout = () => {}
-  const handleShowProfile = () => {
-    router.push("/profile")
-    setIsMenuOpen(false)
-  }
 
   return (
     <>
@@ -89,28 +81,6 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
                   <div className="flex flex-col gap-1">
                     <img src="/pawlogo.png" alt="Hundewagen" className="h-14 w-auto object-contain" />
                     <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "#4F7CFF" }}>hundewagen.shop · Zubehör & Mehr 🐾</div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="[&_span]:hidden flex items-center">
-                      <LoginAuth
-                        onLoginSuccess={handleLoginSuccess}
-                        onLogout={handleLogout}
-                        onShowProfile={handleShowProfile}
-                        isLightSection={true}
-                        variant="button"
-                      />
-                    </div>
-                    <button
-                      onClick={() => { onCartOpen?.(); setIsMenuOpen(false) }}
-                      className="relative p-2 rounded-xl hover:bg-[#F5F5F5] text-[#555]"
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      {cartCount > 0 && (
-                        <span className="absolute top-0 right-0 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                          {cartCount > 9 ? "9+" : cartCount}
-                        </span>
-                      )}
-                    </button>
                   </div>
                 </div>
                 <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
@@ -200,26 +170,6 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
             >
               <Mail className="w-4 h-4 text-[#4F7CFF]" />
               Kontakt
-            </button>
-            <div className="[&_span]:hidden flex items-center justify-center">
-              <LoginAuth
-                onLoginSuccess={handleLoginSuccess}
-                onLogout={handleLogout}
-                onShowProfile={handleShowProfile}
-                isLightSection={isLightSection}
-                variant="button"
-              />
-            </div>
-            <button
-              onClick={() => onCartOpen?.()}
-              className="relative flex items-center justify-center w-11 h-11 hover:bg-[#F5F5F5] rounded-xl transition-colors"
-            >
-              <ShoppingCart className="w-6 h-6 text-[#555]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                  {cartCount > 9 ? "9+" : cartCount}
-                </span>
-              )}
             </button>
           </div>
         </div>

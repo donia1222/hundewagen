@@ -190,35 +190,6 @@ export default function GutscheineGrid() {
             {/* Spacer */}
             <div className="flex-1" />
 
-            {/* Right: login + cart */}
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <div className="[&_span]:hidden sm:[&_span]:inline-block flex items-center justify-center">
-                <LoginAuth
-                  onLoginSuccess={() => {}}
-                  onLogout={() => {}}
-                  onShowProfile={() => router.push("/profile")}
-                  isLightSection={true}
-                  variant="button"
-                />
-              </div>
-              <button
-                onClick={() => gcEnabled && setCartOpen(true)}
-                className={`relative flex flex-col items-center p-2 rounded-xl transition-colors ${gcEnabled ? "hover:bg-[#F5F5F5] cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
-                disabled={!gcEnabled}
-              >
-                <ShoppingCart className="w-6 h-6 text-[#555]" />
-                {gcEnabled ? (
-                  <span className="text-[10px] text-[#555] mt-0.5 leading-none hidden sm:block">Warenkorb</span>
-                ) : (
-                  <span className="text-[9px] text-[#999] mt-0.5 leading-none hidden sm:block whitespace-nowrap">Demnächst</span>
-                )}
-                {gcEnabled && cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                    {cartCount > 9 ? "9+" : cartCount}
-                  </span>
-                )}
-              </button>
-            </div>
 
           </div>
         </div>
