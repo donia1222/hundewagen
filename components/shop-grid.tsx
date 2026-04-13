@@ -897,20 +897,7 @@ export default function ShopGrid() {
 
             </div>
 
-            {/* ── Promo banner — desktop only ── */}
-            <div onClick={() => router.push("/angeln")} className="hidden lg:block mt-4 rounded-2xl overflow-hidden relative cursor-pointer" style={{ minHeight: "210px" }}>
-              <img
-                src="/images/fischen/472679633_1183608080203417_7913441867178334031_n.jpg"
-                alt="Angeln & Outdoor"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 100%)" }} />
-              <div className="relative p-4 flex flex-col justify-end h-full" style={{ minHeight: "210px" }}>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 mb-1">ANGELN & OUTDOOR</p>
-                <p className="text-white font-black text-base leading-tight">Alles zum Angeln im Laden</p>
-                <p className="text-white/75 text-[13px] mt-1 leading-snug">Angelhaken, Ruten, Köder, Netze, Kanus und vieles mehr.</p>
-              </div>
-            </div>
+          
 
 
           </aside>
