@@ -8,14 +8,72 @@ const MAINTENANCE_MODE = false
 
 
 export const metadata: Metadata = {
-  title: 'Hundewagen – Hundewagen & Zubehör für deinen Hund',
-  description: 'Die besten Hundewagen und Zubehör für deinen Hund. Premium-Auswahl für jeden Begleiter. hundewagen.shop',
-  generator: '9475 Sevelen',
+  title: {
+    default: 'Hundewagen Shop – Hundewagen kaufen | hundewagen.shop',
+    template: '%s | hundewagen.shop',
+  },
+  description: 'Hundewagen kaufen: Faltbare Hundewagen, Tragetaschen & Zubehör für kleine und große Hunde. Handverlesene Amazon-Auswahl – komfortabel, sicher & schnell geliefert. Jetzt entdecken!',
+  keywords: [
+    'Hundewagen', 'Hundewagen kaufen', 'Hundewagen faltbar', 'Hundewagen grosse Hunde',
+    'Hundewagen bis 15 Kilo', 'Hundewagen bis 20 Kilo', 'Hundewagen ab 20 Kilo',
+    'Hunde Buggy', 'Hundebuggy', 'Hundebuggy kaufen', 'Hunde Kinderwagen',
+    'Hundewagen Deutschland', 'Hundewagen Schweiz', 'Hundewagen Österreich',
+    'Hundewagen Amazon', 'Hundezubehör', 'Hundezubehör kaufen', 'Hundewagen Shop',
+    'All-Terrain Hundewagen', 'Hundewagen outdoor', 'Hunde Sportwagen',
+    'Hundewagen online kaufen', 'bester Hundewagen', 'Hundewagen Test',
+    'Hundewagen günstig', 'Hundewagen Vergleich', 'www.hundewagen.shop',
+  ],
+  authors: [{ name: 'hundewagen.shop', url: 'https://hundewagen.shop' }],
+  creator: 'hundewagen.shop',
+  publisher: 'hundewagen.shop',
+  metadataBase: new URL('https://www.hundewagen.shop'),
+  alternates: {
+    canonical: 'https://www.hundewagen.shop',
+    languages: {
+      'de-DE': 'https://www.hundewagen.shop',
+      'de-CH': 'https://www.hundewagen.shop',
+      'de-AT': 'https://www.hundewagen.shop',
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'de_DE',
+    alternateLocale: ['de_CH', 'de_AT'],
+    url: 'https://www.hundewagen.shop',
+    siteName: 'www.hundewagen.shop',
+    title: 'Hundewagen kaufen – Faltbare Hundewagen & Zubehör',
+    description: 'Entdecke die besten Hundewagen für jeden Hund. Faltbar, sicher und komfortabel – direkt über Amazon. Schnelle Lieferung & einfache Rückgabe. Für Deutschland, Schweiz & Österreich.',
+    images: [
+      {
+        url: '/wagen.png',
+        width: 1200,
+        height: 630,
+        alt: 'Hundewagen Shop – www.hundewagen.shop',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hundewagen kaufen – www.hundewagen.shop',
+    description: 'Die besten faltbaren Hundewagen & Zubehör für kleine und große Hunde. Für Deutschland 🇩🇪, Schweiz 🇨🇭 & Österreich 🇦🇹. Amazon-Auswahl, schnell geliefert.',
+    images: ['/wagen.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: '/favicon.png',
     apple: '/icon-192x192.png',
   },
   manifest: '/manifest.json',
+  category: 'shopping',
 }
 
 export const viewport: Viewport = {
