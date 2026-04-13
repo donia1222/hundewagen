@@ -9,7 +9,6 @@ import { RecommendedProducts } from "@/components/recommended-products"
 import ProductsGridCombined from "@/components/products-grid"
 import { BlogBanner } from "@/components/blog-banner"
 import { GalleryBanner } from "@/components/gallery-banner"
-import { FischenBanner } from "@/components/fischen-banner"
 import { ShoppingCartComponent } from "@/components/shopping-cart"
 import { CheckoutPage } from "@/components/checkout-page"
 import { Footer } from "@/components/footer"
@@ -409,10 +408,7 @@ function PremiumHotSauceStoreInner() {
             <FadeSection>
         <section className="py-12" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
           <div className="container mx-auto px-4">
-            <div className="mb-4">
-              <FischenBanner />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <BlogBanner />
               <GalleryBanner />
             </div>
