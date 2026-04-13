@@ -125,18 +125,6 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, aff
         {/* Stock indicator */}
         <div className={`absolute top-2.5 left-2.5 w-2.5 h-2.5 rounded-full shadow ${inStock ? "bg-emerald-500" : "bg-red-500"}`} />
 
-        {/* Wishlist heart */}
-        <button
-          onClick={e => { e.stopPropagation(); onToggleWishlist(product.id) }}
-          className={`absolute top-2 right-2 rounded-full flex items-center justify-center transition-all duration-200
-            w-6 h-6 sm:w-8 sm:h-8
-            ${isWished
-              ? "bg-red-500 text-white shadow-md"
-              : "bg-white/80 text-[#333] shadow-sm hover:text-red-400 hover:scale-110"
-            }`}
-        >
-          <Heart className={`w-4 h-4 ${isWished ? "fill-current" : ""}`} />
-        </button>
       </div>
 
       {/* Details */}
@@ -152,13 +140,22 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, aff
         </h3>
         <div className="mt-auto pt-2.5 flex items-center justify-between gap-2 border-t border-[#F5F5F5]">
           <span className="text-base font-black text-[#1A1A1A] tracking-tight">€ {product.price.toFixed(2)}</span>
-          <button
-            onClick={() => onAddToCart(product)}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF9900] hover:bg-[#e88a00] text-white hover:shadow-md active:scale-95 transition-all duration-200"
-            title="Bei Amazon kaufen"
-          >
-            <ExternalLink className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={e => { e.stopPropagation(); onToggleWishlist(product.id) }}
+              className={`flex items-center justify-center w-9 h-9 rounded-full border transition-all duration-200 active:scale-95 ${isWished ? "bg-red-50 border-red-200 text-red-500" : "bg-[#F5F5F5] border-transparent text-[#999] hover:text-red-400 hover:bg-red-50"}`}
+              title="Favorit"
+            >
+              <Heart className={`w-4 h-4 ${isWished ? "fill-current" : ""}`} />
+            </button>
+            <button
+              onClick={() => onAddToCart(product)}
+              className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF9900] hover:bg-[#e88a00] text-white hover:shadow-md active:scale-95 transition-all duration-200"
+              title="Bei Amazon kaufen"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -723,11 +720,19 @@ export default function ShopGrid() {
               <span className="text-[#1A1A1A] font-black">{filtered.length}</span> Produkte
             </span>
 
-            {/* Right group: wishlist + login + cart */}
+            {/* Right group: wishlist */}
             <div className="ml-auto flex items-center gap-1 flex-shrink-0">
-
-
-
+              <button
+                onClick={() => setShowWishlist(p => !p)}
+                className={`relative flex flex-col items-center p-2 rounded-xl transition-colors ${showWishlist ? "text-red-500 bg-red-50" : "text-[#555] hover:bg-[#F5F5F5]"}`}
+              >
+                <Heart className="w-6 h-6" />
+                {wishlist.size > 0 && (
+                  <span style={{ backgroundColor: "#ef4444" }} className="absolute -top-0.5 -right-0.5 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                    {wishlist.size > 9 ? "9+" : wishlist.size}
+                  </span>
+                )}
+              </button>
             </div>{/* end right group */}
           </div>
         </div>
