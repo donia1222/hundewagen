@@ -805,18 +805,6 @@ export default function ShopGrid() {
                 Hundewagen, Zubehör & mehr — handverlesen für aktive Hunde
               </p>
             </div>
-            <div className="flex items-center gap-3 flex-wrap">
-              {[
-                { bg: "#EEF3FF", accent: "#4F7CFF", emoji: "🛡️", label: "Sicherer Kauf" },
-                { bg: "#FFF0F6", accent: "#FF6B9D", emoji: "🚚", label: "Schnelle Lieferung" },
-                { bg: "#F0FFF8", accent: "#22C55E", emoji: "⭐", label: "4.8★ Google" },
-              ].map(({ bg, accent, emoji, label }) => (
-                <div key={label} className="flex items-center gap-2 px-3 py-2 rounded-2xl text-xs font-bold" style={{ background: bg, color: accent }}>
-                  <span>{emoji}</span>
-                  {label}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 

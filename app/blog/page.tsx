@@ -232,14 +232,22 @@ export default function BlogPage() {
         </div>
       </div>
 
-      {/* Page title */}
-      <div className="max-w-5xl mx-auto px-4 pt-10 pb-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3" style={{ background: "#EEF3FF", color: "#3A63E0" }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#4F7CFF]" />
-          Blog & Tipps
-        </span>
-        <h1 className="text-3xl font-black tracking-tight" style={{ color: "#1A1A2E" }}>Aktuelles & Tipps</h1>
-        <p className="text-sm mt-1" style={{ color: "#6B7280" }}>Neuigkeiten, Produkttests und Expertentipps für dich und deinen Hund.</p>
+      {/* Hero banner */}
+      <div style={{ background: "linear-gradient(135deg, #EEF3FF 0%, #E8E3FF 60%, #F7F8FF 100%)", borderBottom: "1px solid #e8eeff" }}>
+        <div className="max-w-5xl mx-auto px-4 py-8 md:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3" style={{ background: "white", color: "#3A63E0", border: "1px solid #c3d4ff" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4F7CFF]" />
+              Blog & Tipps
+            </span>
+            <h1 className="font-black leading-tight" style={{ fontSize: "clamp(1.5rem, 4vw, 2.4rem)", color: "#1A1A2E", letterSpacing: "-0.02em" }}>
+              Aktuelles & Tipps
+            </h1>
+            <p className="text-sm md:text-base mt-1.5 max-w-md" style={{ color: "#6B7280" }}>
+              Neuigkeiten, Produkttests und Expertentipps für dich und deinen Hund.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
