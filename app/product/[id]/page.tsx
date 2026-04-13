@@ -9,18 +9,16 @@ import { fetchProductsCached } from "@/lib/product-cache"
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 function shortTitle(name: string): string {
-  // Cut at first " | " or " : " separator
+  // Cut at first " | " or ": " separator
   const pipe = name.indexOf(" | ")
   const colon = name.indexOf(": ")
-
   const cuts = [pipe, colon].filter(i => i > 0)
-  if (cuts.length > 0) {
-    return name.slice(0, Math.min(...cuts))
-  }
+  const cut = cuts.length > 0 ? Math.min(...cuts) : name.length
+  const trimmed = name.slice(0, cut)
 
-  // Fallback: max 8 words
-  const words = name.split(" ")
-  return words.length > 8 ? words.slice(0, 8).join(" ") + "…" : name
+  // Always limit to max 6 words
+  const words = trimmed.split(" ")
+  return words.length > 6 ? words.slice(0, 6).join(" ") + "…" : trimmed
 }
 
 function DescriptionBlock({ text }: { text: string }) {
