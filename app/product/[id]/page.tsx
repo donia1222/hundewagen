@@ -2,15 +2,25 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
-import { ArrowLeft, ChevronLeft, ChevronRight, ShoppingCart, Check, X, ZoomIn, Heart, ExternalLink } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, X, Heart, ExternalLink } from "lucide-react"
 import { ProductImage } from "@/components/product-image"
 import { fetchProductsCached } from "@/lib/product-cache"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 function shortTitle(name: string): string {
+  // Cut at first " | " or " : " separator
   const pipe = name.indexOf(" | ")
-  return pipe !== -1 ? name.slice(0, pipe) : name
+  const colon = name.indexOf(": ")
+
+  const cuts = [pipe, colon].filter(i => i > 0)
+  if (cuts.length > 0) {
+    return name.slice(0, Math.min(...cuts))
+  }
+
+  // Fallback: max 8 words
+  const words = name.split(" ")
+  return words.length > 8 ? words.slice(0, 8).join(" ") + "…" : name
 }
 
 function DescriptionBlock({ text }: { text: string }) {
@@ -62,12 +72,6 @@ interface Product {
   weight_kg?: number
 }
 
-interface CartItem {
-  id: number; name: string; price: number; image: string; image_url?: string
-  description: string; heatLevel: number; rating: number
-  badge?: string; origin?: string; quantity: number; weight_kg?: number
-}
-
 function getImages(p: Product): string[] {
   return (p.image_urls ?? [p.image_url]).filter((u): u is string => !!u)
 }
@@ -85,8 +89,6 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [imgIdx, setImgIdx] = useState(0)
-  const [added, setAdded] = useState(false)
-  const [cartCount, setCartCount] = useState(0)
   const [isWished, setIsWished] = useState(false)
   const [lightbox, setLightbox] = useState(false)
   const [zoom, setZoom] = useState({ x: 50, y: 50, active: false })
@@ -121,15 +123,6 @@ export default function ProductPage() {
       .catch(() => {})
   }, [])
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("cantina-cart")
-      if (saved) {
-        const items: CartItem[] = JSON.parse(saved)
-        setCartCount(items.reduce((s, i) => s + i.quantity, 0))
-      }
-    } catch {}
-  }, [added])
 
   const markSimilarFailed = (id: number) =>
     setFailedSimilar(prev => new Set([...prev, id]))
@@ -185,31 +178,6 @@ export default function ProductPage() {
       .finally(() => setLoading(false))
   }, [id])
 
-  const addToCart = () => {
-    if (!product) return
-    try {
-      const saved = localStorage.getItem("cantina-cart")
-      const cart: CartItem[] = saved ? JSON.parse(saved) : []
-      const images = getImages(product)
-      const exists = cart.find(i => i.id === product.id)
-      const next = exists
-        ? cart.map(i => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i)
-        : [...cart, {
-            id: product.id, name: product.name, price: product.price,
-            image: images[0] ?? "/placeholder.svg",
-            image_url: images[0],
-            image_url_candidates: product.image_url_candidates,
-            description: product.description,
-            heatLevel: 0, rating: 0,
-            badge: product.badge, origin: product.origin, quantity: 1,
-            weight_kg: product.weight_kg,
-          }]
-      localStorage.setItem("cantina-cart", JSON.stringify(next))
-      localStorage.setItem("cantina-cart-count", next.reduce((s, i) => s + i.quantity, 0).toString())
-      setAdded(true)
-      setTimeout(() => setAdded(false), 2000)
-    } catch {}
-  }
 
   const handleLightboxMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = lightboxImgRef.current?.getBoundingClientRect()
@@ -377,32 +345,15 @@ export default function ProductPage() {
                   <span className="text-base text-[#999] font-medium">€</span>
                 </div>
                 <p className="text-xs text-[#999] mb-4">* Preise exkl. MwSt., zzgl. Versandkosten</p>
-                {(
-                  <a
-                    href={affiliateUrl || `https://www.amazon.es/s?k=${encodeURIComponent(product.name)}&tag=hundezonen-20`}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-[#FF9900] hover:bg-[#e88a00] text-white shadow-lg shadow-[#FF9900]/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Bei Amazon kaufen
-                  </a>
-                ) || (
-                  <button
-                    onClick={addToCart}
-                    disabled={!inStock}
-                    className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-all duration-200 ${
-                      added
-                        ? "bg-emerald-500 text-white"
-                        : inStock
-                          ? "bg-[#4F7CFF] hover:bg-[#B8501F] text-white shadow-lg shadow-[#D4622A]/20 hover:scale-[1.02] active:scale-[0.98]"
-                          : "bg-gray-100 text-gray-300 cursor-not-allowed"
-                    }`}
-                  >
-                    {added ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
-                    {added ? "Hinzugefügt!" : inStock ? "In den Warenkorb" : "Im Moment nicht im Lager"}
-                  </button>
-                )}
+                <a
+                  href={affiliateUrl ?? `https://www.amazon.de/s?k=${encodeURIComponent(product.name)}&tag=hundezonen-20`}
+                  target="_blank"
+                  rel="noopener noreferrer sponsored"
+                  className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm bg-[#FF9900] hover:bg-[#e88a00] text-white shadow-lg shadow-[#FF9900]/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Bei Amazon kaufen
+                </a>
                 {!inStock && (
                   <div className="flex justify-center mt-3">
                     <a

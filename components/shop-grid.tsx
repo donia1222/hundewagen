@@ -152,23 +152,13 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, aff
         </h3>
         <div className="mt-auto pt-2.5 flex items-center justify-between gap-2 border-t border-[#F5F5F5]">
           <span className="text-base font-black text-[#1A1A1A] tracking-tight">€ {product.price.toFixed(2)}</span>
-          {(
-            <button
-              onClick={() => onAddToCart(product)}
-              className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF9900] hover:bg-[#e88a00] text-white hover:shadow-md active:scale-95 transition-all duration-200"
-              title="Comprar en Amazon"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </button>
-          ) || (
-            <a
-              href={`mailto:info@usfh.ch?subject=Verfügbarkeitsanfrage: ${encodeURIComponent(product.name)}&body=Guten Tag,%0A%0Aich würde gerne wissen, ob der folgende Artikel wieder verfügbar ist:%0A%0AArtikel: ${encodeURIComponent(product.name)}%0AArtikel-Nr.: ${product.id}%0A%0AVielen Dank!`}
-              onClick={e => e.stopPropagation()}
-              className="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-semibold px-2.5 py-1.5 rounded-full border border-blue-200 transition-colors"
-            >
-              Anfragen
-            </a>
-          )}
+          <button
+            onClick={() => onAddToCart(product)}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF9900] hover:bg-[#e88a00] text-white hover:shadow-md active:scale-95 transition-all duration-200"
+            title="Bei Amazon kaufen"
+          >
+            <ExternalLink className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>
