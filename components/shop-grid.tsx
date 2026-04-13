@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, memo, useRef } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import {
   ShoppingCart, ChevronLeft, ChevronRight,
-  Search, X, Check, LayoutGrid, ArrowLeft,
+  Search, X, Check, LayoutGrid, ArrowLeft, ArrowRight,
   ArrowUp, ChevronDown, Heart, Menu, Newspaper, Download, Images, Gift, ExternalLink
 } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -31,6 +31,17 @@ interface CartItem {
 }
 interface Category { id: number; parent_id: number | null; slug: string; name: string }
 
+
+// ─── Brand palettes (same as home page) ───────────────────────────────────────
+
+const PALETTES = [
+  { bg: "#EEF3FF", accent: "#4F7CFF" },
+  { bg: "#FFF0F6", accent: "#FF6B9D" },
+  { bg: "#F0FFF8", accent: "#22C55E" },
+  { bg: "#FFFBEE", accent: "#F59E0B" },
+  { bg: "#E8E3FF", accent: "#8B5CF6" },
+  { bg: "#FFF5F5", accent: "#EF4444" },
+]
 
 // ─── Standalone helpers ────────────────────────────────────────────────────────
 
@@ -162,101 +173,127 @@ const ProductCard = memo(function ProductCard({ product, addedIds, wishlist, aff
   )
 })
 
-// ─── MobileCatCard: smaller version for mobile scroll ─────────────────────────
+// ─── MobileCatCard: soft pastel style matching home page ──────────────────────
 
-function MobileCatCard({ srcs, displayName, isActive, onClick, id }: {
+function MobileCatCard({ srcs, displayName, isActive, onClick, id, palette }: {
   srcs: string[]
   displayName: string
   isActive: boolean
   onClick: () => void
   id?: string
+  palette: { bg: string; accent: string }
 }) {
-  const [idx, setIdx] = useState(0)
-  const img = srcs[idx] ?? null
+  const [imgIdx, setImgIdx] = useState(0)
+  const img = srcs[imgIdx] ?? null
+  const { bg, accent } = palette
+
   return (
     <button
       id={id}
       onClick={onClick}
-      className="relative overflow-hidden rounded-xl flex-shrink-0 text-left transition-all duration-200"
+      className="relative overflow-hidden rounded-2xl flex-shrink-0 text-left transition-all duration-300 hover:-translate-y-0.5"
       style={{
-        width: "110px", height: "120px",
-        backgroundColor: "#111",
-        border: isActive ? "2px solid #4F7CFF" : "2px solid transparent",
-        boxShadow: isActive ? "0 4px 16px rgba(44,95,46,0.3)" : "none",
+        width: "104px", height: "112px",
+        background: bg,
+        border: isActive ? `2px solid ${accent}` : `1.5px solid ${accent}28`,
+        boxShadow: isActive ? `0 6px 20px ${accent}35` : "none",
       }}
     >
+      {/* Soft image thumbnail — top right corner */}
       {img && (
-        <img
-          src={img}
-          alt={displayName}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ transform: isActive ? "scale(1.05)" : undefined, transition: "transform 0.4s ease" }}
-          onError={() => setIdx(i => i + 1)}
-        />
+        <div className="absolute top-0 right-0 w-14 h-14 overflow-hidden rounded-bl-2xl" style={{ opacity: 0.38 }}>
+          <img
+            src={img}
+            alt=""
+            className="w-full h-full object-cover"
+            onError={() => setImgIdx(i => i + 1)}
+          />
+        </div>
       )}
-      <div className="absolute inset-0" style={{
-        background: isActive
-          ? "linear-gradient(to top, rgba(44,95,46,0.8) 0%, transparent 55%)"
-          : "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)"
-      }} />
+
       {isActive && (
-        <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#4F7CFF] rounded-full flex items-center justify-center">
+        <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: accent }}>
           <Check className="w-2.5 h-2.5 text-white" />
         </div>
       )}
-      <div className="absolute bottom-0 left-0 right-0 px-2.5 pb-2">
-        <span className="text-white font-black text-[13px] leading-tight block truncate drop-shadow-md">
-          {displayName}
-        </span>
+
+      <div className="relative p-2.5 flex flex-col justify-between h-full">
+        {/* Icon */}
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${accent}20` }}>
+          <LayoutGrid className="w-4 h-4" style={{ color: accent }} />
+        </div>
+        {/* Text */}
+        <div>
+          <span className="font-black text-[12px] leading-tight block" style={{ color: "var(--ap-dark)" }}>
+            {displayName}
+          </span>
+          <span className="text-[10px] font-bold" style={{ color: accent }}>Ansehen →</span>
+        </div>
       </div>
     </button>
   )
 }
 
-// ─── CatCard: category card with image fallback chain ─────────────────────────
+// ─── CatCard: soft pastel style matching home page ────────────────────────────
 
-function CatCard({ srcs, displayName, isActive, onClick }: {
+function CatCard({ srcs, displayName, isActive, onClick, palette }: {
   srcs: string[]
   displayName: string
   isActive: boolean
   onClick: () => void
+  palette: { bg: string; accent: string }
 }) {
-  const [idx, setIdx] = useState(0)
-  const img = srcs[idx] ?? null
+  const [imgIdx, setImgIdx] = useState(0)
+  const img = srcs[imgIdx] ?? null
+  const { bg, accent } = palette
 
   return (
     <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl group text-left transition-all duration-300`}
+      className="group relative overflow-hidden rounded-3xl text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
       style={{
-        height: "180px", minWidth: "210px", width: "210px", flexShrink: 0,
-        backgroundColor: "#f5f5f5",
-        border: isActive ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
-        boxShadow: isActive ? "0 8px 32px rgba(44,95,46,0.3)" : "none",
+        height: "170px", minWidth: "200px", width: "200px", flexShrink: 0,
+        background: bg,
+        border: isActive ? `2px solid ${accent}` : `1.5px solid ${accent}25`,
+        boxShadow: isActive ? `0 8px 28px ${accent}38` : "none",
       }}
     >
+      {/* Soft image thumbnail — top-right corner */}
       {img && (
-        <img
-          src={img}
-          alt={displayName}
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-          onError={() => setIdx(i => i + 1)}
-        />
+        <div className="absolute top-0 right-0 w-28 h-28 overflow-hidden rounded-bl-3xl" style={{ opacity: 0.35 }}>
+          <img
+            src={img}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={() => setImgIdx(i => i + 1)}
+          />
+        </div>
       )}
-      <div className="absolute inset-0" style={{
-        background: isActive
-          ? "linear-gradient(to top, rgba(44,95,46,0.75) 0%, transparent 50%)"
-          : "linear-gradient(to top, rgba(0,0,0,0.60) 0%, transparent 50%)"
-      }} />
+
       {isActive && (
-        <div className="absolute top-3 right-3 w-6 h-6 bg-[#4F7CFF] rounded-full flex items-center justify-center shadow-lg">
+        <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center shadow-md" style={{ background: accent }}>
           <Check className="w-3.5 h-3.5 text-white" />
         </div>
       )}
-      <div className="absolute bottom-0 left-0 right-0 px-3.5 pb-3.5">
-        <span className="text-white font-black text-sm leading-tight block tracking-wide drop-shadow-lg">
-          {displayName}
-        </span>
+
+      <div className="relative p-4 flex flex-col justify-between h-full">
+        {/* Icon */}
+        <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: `${accent}18` }}>
+          <LayoutGrid className="w-6 h-6" style={{ color: accent }} />
+        </div>
+
+        {/* Text */}
+        <div>
+          {isActive && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: accent }}>
+              <Check className="w-3 h-3" /> Aktiv
+            </span>
+          )}
+          <p className="font-black text-sm leading-tight" style={{ color: "var(--ap-dark)" }}>{displayName}</p>
+          <div className="flex items-center gap-1 text-[11px] font-semibold mt-0.5" style={{ color: accent }}>
+            Ansehen <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
       </div>
     </button>
   )
@@ -520,11 +557,24 @@ export default function ShopGrid() {
     }
   }, [activeCategory])
 
+  // When a parent category is active → include products from all its subcategories too
+  // When a subcategory is active → only that subcategory
+  const activeCatObj2 = categories.find(c => c.slug === activeCategory)
+  const categoryMatchSlugs: Set<string> = (() => {
+    if (activeCategory === "all" || !activeCatObj2) return new Set()
+    const isParent = activeCatObj2.parent_id === null
+    if (isParent) {
+      const subSlugs = categories.filter(c => c.parent_id === activeCatObj2.id).map(c => c.slug)
+      return new Set([activeCategory, ...subSlugs])
+    }
+    return new Set([activeCategory])
+  })()
+
   const filtered = products
     .filter(p => {
       if (showWishlist) return wishlist.has(p.id)
       const matchSearch   = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase())
-      const matchCategory = activeCategory === "all" || p.category === activeCategory
+      const matchCategory = activeCategory === "all" || categoryMatchSlugs.has(p.category ?? "")
       const matchSupplier = activeSupplier === "all" || (p.origin && getCanonicalOrigin(p.origin) === activeSupplier)
       const matchStock    = stockFilter === "out_of_stock" ? (p.stock ?? 0) > 0 : true
       return matchSearch && matchCategory && matchSupplier && matchStock
@@ -619,7 +669,7 @@ export default function ShopGrid() {
 <div className="min-h-screen" style={{ background: "var(--ap-cream)" }}>
 
         {/* ── Top bar ── */}
-        <div className="bg-white sticky top-0 z-30 shadow-sm" style={{ borderBottom: "1px solid #e8eeff" }}>
+        <div className="bg-white/90 backdrop-blur-md sticky top-0 z-30" style={{ borderBottom: "1px solid #e8eeff", boxShadow: "0 2px 12px rgba(79,124,255,0.06)" }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
 
             {/* Mobile: Hamburger side menu */}
@@ -737,14 +787,47 @@ export default function ShopGrid() {
           </div>
         </div>
 
+        {/* ── Shop hero banner ── */}
+        <div style={{ background: "linear-gradient(135deg, #EEF3FF 0%, #FFF0F6 60%, #F7F8FF 100%)", borderBottom: "1px solid #e8eeff" }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3"
+                style={{ background: "var(--ap-blue-pale)", color: "var(--ap-blue-dark)" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--ap-blue)" }} />
+                Online-Shop
+              </span>
+              <h1 className="font-black leading-tight" style={{ fontSize: "clamp(1.5rem, 4vw, 2.4rem)", color: "var(--ap-dark)", letterSpacing: "-0.02em" }}>
+                Amazon Hundewagen Selection
+              </h1>
+              <p className="text-sm md:text-base mt-1.5 max-w-md" style={{ color: "var(--ap-muted)" }}>
+                Hundewagen, Zubehör & mehr — handverlesen für aktive Hunde
+              </p>
+            </div>
+            <div className="flex items-center gap-3 flex-wrap">
+              {[
+                { bg: "#EEF3FF", accent: "#4F7CFF", emoji: "🛡️", label: "Sicherer Kauf" },
+                { bg: "#FFF0F6", accent: "#FF6B9D", emoji: "🚚", label: "Schnelle Lieferung" },
+                { bg: "#F0FFF8", accent: "#22C55E", emoji: "⭐", label: "4.8★ Google" },
+              ].map(({ bg, accent, emoji, label }) => (
+                <div key={label} className="flex items-center gap-2 px-3 py-2 rounded-2xl text-xs font-bold" style={{ background: bg, color: accent }}>
+                  <span>{emoji}</span>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex gap-6">
 
           {/* ── Sidebar ── */}
           <aside className={`${sidebarOpen ? "block" : "hidden"} lg:block w-full lg:w-52 xl:w-60 flex-shrink-0 lg:sticky lg:top-20 lg:self-start`}>
-            <div className="bg-white rounded-3xl p-4 space-y-5" style={{ border: "1.5px solid #e8eeff", boxShadow: "0 2px 16px rgba(79,124,255,0.06)" }}>
+            <div className="rounded-3xl p-4 space-y-5" style={{ background: "white", border: "1.5px solid #e8eeff", boxShadow: "0 4px 20px rgba(79,124,255,0.07)" }}>
 
               <div>
-                <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Verfügbarkeit</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-3" style={{ color: "var(--ap-muted)" }}>Verfügbarkeit</p>
                 <ul className="space-y-0.5">
                   {([["all", "Alle"], ["out_of_stock", "An Lager"]] as const).map(([val, label]) => {
                     const count = val === "all" ? products.length : products.filter(p => (p.stock ?? 0) > 0).length
@@ -753,12 +836,16 @@ export default function ShopGrid() {
                       <li key={val}>
                         <button
                           onClick={() => { setShowWishlist(false); setStockFilter(val); setSidebarOpen(false) }}
-                          className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
-                            isActive ? "bg-[#4F7CFF] text-white shadow-sm" : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
-                          }`}
+                          className="w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium"
+                          style={isActive
+                            ? { background: "var(--ap-blue)", color: "white" }
+                            : { color: "var(--ap-muted)" }
+                          }
                         >
                           <span>{label}</span>
-                          <span className={`text-[10px] font-bold ml-2 px-1.5 py-0.5 rounded-full flex-shrink-0 ${isActive ? "bg-white/25 text-white" : "bg-[#F0F0F0] text-[#888]"}`}>{count}</span>
+                          <span className="text-[10px] font-bold ml-2 px-1.5 py-0.5 rounded-full flex-shrink-0"
+                            style={isActive ? { background: "rgba(255,255,255,0.25)", color: "white" } : { background: "#F0F0F0", color: "#888" }}
+                          >{count}</span>
                         </button>
                       </li>
                     )
@@ -766,28 +853,36 @@ export default function ShopGrid() {
                 </ul>
               </div>
 
-              <div className="border-t border-[#F3F3F3] pt-4">
-                <p className="text-[10px] font-black text-[#AAAAAA] uppercase tracking-[0.15em] mb-3">Kategorien</p>
+              <div className="pt-4" style={{ borderTop: "1px solid #e8eeff" }}>
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-3" style={{ color: "var(--ap-muted)" }}>Kategorien</p>
                 <ul className="space-y-0.5">
                   {categories
                     .filter(c => c.parent_id === null)
                     .flatMap(parent => [parent, ...categories.filter(c => c.parent_id === parent.id)])
                   .map(cat => {
-                    const count = products.filter(p => p.category === cat.slug).length
-                    const isActive = activeCategory === cat.slug
                     const isSub = cat.parent_id !== null
+                    // Parent categories: count own products + all subcategory products
+                    const count = isSub
+                      ? products.filter(p => p.category === cat.slug).length
+                      : products.filter(p => {
+                          const subSlugs = categories.filter(c => c.parent_id === cat.id).map(c => c.slug)
+                          return p.category === cat.slug || subSlugs.includes(p.category ?? "")
+                        }).length
+                    const isActive = activeCategory === cat.slug
                     return (
                       <li key={cat.slug} className={isSub ? "pl-3" : ""}>
                         <button
                           onClick={() => { setShowWishlist(false); setActiveCategory(prev => prev === cat.slug ? "all" : cat.slug); setSidebarOpen(false) }}
-                          className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
-                            isActive
-                              ? "bg-[#4F7CFF] text-white shadow-sm"
-                              : "text-[#555] hover:bg-[#F5F5F5] hover:text-[#1A1A1A]"
-                          }`}
+                          className="w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium"
+                          style={isActive
+                            ? { background: "var(--ap-blue)", color: "white" }
+                            : { color: "var(--ap-muted)" }
+                          }
                         >
                           <span className="truncate">{isSub ? "↳ " : ""}{cat.name.replace(/\s*\d{4}$/, "")}</span>
-                          <span className={`text-[10px] font-bold ml-2 px-1.5 py-0.5 rounded-full flex-shrink-0 ${isActive ? "bg-white/25 text-white" : "bg-[#F0F0F0] text-[#888]"}`}>{count}</span>
+                          <span className="text-[10px] font-bold ml-2 px-1.5 py-0.5 rounded-full flex-shrink-0"
+                            style={isActive ? { background: "rgba(255,255,255,0.25)", color: "white" } : { background: "#F0F0F0", color: "#888" }}
+                          >{count}</span>
                         </button>
                       </li>
                     )
@@ -795,19 +890,23 @@ export default function ShopGrid() {
                 </ul>
               </div>
 
-              <div className="border-t border-[#F3F3F3] pt-4">
+              <div className="pt-4" style={{ borderTop: "1px solid #e8eeff" }}>
                 <button
                   onClick={() => { setShowWishlist(p => !p); setActiveCategory("all"); setStockFilter("all"); setSearch(""); setSidebarOpen(false) }}
-                  className={`w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium ${
-                    showWishlist ? "bg-rose-100 text-rose-600 shadow-sm" : "text-[#555] hover:bg-rose-50 hover:text-rose-500"
-                  }`}
+                  className="w-full text-left flex items-center justify-between text-sm px-3 py-2 rounded-xl transition-all font-medium"
+                  style={showWishlist
+                    ? { background: "var(--ap-pink-pale)", color: "#c0395a" }
+                    : { color: "var(--ap-muted)" }
+                  }
                 >
                   <span className="flex items-center gap-2">
                     <Heart className={`w-3.5 h-3.5 ${showWishlist ? "fill-current" : ""}`} />
                     Wunschliste
                   </span>
                   {wishlist.size > 0 && (
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${showWishlist ? "bg-rose-200 text-rose-600" : "bg-rose-100 text-rose-400"}`}>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                      style={showWishlist ? { background: "#ffc0d0", color: "#c0395a" } : { background: "#ffe0f0", color: "#FF6B9D" }}
+                    >
                       {wishlist.size}
                     </span>
                   )}
@@ -826,13 +925,35 @@ export default function ShopGrid() {
           <main className="flex-1 min-w-0">
 
             {/* ── Category section title ── */}
-            <div className="hidden lg:flex items-start gap-3 mb-3">
-              <div className="w-1 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
-              <div>
-                <p className="font-black text-[#4F7CFF] text-2xl leading-tight">Sortiment</p>
-                <p className="text-sm text-[#888] mt-1">Hundewagen & Zubehör für jeden Hund</p>
-              </div>
-            </div>
+            {(() => {
+              const activeCatObj = categories.find(c => c.slug === activeCategory)
+              const activeName = activeCatObj
+                ? (activeCatObj.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "").trim() || activeCatObj.name.replace(/\s*\d{4}$/, "").trim() || "Hundewagen")
+                : null
+              const parentObj = activeCatObj?.parent_id ? categories.find(c => c.id === activeCatObj.parent_id) : null
+              const parentName = parentObj
+                ? (parentObj.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "").trim() || "Hundewagen")
+                : null
+              return (
+                <div className="hidden lg:block mb-5">
+                  <span
+                    className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-2"
+                    style={{ background: "var(--ap-blue-pale)", color: "var(--ap-blue-dark)" }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--ap-blue)" }} />
+                    {activeName ? `Hundewagen${parentName ? ` · ${parentName}` : ""} · ${activeName}` : "Unser Sortiment"}
+                  </span>
+                  <h1 className="text-2xl font-black tracking-tight" style={{ color: "var(--ap-dark)" }}>
+                    {activeName ?? "Hundewagen & Zubehör"}
+                  </h1>
+                  <p className="text-sm mt-1" style={{ color: "var(--ap-muted)" }}>
+                    {activeName
+                      ? `${filtered.length} Produkte in dieser Kategorie`
+                      : "Alles für deinen Hund — kuratiert & geprüft"}
+                  </p>
+                </div>
+              )
+            })()}
 
             {/* ── Category image banners — desktop only ── */}
             <div className="hidden lg:block mb-6 relative group/cat">
@@ -853,36 +974,30 @@ export default function ShopGrid() {
               {/* Alle — default card */}
               <button
                 onClick={() => setActiveCategory("all")}
-                className="relative overflow-hidden rounded-2xl group text-left transition-all duration-300 flex flex-col justify-between p-4"
+                className="group relative overflow-hidden rounded-3xl text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between p-4"
                 style={{
-                  height: "180px", minWidth: "210px", width: "210px", flexShrink: 0,
-                  backgroundColor: "#ffffff",
-                  border: activeCategory === "all" ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
-                  boxShadow: activeCategory === "all" ? "0 8px 32px rgba(44,95,46,0.2)" : "none",
+                  height: "170px", minWidth: "200px", width: "200px", flexShrink: 0,
+                  background: "#EEF3FF",
+                  border: activeCategory === "all" ? "2px solid #4F7CFF" : "1.5px solid #4F7CFF25",
+                  boxShadow: activeCategory === "all" ? "0 8px 28px #4F7CFF38" : "none",
                 }}
               >
-                {/* Decorative circles */}
-                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.08)" }} />
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.06)" }} />
-                <div className="absolute top-1/2 right-6 -translate-y-1/2 w-14 h-14 rounded-full" style={{ backgroundColor: "rgba(79,124,255,0.05)" }} />
-
-                {/* Icon */}
-                <div className="relative w-11 h-11 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: "#EEF3FF" }}>
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: "#4F7CFF18" }}>
                   <LayoutGrid className="w-6 h-6" style={{ color: "#4F7CFF" }} />
                 </div>
-                {/* Text */}
-                <div className="relative">
+                <div>
                   {activeCategory === "all" && (
                     <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: "#4F7CFF" }}>
                       <Check className="w-3 h-3" /> Aktiv
                     </span>
                   )}
-                  <p className="font-black text-base leading-tight tracking-tight" style={{ color: "#4F7CFF" }}>Alle Kategorien</p>
-                  <p className="text-[11px] mt-0.5 font-medium text-[#999]">Alles anzeigen →</p>
+                  <p className="font-black text-sm leading-tight" style={{ color: "var(--ap-dark)" }}>Alle Kategorien</p>
+                  <div className="flex items-center gap-1 text-[11px] font-semibold mt-0.5" style={{ color: "#4F7CFF" }}>
+                    Alles anzeigen <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </button>
-              {categories.filter(cat => cat.parent_id === null).map(cat => {
+              {categories.filter(cat => cat.parent_id === null).map((cat, i) => {
                 const catProds = products.filter(p =>
                   p.category === cat.slug || p.category === cat.name
                 )
@@ -895,7 +1010,7 @@ export default function ShopGrid() {
                 }
                 const uniqueSrcs = [...new Set(srcs)]
                 const isActive = activeCategory === cat.slug
-                const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "")
+                const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "").trim() || cat.name.replace(/\s*\d{4}$/, "").trim() || "Hundewagen"
                 return (
                   <CatCard
                     key={cat.slug}
@@ -903,6 +1018,7 @@ export default function ShopGrid() {
                     displayName={displayName}
                     isActive={isActive}
                     onClick={() => handleCategoryClick(activeCategory === cat.slug ? "all" : cat.slug)}
+                    palette={PALETTES[(i + 1) % PALETTES.length]}
                   />
                 )
               })}
@@ -934,26 +1050,24 @@ export default function ShopGrid() {
                 {/* Alle card — mobile */}
                 <button
                   onClick={() => setActiveCategory("all")}
-                  className="relative overflow-hidden rounded-xl flex-shrink-0 flex flex-col justify-between p-3 transition-all duration-200"
+                  className="relative overflow-hidden rounded-2xl flex-shrink-0 flex flex-col justify-between p-2.5 transition-all duration-300 hover:-translate-y-0.5"
                   style={{
-                    width: "110px", height: "120px",
-                    backgroundColor: "#fff",
-                    border: activeCategory === "all" ? "2px solid #4F7CFF" : "2px solid #E0E0E0",
-                    boxShadow: activeCategory === "all" ? "0 4px 16px rgba(44,95,46,0.2)" : "none",
+                    width: "104px", height: "112px",
+                    background: "#EEF3FF",
+                    border: activeCategory === "all" ? "2px solid #4F7CFF" : "1.5px solid #4F7CFF28",
+                    boxShadow: activeCategory === "all" ? "0 6px 20px #4F7CFF35" : "none",
                   }}
                 >
-                  <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.07)" }} />
-                  <div className="absolute -bottom-3 -left-3 w-12 h-12 rounded-full" style={{ backgroundColor: "rgba(44,95,46,0.05)" }} />
-                  <div className="relative w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(44,95,46,0.12)" }}>
-                    <LayoutGrid className="w-4 h-4" style={{ color: "#D4622A" }} />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#4F7CFF20" }}>
+                    <LayoutGrid className="w-4 h-4" style={{ color: "#4F7CFF" }} />
                   </div>
-                  <div className="relative">
-                    <p className="font-black text-[15px] leading-tight" style={{ color: "#D4622A" }}>Alle</p>
-                    <p className="text-[12px] text-[#999] mt-0.5">Anzeigen</p>
+                  <div>
+                    <p className="font-black text-[12px] leading-tight" style={{ color: "var(--ap-dark)" }}>Alle</p>
+                    <p className="text-[10px] font-bold" style={{ color: "#4F7CFF" }}>Ansehen →</p>
                   </div>
                 </button>
 
-                {categories.map(cat => {
+                {categories.map((cat, i) => {
                   const catProds = products.filter(p => p.category === cat.slug || p.category === cat.name)
                   const srcs: string[] = []
                   for (const p of catProds) {
@@ -964,7 +1078,7 @@ export default function ShopGrid() {
                   }
                   const uniqueSrcs = [...new Set(srcs)]
                   const isActive = activeCategory === cat.slug
-                  const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "")
+                  const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "").trim() || cat.name.replace(/\s*\d{4}$/, "").trim() || "Hundewagen"
                   return (
                     <MobileCatCard
                       key={cat.slug}
@@ -973,6 +1087,7 @@ export default function ShopGrid() {
                       displayName={displayName}
                       isActive={isActive}
                       onClick={() => handleCategoryClick(activeCategory === cat.slug ? "all" : cat.slug)}
+                      palette={PALETTES[(i + 1) % PALETTES.length]}
                     />
                   )
                 })}
@@ -1005,13 +1120,16 @@ export default function ShopGrid() {
               const subs = parentCat ? categories.filter(c => c.parent_id === parentCat.id) : []
               if (subs.length === 0) return null
               return (
-                <div className="border-t border-[#E0E0E0] mt-6 pt-6">
-                  <div className="flex items-start gap-2.5 mb-2.5">
-                    <div className="w-0.5 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
-                    <div>
-                      <p className="font-black text-[#4F7CFF] text-xl lg:text-2xl leading-tight">Subkategorien</p>
-                      <p className="text-sm text-[#888] mt-1">{parentCat?.name.replace(/\s*\d{4}$/, "")}</p>
-                    </div>
+                <div className="border-t mt-6 pt-6" style={{ borderColor: "#e8eeff" }}>
+                  <div className="mb-3">
+                    <span
+                      className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-1"
+                      style={{ background: "var(--ap-pink-pale)", color: "#c0395a" }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B9D]" />
+                      Subkategorien
+                    </span>
+                    <p className="text-sm font-semibold" style={{ color: "var(--ap-muted)" }}>{parentCat?.name.replace(/\s*\d{4}$/, "")}</p>
                   </div>
                   <div className="overflow-x-auto mb-3 -mx-1 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div className="flex items-center gap-1.5 min-w-max pb-1">
@@ -1021,10 +1139,10 @@ export default function ShopGrid() {
                           <button
                             key={sub.slug}
                             onClick={() => setActiveCategory(prev => prev === sub.slug ? parentCat!.slug : sub.slug)}
-                            className="px-2.5 py-1 rounded-full border transition-all whitespace-nowrap text-[11px] font-black uppercase tracking-wider"
+                            className="px-3 py-1.5 rounded-full border transition-all whitespace-nowrap text-[11px] font-bold"
                             style={isSubActive
-                              ? { backgroundColor: "#D4622A", color: "#fff", borderColor: "#D4622A" }
-                              : { backgroundColor: "#4a7f4c", color: "#fff", borderColor: "#4a7f4c" }
+                              ? { background: "var(--ap-blue)", color: "#fff", borderColor: "var(--ap-blue)" }
+                              : { background: "var(--ap-blue-pale)", color: "var(--ap-blue)", borderColor: "var(--ap-blue-pale)" }
                             }
                           >
                             {sub.name.replace(/\s*\d{4}$/, "")}
@@ -1039,23 +1157,26 @@ export default function ShopGrid() {
 
             {/* ── Supplier section ── */}
             {suppliers.length > 0 && (
-              <div className="border-t border-[#E0E0E0] mt-6 pt-6">
-                <div className="flex items-start gap-2.5 mb-2.5">
-                  <div className="w-0.5 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
-                  <div>
-                    <p className="font-black text-[#4F7CFF] text-xl lg:text-2xl leading-tight">Lieferanten</p>
-                    <p className="text-sm text-[#888] mt-1">Qualitätsmarken aus aller Welt</p>
-                  </div>
+              <div className="border-t mt-6 pt-6" style={{ borderColor: "#e8eeff" }}>
+                <div className="mb-3">
+                  <span
+                    className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-1"
+                    style={{ background: "#F0FFF8", color: "#15803d" }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                    Marken
+                  </span>
+                  <p className="text-sm font-semibold" style={{ color: "var(--ap-muted)" }}>Qualitätsmarken aus aller Welt</p>
                 </div>
                 <div className="overflow-x-auto mb-3 -mx-1 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                   <div className="flex items-center gap-1.5 min-w-max pb-1">
                     <button
                       onClick={() => setActiveSupplier("all")}
-                      className={`px-2.5 py-1 rounded-full border transition-all whitespace-nowrap text-[11px] font-black uppercase tracking-wider ${
-                        activeSupplier === "all"
-                          ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
-                          : "border-[#E0E0E0] text-[#555] hover:border-[#555]"
-                      }`}
+                      className="px-3 py-1.5 rounded-full border transition-all whitespace-nowrap text-[11px] font-bold"
+                      style={activeSupplier === "all"
+                        ? { background: "var(--ap-dark)", color: "#fff", borderColor: "var(--ap-dark)" }
+                        : { background: "white", color: "var(--ap-muted)", borderColor: "#e8eeff" }
+                      }
                     >
                       Alle
                     </button>
@@ -1082,10 +1203,10 @@ export default function ShopGrid() {
                         <button
                           key={supplier}
                           onClick={() => setActiveSupplier(prev => prev === supplier ? "all" : supplier)}
-                          className="px-2.5 py-1 rounded-full border transition-all whitespace-nowrap text-[11px] font-black uppercase tracking-wider"
+                          className="px-3 py-1.5 rounded-full border transition-all whitespace-nowrap text-[11px] font-bold"
                           style={isActive
-                            ? { backgroundColor: color, color: "#fff", borderColor: color }
-                            : { borderColor: "#E0E0E0", color, opacity: 0.65 }
+                            ? { background: color, color: "#fff", borderColor: color }
+                            : { background: "white", color, borderColor: "#e8eeff", opacity: 0.8 }
                           }
                         >
                           {supplier}
