@@ -8,6 +8,11 @@ import { fetchProductsCached } from "@/lib/product-cache"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
+function shortTitle(name: string): string {
+  const pipe = name.indexOf(" | ")
+  return pipe !== -1 ? name.slice(0, pipe) : name
+}
+
 function DescriptionBlock({ text }: { text: string }) {
   const [expanded, setExpanded] = useState(false)
   const [clamped, setClamped] = useState(false)
@@ -282,18 +287,7 @@ export default function ProductPage() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="w-px h-6 bg-[#E5E5E5] flex-shrink-0" />
-          <p className="truncate font-bold text-base" style={{ color: "#1A1A2E" }}>{product.name}</p>
-          <button
-            onClick={() => router.push("/?checkout=true")}
-            className="ml-auto relative flex items-center justify-center w-10 h-10 hover:bg-[#F5F5F5] rounded-xl transition-colors flex-shrink-0"
-          >
-            <ShoppingCart className="w-5 h-5 text-[#555]" />
-            {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-[#CC0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                {cartCount > 9 ? "9+" : cartCount}
-              </span>
-            )}
-          </button>
+          <p className="truncate font-bold text-base" style={{ color: "#1A1A2E" }}>{shortTitle(product.name)}</p>
         </div>
       </div>
 
@@ -359,7 +353,7 @@ export default function ProductPage() {
               )}
 
               <h1 className="text-2xl md:text-3xl font-black text-[#1A1A1A] leading-tight tracking-tight">
-                {product.name}
+                {shortTitle(product.name)}
               </h1>
 
               <div className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full w-fit ${
@@ -471,7 +465,7 @@ export default function ProductPage() {
                       </div>
                       <div className="p-3">
                         <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-2 leading-tight mb-1">
-                          {p.name}
+                          {shortTitle(p.name)}
                         </p>
                         <p className="text-sm font-black text-[#4F7CFF]">
                           € {p.price.toFixed(2)}
@@ -486,25 +480,26 @@ export default function ProductPage() {
         )
       })()}
 
-      {/* Trust badges */}
+      {/* Amazon Affiliate Banner */}
       <div className="max-w-5xl mx-auto px-4 pb-12">
-        <div className="flex flex-wrap justify-center gap-3">
-          {[
-            "100% sicherer Kauf",
-            "Schnelle Lieferung",
-            "Einfache Rückgabe",
-            "Das Beste für deinen Hund",
-          ].map((feat) => (
-            <div
-              key={feat}
-              className="flex items-center gap-2 bg-white border border-[#E8E8E8] rounded-full px-4 py-2 shadow-sm"
-            >
-              <span className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #4F7CFF, #FF6B9D)" }}>
-                <Check className="w-3 h-3 text-white stroke-[3]" />
-              </span>
-              <span className="text-xs font-semibold text-[#333]">{feat}</span>
+        <div style={{ background: "linear-gradient(135deg, #FFF8F0 0%, #FFF3E0 100%)", borderRadius: "16px", border: "1px solid #FFE0B2" }}>
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 px-6 py-5">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-md" style={{ background: "#FF9900" }}>
+              <span className="font-black text-white text-xl italic" style={{ fontFamily: "Georgia, serif" }}>a</span>
             </div>
-          ))}
+            <div className="text-center sm:text-left">
+              <p className="font-black text-sm mb-1" style={{ color: "#1A1A1A" }}>
+                Dieses Produkt kommt direkt von Amazon
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: "#6B6B6B" }}>
+                hundewagen.shop ist ein Amazon-Affiliate-Partner. Beim Kauf werden Sie direkt zu Amazon weitergeleitet — Versand, Lieferung und Rückgabe laufen vollständig über Amazon.
+              </p>
+            </div>
+            <div className="flex-shrink-0 hidden sm:flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl border" style={{ borderColor: "#FFB74D", background: "white" }}>
+              <span className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#FF9900" }}>Partner</span>
+              <span className="font-black text-base leading-none" style={{ color: "#FF9900" }}>Amazon</span>
+            </div>
+          </div>
         </div>
       </div>
 

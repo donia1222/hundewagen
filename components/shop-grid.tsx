@@ -672,13 +672,6 @@ export default function ShopGrid() {
                     </button>
                   ))}
                   <button
-                    onClick={() => { router.push("/gutscheine"); setNavMenuOpen(false) }}
-                    className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 font-bold text-[#4F7CFF]"
-                  >
-                    <Gift className="w-4 h-4 shrink-0" />
-                    Gutscheine
-                  </button>
-                  <button
                     onClick={() => { router.push("/blog"); setNavMenuOpen(false) }}
                     className="w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 font-bold text-[#4F7CFF]"
                   >
@@ -743,19 +736,6 @@ export default function ShopGrid() {
             {/* Right group: wishlist + login + cart */}
             <div className="ml-auto flex items-center gap-1 flex-shrink-0">
 
-            {/* Wishlist icon — mobile only */}
-            <button
-              onClick={() => setShowWishlist(p => !p)}
-              className={`relative flex flex-col items-center p-2 rounded-xl transition-colors ${showWishlist ? "text-red-500 bg-red-50" : "text-[#555] hover:bg-[#F5F5F5]"}`}
-            >
-              <Heart className="w-6 h-6" />
-              <span className="text-[10px] mt-0.5 leading-none hidden sm:block">Wunsch</span>
-              {wishlist.size > 0 && (
-                <span style={{ backgroundColor: "#ef4444" }} className="absolute -top-0.5 -right-0.5 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                  {wishlist.size > 9 ? "9+" : wishlist.size}
-                </span>
-              )}
-            </button>
 
 
             </div>{/* end right group */}
@@ -839,15 +819,6 @@ export default function ShopGrid() {
                 </button>
               </div>
 
-              <div className="border-t border-[#F3F3F3] pt-4">
-                <button
-                  onClick={() => router.push("/gutscheine")}
-                  className="w-full text-left flex items-center gap-2 text-sm px-3 py-2 rounded-xl transition-all font-medium text-[#4F7CFF] hover:bg-[#F0F5F0]"
-                >
-                  <Gift className="w-3.5 h-3.5 flex-shrink-0" />
-                  Gutscheine kaufen
-                </button>
-              </div>
 
             </div>
 
@@ -863,8 +834,8 @@ export default function ShopGrid() {
             <div className="hidden lg:flex items-start gap-3 mb-3">
               <div className="w-1 self-stretch bg-[#4F7CFF] rounded-full flex-shrink-0" />
               <div>
-                <p className="font-black text-[#4F7CFF] text-2xl leading-tight">Kategorien</p>
-                <p className="text-sm text-[#888] mt-1">Jagd, Angeln & Outdoor-Ausrüstung</p>
+                <p className="font-black text-[#4F7CFF] text-2xl leading-tight">Sortiment</p>
+                <p className="text-sm text-[#888] mt-1">Hundewagen & Zubehör für jeden Hund</p>
               </div>
             </div>
 
@@ -929,7 +900,7 @@ export default function ShopGrid() {
                 }
                 const uniqueSrcs = [...new Set(srcs)]
                 const isActive = activeCategory === cat.slug
-                const displayName = cat.name.replace(/\s*\d{4}$/, "")
+                const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "")
                 return (
                   <CatCard
                     key={cat.slug}
@@ -998,7 +969,7 @@ export default function ShopGrid() {
                   }
                   const uniqueSrcs = [...new Set(srcs)]
                   const isActive = activeCategory === cat.slug
-                  const displayName = cat.name.replace(/\s*\d{4}$/, "")
+                  const displayName = cat.name.replace(/\s*\d{4}$/, "").replace(/^Hundewagen\s*/i, "")
                   return (
                     <MobileCatCard
                       key={cat.slug}

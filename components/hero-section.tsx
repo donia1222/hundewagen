@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, ShieldCheck, Truck, Star, Heart, ShoppingBag } from "lucide-react"
+import { ArrowRight, ShieldCheck, Truck, Star, Heart, ShoppingBag, LayoutGrid } from "lucide-react"
 
 interface Category {
   id: number
   slug: string
   name: string
+}
+
+interface Product {
+  id: number
+  name: string
+  category: string
+  image_url?: string
+  image_url_candidates?: string[]
 }
 
 const HERO_IMG = "/wagen.png"
@@ -33,6 +41,7 @@ export function HeroSection() {
       .then(r => r.json())
       .then(d => { if (d.success) setCategories(d.categories) })
       .catch(() => {})
+
   }, [])
 
   return (
@@ -228,17 +237,17 @@ export function HeroSection() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {categories.slice(0, 6).map((cat, i) => {
+            <div className="grid grid-cols-2 gap-4">
+              {categories.slice(0, 4).map((cat, i) => {
                 const palettes = [
-                  { bg: "#EEF3FF", accent: "#4F7CFF", emoji: "🛒" },
-                  { bg: "#FFF0F6", accent: "#FF6B9D", emoji: "🦮" },
-                  { bg: "#F0FFF8", accent: "#22C55E", emoji: "🧸" },
-                  { bg: "#FFFBEE", accent: "#F59E0B", emoji: "🎽" },
-                  { bg: "#E8E3FF", accent: "#8B5CF6", emoji: "🏕️" },
-                  { bg: "#FFF5F5", accent: "#EF4444", emoji: "💊" },
+                  { bg: "#EEF3FF", accent: "#4F7CFF" },
+                  { bg: "#FFF0F6", accent: "#FF6B9D" },
+                  { bg: "#F0FFF8", accent: "#22C55E" },
+                  { bg: "#FFFBEE", accent: "#F59E0B" },
+                  { bg: "#E8E3FF", accent: "#8B5CF6" },
+                  { bg: "#FFF5F5", accent: "#EF4444" },
                 ]
-                const { bg, accent, emoji } = palettes[i % palettes.length]
+                const { bg, accent } = palettes[i % palettes.length]
                 return (
                   <button
                     key={cat.id}
@@ -246,11 +255,8 @@ export function HeroSection() {
                     className="group text-left rounded-3xl p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                     style={{ background: bg, border: `1.5px solid ${accent}25` }}
                   >
-                    <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-4 transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `${accent}18` }}
-                    >
-                      {emoji}
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110" style={{ background: `${accent}18` }}>
+                      <LayoutGrid className="w-5 h-5" style={{ color: accent }} />
                     </div>
                     <p className="font-black text-base mb-0.5" style={{ color: "var(--ap-dark)" }}>{cat.name}</p>
                     <div className="flex items-center gap-1 text-xs font-semibold" style={{ color: accent }}>

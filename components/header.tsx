@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Menu, ArrowUp, Newspaper, Images, Mail, Gift } from "lucide-react"
+import { Menu, ArrowUp, Newspaper, Images, Mail } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 
 interface HeaderProps {
@@ -54,7 +54,6 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
       label: cat.name,
       href: `/shop?cat=${encodeURIComponent(cat.name)}`,
     })),
-    { label: "Gutscheine", href: "/gutscheine" },
   ]
 
 
@@ -90,8 +89,7 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
                       onClick={() => { router.push(cat.href); setIsMenuOpen(false) }}
                       className={`w-full text-left px-3 py-2.5 text-base rounded hover:bg-[#F5F5F5] flex items-center gap-2 ${cat.highlight ? "text-[#CC0000] font-bold" : "text-[#222222] font-bold"}`}
                     >
-                      {cat.label === "Gutscheine" && <Gift className="w-4 h-4 shrink-0 text-[#4F7CFF]" />}
-                      <span className={cat.label === "Gutscheine" ? "text-[#4F7CFF]" : ""}>{cat.label}</span>
+                      <span>{cat.label}</span>
                     </button>
                   ))}
                   {amazonLinkCats.map(cat => (
@@ -140,13 +138,6 @@ export function Header({ onCartOpen, cartCount = 0 }: HeaderProps) {
 
           {/* RIGHT: Blog + Gallery + Login + Cart */}
           <div className="flex items-center gap-1 justify-end">
-            <button
-              onClick={() => router.push("/gutscheine")}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#333333] hover:text-[#4F7CFF] hover:bg-[#EEF3FF] rounded-xl transition-colors"
-            >
-              <Gift className="w-4 h-4 text-[#4F7CFF]" />
-              Gutscheine
-            </button>
             <button
               onClick={() => router.push("/blog")}
               className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#333333] hover:text-[#4F7CFF] hover:bg-[#EEF3FF] rounded-xl transition-colors"

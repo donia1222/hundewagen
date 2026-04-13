@@ -321,6 +321,32 @@ Falls Sie eine beschädigte oder falsche Ware erhalten haben, wenden Sie sich bi
       )}
 
 
+      {/* ── Amazon Affiliate Banner ── */}
+      <div style={{ background: "linear-gradient(135deg, #FFF8F0 0%, #FFF3E0 100%)", borderTop: "1px solid #FFE0B2", borderBottom: "1px solid #FFE0B2" }}>
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 max-w-3xl mx-auto">
+            {/* Amazon A icon */}
+            <div className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center shadow-md" style={{ background: "#FF9900" }}>
+              <span className="font-black text-white text-2xl italic" style={{ fontFamily: "Georgia, serif" }}>a</span>
+            </div>
+            {/* Text */}
+            <div className="text-center sm:text-left">
+              <p className="font-black text-base mb-1" style={{ color: "#1A1A1A" }}>
+                Unsere Produkte kommen direkt von Amazon
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "#6B6B6B" }}>
+                hundewagen.shop ist ein Amazon-Affiliate-Partner. Wir kuratieren sorgfältig die besten Hundewagen und Zubehör — beim Kauf werden Sie direkt zu Amazon weitergeleitet. Versand, Lieferung und Rückgabe laufen vollständig über Amazon.
+              </p>
+            </div>
+            {/* Badge */}
+            <div className="flex-shrink-0 hidden sm:flex flex-col items-center gap-1 px-4 py-2 rounded-xl border" style={{ borderColor: "#FFB74D", background: "white" }}>
+              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#FF9900" }}>Partner</span>
+              <span className="font-black text-lg leading-none" style={{ color: "#FF9900" }}>Amazon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── Footer columns ── */}
       <div className="bg-white border-t border-[#E8E8E8] py-14">
         <div className="container mx-auto px-4">
