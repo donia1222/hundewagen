@@ -182,32 +182,6 @@ export function HeroSection() {
 
       </div>
 
-      {/* ── Feature strip ── */}
-      <div style={{ background: "white", borderTop: "1px solid #e8eeff", borderBottom: "1px solid #e8eeff" }}>
-        <div className="container mx-auto px-4 py-5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { icon: <ShoppingBag className="w-5 h-5" />, title: "Sichere Hundewagen", desc: "Für Spaziergänge & Reisen", color: "#EEF3FF", accent: "#4F7CFF" },
-              { icon: <Star className="w-5 h-5" />, title: "Beste Auswahl", desc: "Premium-Qualität", color: "#FFF0F6", accent: "#FF6B9D" },
-              { icon: <Truck className="w-5 h-5" />, title: "Schnelle Lieferung", desc: "Direkt nach Hause", color: "#F0FFF8", accent: "#22C55E" },
-              { icon: <Heart className="w-5 h-5" />, title: "Für jeden Hund", desc: "Klein oder gross", color: "#FFFBEE", accent: "#F59E0B" },
-            ].map(({ icon, title, desc, color, accent }) => (
-              <div
-                key={title}
-                className="flex items-center gap-3 p-3.5 rounded-2xl"
-                style={{ background: color, border: `1px solid ${accent}20` }}
-              >
-                <span className="shrink-0" style={{ color: accent }}>{icon}</span>
-                <div>
-                  <p className="font-bold text-sm" style={{ color: "var(--ap-dark)" }}>{title}</p>
-                  <p className="text-xs" style={{ color: "var(--ap-muted)" }}>{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* ── Categorías grid ── */}
       {categories.length > 0 && (
         <div style={{ background: "var(--ap-cream)", borderBottom: "1px solid #e8eeff" }} className="py-14">

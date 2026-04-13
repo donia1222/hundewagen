@@ -399,13 +399,76 @@ function PremiumHotSauceStoreInner() {
       <HeroSection />
 
       <FadeSection>
+        <section className="py-14" style={{ background: "white", borderTop: "1px solid #e8eeff", borderBottom: "1px solid #e8eeff" }}>
+          <div className="container mx-auto px-4">
+            {/* Header */}
+            <div className="text-center mb-10">
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3"
+                style={{ background: "var(--ap-blue-pale)", color: "var(--ap-blue-dark)" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--ap-blue)" }} />
+                So wählen wir aus
+              </span>
+              <h2 className="text-2xl font-black tracking-tight" style={{ color: "var(--ap-dark)" }}>
+                Nur das Beste für deinen Hund
+              </h2>
+              <p className="text-sm mt-2 max-w-md mx-auto" style={{ color: "var(--ap-muted)" }}>
+                Wir sind gerade gestartet — und jeder Artikel in unserem Shop wurde einzeln geprüft.
+              </p>
+            </div>
+
+            {/* Feature cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                {
+                  bg: "#EEF3FF", accent: "#4F7CFF", emoji: "🔍",
+                  title: "Amazon täglich durchforstet",
+                  desc: "Wir suchen täglich nach den besten Hundewagen und Zubehör — nur Top-Produkte kommen rein.",
+                },
+                {
+                  bg: "#FFF0F6", accent: "#FF6B9D", emoji: "⭐",
+                  title: "Bewertungen gelesen",
+                  desc: "Wir lesen echte Kommentare zu Lieferung, Qualität und Preis — nicht nur die Sternzahl.",
+                },
+                {
+                  bg: "#F0FFF8", accent: "#22C55E", emoji: "✅",
+                  title: "Jedes Produkt einzeln geprüft",
+                  desc: "Kein blinder Import. Jeder Artikel wird von uns persönlich bewertet bevor er erscheint.",
+                },
+                {
+                  bg: "#FFFBEE", accent: "#F59E0B", emoji: "🐾",
+                  title: "Nur was wir selbst kaufen würden",
+                  desc: "Wenn wir es nicht unserem eigenen Hund kaufen würden, kommt es nicht in den Shop.",
+                },
+              ].map(({ bg, accent, emoji, title, desc }) => (
+                <div
+                  key={title}
+                  className="rounded-3xl p-5 flex flex-col gap-3"
+                  style={{ background: bg, border: `1.5px solid ${accent}20` }}
+                >
+                  <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style={{ background: `${accent}18` }}>
+                    {emoji}
+                  </div>
+                  <div>
+                    <p className="font-black text-sm leading-snug mb-1" style={{ color: "var(--ap-dark)" }}>{title}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--ap-muted)" }}>{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </FadeSection>
+
+      <FadeSection>
         <RecommendedProducts />
       </FadeSection>
       <FadeSection>
         <CategoryPreviewSection />
       </FadeSection>
 
-            <FadeSection>
+      <FadeSection>
         <section className="py-12" style={{ background: "var(--ap-cream)", borderTop: "1px solid #e8eeff" }}>
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
